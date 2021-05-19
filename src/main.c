@@ -4,12 +4,26 @@
 #include <errno.h>
 #include <stdlib.h>
 #include <stdio.h>
+#include <unistd.h>
+#include <limits.h>
 
 static void	print_prompt(void)
 {
-	// ft_putstr_fd(BCYAN, 1);
-	ft_putstr_fd("minishell> ", 1);
-	// ft_putstr_fd(RESET, 1);
+	char	*cwd;
+
+	cwd = getcwd(0, PATH_MAX);
+	if (cwd)
+	{
+		ft_putstr(BGRN);
+		ft_putstr_fd("@minishell", 1);
+		ft_putstr(WHT);
+		ft_putchar(':');
+		ft_putstr(BBLU);
+		ft_putstr_fd(cwd, 1);
+		ft_putstr(WHT);
+		ft_putstr_fd("$ ", 1);
+		free(cwd);
+	}
 	if (errno)
 		exit_shell(errno);
 }
@@ -23,9 +37,7 @@ int	main(void)
 	while (1)
 	{
 		print_prompt();
-		// line = read_line();
 		get_next_line(0, &line);
-		printf("[%s]\n", line);
 		free(line);
 		line = 0;
 	}
