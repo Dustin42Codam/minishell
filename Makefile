@@ -19,9 +19,7 @@ OS = $(shell uname)
 
 #all the files
 
-OBJ = main.o \
-	test.o
-#	ft_strcpy.o
+OBJ = main.o
 
 #headers aka dependencys
 
