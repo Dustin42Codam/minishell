@@ -3,7 +3,6 @@
 #include "libft.h"
 #include <errno.h>
 #include <stdlib.h>
-#include <stdio.h>
 #include <unistd.h>
 #include <limits.h>
 
@@ -15,13 +14,13 @@ static void	print_prompt(void)
 	if (cwd)
 	{
 		ft_putstr(BGRN);
-		ft_putstr_fd("@minishell", 1);
+		ft_putstr("@minishell");
 		ft_putstr(WHT);
 		ft_putchar(':');
 		ft_putstr(BBLU);
-		ft_putstr_fd(cwd, 1);
+		ft_putstr(cwd);
 		ft_putstr(WHT);
-		ft_putstr_fd("$ ", 1);
+		ft_putstr("$ ");
 		free(cwd);
 	}
 	if (errno)
@@ -31,15 +30,15 @@ static void	print_prompt(void)
 int	main(void)
 {
 	char	*line;
-	int		ret;
 
-	ret = 1;
 	while (1)
 	{
 		print_prompt();
 		get_next_line(0, &line);
+		if (errno)
+			exit_shell(errno);
 		free(line);
-		line = 0;
+		line = NULL;
 	}
 	return (0);
 }

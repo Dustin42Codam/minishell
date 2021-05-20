@@ -1,15 +1,3 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        ::::::::            */
-/*   get_next_line.h                                    :+:    :+:            */
-/*                                                     +:+                    */
-/*   By: dkrecisz <dkrecisz@student.codam.nl>         +#+                     */
-/*                                                   +#+                      */
-/*   Created: 2020/01/16 18:29:12 by dkrecisz      #+#    #+#                 */
-/*   Updated: 2021/05/19 15:07:06 by dkrecisz      ########   odam.nl         */
-/*                                                                            */
-/* ************************************************************************** */
-
 #ifndef GET_NEXT_LINE_H
 # define GET_NEXT_LINE_H
 # ifndef BUFFER_SIZE
