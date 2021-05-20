@@ -11,19 +11,28 @@ NC := \033[0m
 #used folders
 
 SDIR := src
-IDIR := inc/
-ODIR := $(SDIR)/.obj
+IDIR := inc
+ODIR := obj
 DDIR := .debug
 
 OS = $(shell uname)
 
 #all the files
 
-OBJ = main.o
+SRC = main.c exit_shell.c get_next_line.c get_next_line_utils.c
+
+OBJ = $(SRC:.c=.o)
+
+SRCS = $(addprefix $(SDIR)/, $(SRC))
+OBJS = $(addprefix $(ODIR)/, $(OBJ))
+
+LIBFT = libft
+
+LIBS = -L $(LIBFT) -lft
 
 #headers aka dependencys
 
-HEADER := minishell.h
+HEADER := -I $(IDIR) -I $(LIBFT)
 
 #check what os we are one 
 
@@ -38,18 +47,17 @@ HEADER := minishell.h
 
 # set paths
 
-OBJ := $(patsubst %,$(ODIR)/%,$(OBJ))
+# OBJ := $(patsubst %,$(ODIR)/%,$(OBJ))
 DBG := $(patsubst %,$(DDIR)/%,$(OBJ))
-INC := $(patsubst %,$(IDIR)/%,$(HEADER))
 
 #flags
 
-C_DEBUG := -g -Wall -Werror -Wextra -fsanitize=address -I$(IDIR)
-C_REGULAR := -Wall -Werror -Wextra -I$(IDIR)
+C_DEBUG := -g -Wall -Werror -Wextra -fsanitize=address $(HEADER)
+C_REGULAR := -Wall -Werror -Wextra $(HEADER)
 
 #nasm compiler
 
-CC := gcc 
+CC := clang 
 
 #if bonus
 
@@ -67,42 +75,44 @@ else
 	FLAGS = $(C_REGULAR)
 endif
 
-#libft
-LIBFT = libft.a
+all: $(NAME)
 
-all: $(LIBFT) $(NAME)
-
-$(NAME): $(OBJ) $(LIBS)
+$(NAME): $(LIBFT)/libft.a $(OBJS)
 	@echo "${GREEN}Building minishell${NC}"
-	@$(CC) $(FLAGS) $(OBJ) -o $(NAME)
+	@$(CC) $(FLAGS) $(OBJS) $(LIBS) -o $(NAME)
+	@echo "${GREEN}minishell ready!${NC}"
 
-$(ODIR)/%.o: $(SDIR)/%.c $(INC)
-	@mkdir -p $(@D)
-	@$(CC) -c $(FLAGS) -o $@ $<
+$(OBJS): $(ODIR)/%.o: $(SDIR)/%.c
+	@mkdir -p $(ODIR)
+	@$(CC) $(FLAGS) -c $< -o $@
+
+$(LIBFT)/libft.a:
+	@echo "${GREEN}Building libft${NC}"
+	@make -C $(LIBFT)
+	@echo "${GREEN}libft ready!${NC}"
 
 clean:
 	@echo "${RED}Cleaning build!${NC}"
+	@rm -rf $(ODIR)
 	@echo "${RED}Cleaning libft!${NC}"
-	@make -C libft clean
-	@rm -rf $(ODIR) 
-
-$(LIBFT):
-	@echo "${GREEN}Building libft${NC}"
-	@make -C libft
+	@make -C $(LIBFT) clean
 
 fclean: clean
 	@echo "${RED}Deleting minishell!${NC}"
-	@echo "${RED}Deleting libft!${NC}"
-	@make -C libft fclean
 	@rm -rf $(NAME)
+	@echo "${RED}Deleting libft!${NC}"
+	@make -C $(LIBFT) fclean
 
 re: fclean all
 
-test: $(NAME) $(OBJ)
+run: all
+	@./$(NAME)
+
+test: $(NAME) $(OBJS)
 	@echo "${BLUE}Building test cases!${NC}"
 
 test_d: fclean
 	@make DEBUG=1
 	@echo "${LBLUE}Building debugable test cases!${NC}"
 
-.PHONY: all bonus test test_d clean fclean re
+.PHONY: all bonus test test_d clean fclean re run
