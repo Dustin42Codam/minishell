@@ -34,7 +34,7 @@ int	main(void)
 	while (1)
 	{
 		print_prompt();
-		get_next_line(0, &line);
+		ret = get_next_line(0, &line);
 		if (errno)
 			exit_shell(errno);
 		free(line);
