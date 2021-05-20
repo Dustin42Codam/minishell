@@ -19,7 +19,8 @@ OS = $(shell uname)
 
 #all the files
 
-SRC = main.c exit_shell.c get_next_line.c get_next_line_utils.c
+SRC = main.c exit_shell.c get_next_line.c get_next_line_utils.c \
+	signals.c
 
 OBJ = $(SRC:.c=.o)
 
