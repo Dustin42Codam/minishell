@@ -9,5 +9,6 @@
 void	exit_shell(int error_id);
 char	*read_line(void);
 pid_t	call(char *line);
+char	**tokenizer(char const *s, const char *delim);
 
 #endif

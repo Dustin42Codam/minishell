@@ -14,18 +14,22 @@ SDIR := src
 IDIR := inc
 ODIR := obj
 DDIR := .debug
+TDIR := tests
 
 OS = $(shell uname)
 
 #all the files
 
 SRC = main.c exit_shell.c get_next_line.c get_next_line_utils.c \
-	signals.c
+	signals.c tokenizer.c
+
+TEST = test_tokenizer.c
 
 OBJ = $(SRC:.c=.o)
 
 SRCS = $(addprefix $(SDIR)/, $(SRC))
 OBJS = $(addprefix $(ODIR)/, $(OBJ))
+TESTS = $(addprefix $(TDIR)/, $(TEST))
 
 LIBFT = libft
 
@@ -103,14 +107,17 @@ fclean: clean
 	@rm -rf $(NAME)
 	@echo "${RED}Deleting libft!${NC}"
 	@make -C $(LIBFT) fclean
+	@rm -f test_*.out
 
 re: fclean all
 
 run: all
 	@./$(NAME)
 
-test: $(NAME) $(OBJS)
+test: $(OBJS) $(LIBFT)/libft.a
 	@echo "${BLUE}Building test cases!${NC}"
+	@$(CC) -lcriterion $(FLAGS) src/tokenizer.c $(TDIR)/test_tokenizer.c $(LIBS) -o test_tokenizer.out
+	@./test_*.out
 
 test_d: fclean
 	@make DEBUG=1
