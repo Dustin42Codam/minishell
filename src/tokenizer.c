@@ -1,5 +1,4 @@
 #include "libft.h"
-#include "minishell.h"
 #include <stdlib.h>
 #include <errno.h>
 
