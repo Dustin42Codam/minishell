@@ -21,7 +21,7 @@ OS = $(shell uname)
 #all the files
 
 SRC = main.c exit_shell.c get_next_line.c get_next_line_utils.c \
-	signals.c tokenizer.c utiles.c init.c built_in_functions.c \
+	signals.c tokenizer.c
 
 
 TEST = test_tokenizer.c

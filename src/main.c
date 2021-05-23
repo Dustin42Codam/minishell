@@ -32,9 +32,7 @@ static void	print_prompt(void)
 int	main(void)
 {
 	char	*line;
-	t_built_in	*built_in;
 
-	built_in = init();
 	while (1)
 	{
 		print_prompt();
