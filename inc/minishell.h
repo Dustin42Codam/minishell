@@ -1,14 +1,30 @@
 #ifndef MINISHELL_H
 # define MINISHELL_H
 
+/*
+**	COLORS THAT YOU SEE ON THE PROOMPT
+*/
+
 # define BGRN "\033[32;1;4m"
 # define BBLU "\033[34;1;4m"
 # define WHT "\033[97;0;4m"
-#include "unistd.h"
+# define END "\033[0m"
 
-void	exit_shell(int error_id);
-char	*read_line(void);
-pid_t	call(char *line);
-char	**tokenizer(char const *s, const char *delim);
+typedef struct s_built_in
+{
+	char	*functions[7];
+}		t_built_in;
+
+void		exit_shell(int error_id);
+char		*read_line(void);
+int		call(char *line);
+char		**tokenizer(char const *s, const char *delim);
+t_built_in	*init(void);
+
+/*
+**	BUILT IN FUNCTIONS
+*/
+
+int	pwd(void);
 
 #endif

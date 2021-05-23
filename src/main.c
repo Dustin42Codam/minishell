@@ -22,6 +22,7 @@ static void	print_prompt(void)
 		ft_putstr(cwd);
 		ft_putstr(WHT);
 		ft_putstr("$ ");
+		ft_putstr(END);
 		free(cwd);
 	}
 	if (errno)
@@ -31,14 +32,17 @@ static void	print_prompt(void)
 int	main(void)
 {
 	char	*line;
+	t_built_in	*built_in;
 
+	built_in = init();
 	while (1)
 	{
 		print_prompt();
 		get_next_line(0, &line);
 		if (errno)
 			exit_shell(errno);
-		call(line);
+		if (!call(line))
+			exit(1);
 		free(line);
 		line = NULL;
 	}

@@ -21,7 +21,8 @@ OS = $(shell uname)
 #all the files
 
 SRC = main.c exit_shell.c get_next_line.c get_next_line_utils.c \
-	signals.c tokenizer.c
+	signals.c tokenizer.c utiles.c init.c built_in_functions.c \
+
 
 TEST = test_tokenizer.c
 
@@ -119,8 +120,7 @@ test: $(OBJS) $(LIBFT)/libft.a
 	@$(CC) -lcriterion $(FLAGS) src/tokenizer.c $(TDIR)/test_tokenizer.c $(LIBS) -o test_tokenizer.out
 	@./test_*.out
 
-test_d: fclean
+debug: fclean
 	@make DEBUG=1
-	@echo "${LBLUE}Building debugable test cases!${NC}"
 
 .PHONY: all bonus test test_d clean fclean re run
