@@ -1,103 +1,93 @@
 #include "libft.h"
+#include "minishell.h"
 #include <stdlib.h>
+#include <stdio.h>
 #include <errno.h>
 
-static size_t	get_arr_size(char const *s, const char *delim)
+void	free_token_list(t_token *token)
 {
-	size_t	size;
+	t_token	*tmp;
 
-	size = 0;
-	while (*s)
+	while (token)
 	{
-		if (!ft_strchr(delim, *s) && (ft_strchr(delim, *(s + 1)) || \
-			*(s + 1) == '\0'))
-			size++;
-		s++;
+		tmp = token->next;
+		free(token->str);
+		token->str = NULL;
+		free(token);
+		token = NULL;
+		token = tmp;
 	}
-	return (size);
 }
 
-static size_t	get_token_size(char const *s, const char *delim)
+static t_token	*init_token_list(size_t len)
 {
-	size_t	i;
-	size_t	j;
-	char	*scope;
+	t_token	*new_token;
 
-	scope = NULL;
-	i = 0;
-	while (s[i])
-	{
-		j = 0;
-		while (delim[j])
-		{
-			if (s[i] == delim[j])
-			{
-				scope = (char *)s + i;
-				return (scope - s);
-			}
-			j++;
-		}
-		i++;
-	}
-	if (scope == NULL)
-		scope = (char *)s + ft_strlen(s);
-	return (scope - s);
+	new_token = (t_token *)ft_calloc(len, sizeof(t_token));
+	if (errno)
+		exit_shell(errno);
+	new_token->str = (char *)ft_calloc(len, sizeof(char));
+	if (errno)
+		exit_shell(errno);
+	new_token->id = WORD;
+	new_token->next = NULL;
+	return (new_token);
 }
 
-static void	free_arr(char **arr)
+int	init_next_token(t_token **token, size_t len, size_t i)
 {
-	size_t	i;
-
-	i = 0;
-	while (arr[i])
-	{
-		free(arr[i]);
-		i++;
-	}
-	free(arr);
-}
-
-static int	make_tokens(char **arr, const char *s, const char *delim)
-{
-	size_t	token_size;
-	size_t	s_len;
-	size_t	i;
-	size_t	j;
-
-	i = 0;
-	j = 0;
-	s_len = ft_strlen(s);
-	while (i < s_len)
-	{
-		while (ft_strchr(delim, s[i]))
-			i++;
-		if (i >= s_len)
-			break ;
-		token_size = get_token_size(s + i, delim);
-		arr[j] = ft_substr(s + i, 0, token_size);
-		if (arr[j] == NULL)
-			return (1);
-		j++;
-		i += token_size;
-	}
-	arr[j] = NULL;
+	(*token)->next = (t_token *)ft_calloc(1, sizeof(t_token));
+	if (errno)
+		exit_shell(errno);
+	(*token) = (*token)->next;
+	(*token)->str = (char *)ft_calloc(len - i, sizeof(char));
+	if (errno)
+		exit_shell(errno);
+	(*token)->next = NULL;
 	return (0);
 }
 
-char	**tokenizer(char const *s, const char *delim)
+static int	switch_ctype(t_data **data, t_token **token, size_t *i, size_t *j)
 {
-	char		**arr;
-	size_t		size;
+	char	c;
+	int		ret;
 
-	if (s == NULL)
-		return (NULL);
-	if (!delim)
-		delim = "";
-	size = get_arr_size(s, delim);
-	arr = (char **)malloc(sizeof(char *) * (size + 1));
-	if (arr == NULL)
-		return (NULL);
-	if (make_tokens(arr, s, delim) == 1)
-		free_arr(arr);
-	return (arr);
+	c = (*data)->line[(*i)];
+	if (ft_strchr(" \t\n;<>|\"\'", c))
+	{
+		if ((*j) > 0)
+			ret = init_next_token(token, (*data)->line_len, *i);
+		if (ft_strchr("<>|;", c))
+			ret = token_meta(token, data, i, c);
+		else if (ft_strchr("\"\'", c))
+			ret = token_quote(token, data, i, c);
+		(*j) = 0;
+		return (ret);
+	}
+	else
+	{
+		(*token)->str[(*j)] = c;
+		(*token)->id = WORD;
+		(*j)++;
+	}
+	return (0);
+}
+
+int	tokenizer(t_data **data, char *line)
+{
+	t_token		*tmp_token;
+	size_t		i;
+	size_t		j;
+
+	i = 0;
+	j = 0;
+	(*data)->token = init_token_list((*data)->line_len);
+	tmp_token = (*data)->token;
+	while (line[i])
+	{
+		if (switch_ctype(data, &tmp_token, &i, &j))
+			return (1);
+		i++;
+	}
+	return (0);
 }

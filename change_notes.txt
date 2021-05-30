@@ -1,0 +1,25 @@
+
+All the changes I've done so far on the lexer branch:
+
+-	added shell_notes.txt which describes the plan for the parser
+
+-	added more debug options in the makefile
+	make valgrind	->	make re + instant valgrind execution for full leak checking
+					-> note:	gnl has still reachable bytes.
+								maybe will replace gnl with another function
+	make debug_1	->	compiles only with "-g" flag
+	make debug_2	->	compiles with "-g" flag and -Wall -Werror -Wextra
+
+	if compiling with "make debug_2" all tokens will be printed out after a line input
+
+-	added new files:
+	tokenizer.c		->	root file for the new tokenizer
+	tokenizer_utils.c ->	subfunctions for tokenizer
+	init_data		->	initializes data for new struct
+
+-	changes in files:
+	main.c			->	added data struct which holds the input line received from gnl
+	minishell.h		->	added some more structs
+	get_next_line	->	gnl reads also the newline character into the line buffer.
+						this mimics the behaviour like in bash
+						and makes it easier to parse tokens.

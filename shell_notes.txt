@@ -1,0 +1,313 @@
+Notes for minishell
+
+These notes describe how I want to build the lexer + parser + executor.
+
+
+Bash reference: 	https://www.gnu.org/software/bash/manual/bash.html#Shell-Expansions
+				or	http://www.opengroup.org/onlinepubs/9699919799/utilities/V3_chap01.html
+				or	https://www.computerhope.com/unix/ubash.htm
+
+
+minishell
+
+	1.	First things first: Read user input with good ol' get_next_line
+		-	a call to get_next_line(0, &line) reads a line from stdin.
+		-	get_next_line will read the whole line
+			including the '\n' character
+
+		1.x To do:
+			-	Read environment variables
+			-	Replace get_next_line with a lightweight function
+
+	2.	Lexical analysis
+
+		2.1	Tokenize user input
+
+		-	In order to process user input into commands
+			minishell splits the the input line into tokens.
+			All tokens will be stored inside a linked list of token structs.
+
+			typedef struct	s_token
+			{
+				int				id;		//	token type		(e.g: WORD)
+				char			*str;	//	token string	(e.g: "echo")
+				struct s_token	*next;	//	pointer to next token
+			}				t_token;
+
+			Shell Manual:
+			"A character that, when unquoted, separates words. A metacharacter is a space, tab, newline, 
+			or one of the following characters: ‘|’, ‘&’, ‘;’, ‘(’, ‘)’, ‘<’, or ‘>’."
+
+			For the mandatory part these characters are considered as metacharacters:
+			
+			' '		-	single space	-	word seperator
+			'\t'	-	tab space		-	word seperator
+			'\n'	-	newline			-	word seperator
+			';'		-	semicolon		-	list terminator
+			'\''	-	single quote	-	enlosing character
+			'\"'	-	double quote	-	enlosing character
+			'<'		-	less than		-	redirection operator
+			'>'		-	bigger than		-	redirection operator
+			'>>'	-	2x bigger than	-	redirection operator
+			'|'		-	pipe			-	pipe operator
+		
+		-	Redirection oparators, pipes and list terminators will also 
+			get parsed into seperate tokens. ("<", ">", "|", ";" or ">>")
+		
+		-	Parsing steps for words and oparator tokens:
+
+			1.	Start iterating through input line with an index variabel i = 0.
+
+			2.	If line[i] is not a metacharacter then copy the character into a token string.
+				->	token[j] = line[i]
+				->	j++;
+				->	i++;
+
+			3.	If line[i] is a space, tab or newline character then stop reading the current token
+				and create a new empty token
+				(token strings are allocated with ft_calloc so null termination is not needed)
+				->	token->next = ft_calloc(1, sizeof(t_token));
+				->	token = token->next;
+				->	token->str = ft_calloc(strlen(line) - i, sizeof(char));
+
+			4.	If line[i] matches one of those chars in this string ";<>|" then do the same instructions
+				as mentioned in step 3 and additionally create a new token
+				which contains the operator character itself. Then make a new empty token
+				->	token->str[0] = '<'		// example
+				->	token->next = ft_calloc(1, sizeof(t_token));
+				->	token = token->next;
+				->	token->str = ft_calloc(strlen(line) - i, sizeof(char));
+			
+			5.	If line[i] is a quote character '\"' or '\'' then minishell
+				checks first if the quotes have a matching closing quote.
+				If so then everything between those quotes gets copied into new token.
+				If there is no second quote of the same type present in the input string then
+				the behaviour results in a syntax error.
+
+			6.	Basic syntax checks are currently present within the tokenizer.
+				Deep syntax checking will happen at a later stage.
+
+				Basic syntax checks include:
+					-	multiple semicolons "echo ;;"
+					-	open quotes	"echo 'abc "
+					-	invalid operators "echo >>>"
+					-	and a bit more...
+	
+		
+		-	Each token gets a value assigned as described below.
+
+			#define TOKEN -1
+			#define WORD 0
+			#define SQUOTE 1
+			#define DQUOTE 2
+			#define SEMICOLON 3
+			#define PIPE 4
+			#deinfe REDIR 5
+		
+		-	WORD, SQUOTE and DQUOTE will be used only for the next
+			parsing step (Variable expansion, path expansion).
+			Their value will result in TOKEN = -1 right before
+			the creation of the syntax tree.
+
+		-	Let's consider the following input line:
+			// VAR=42
+				echo "42 is $VAR" -n | grep "1" < 1.txt
+
+			The tokenizer will create this list of tokens:
+
+			token->str		token->type
+			"echo"		|	WORD
+			"42 is $VAR"|	DQUOTE
+			"-n"		|	WORD
+			"|"			|	PIPE
+			"grep"		|	WORD
+			"1"			|	DQUOTE
+			"<"			|	REDIR
+			"1.txt"		|	WORD
+			NULL		|	0
+
+
+		2.2	Shell Expansions	-	only theory - code still has to be written
+			
+			-	As stated in the bash manual:
+				"Expansion is performed on the command line after it has been split into tokens."
+			
+			-	Work in progress - See the manual for more details
+
+			-	Must be done before building parse tree
+
+			After expanding the pathnames and variables the token list 
+			will look like this:
+
+			// echo "42 is 42" -n | /usr/bin/grep "1" < 1.txt
+
+			token->str		token->type
+			"echo"			|	TOKEN
+			"42 is 42"		|	TOKEN		<--- Variable expansion
+			"-n"			|	TOKEN
+			"|"				|	PIPE
+			"/usr/bin/grep"	|	TOKEN		<--- Path expansion
+			"1"				|	TOKEN
+			"<"				|	REDIR
+			"1.txt"			|	TOKEN
+			NULL			|	0
+		
+		2.3	To do
+				-	Parse backslashes 'echo \"'
+				-	Expand variables 'ARG1=42; echo $ARG1' -> 'echo 42'
+				-	Expand pathnames 'cat file.txt' -> '/usr/bin/cat file.txt'
+	
+	3.	Build an abstract syntax tree (AST)	-	only theory - code still has to be written
+
+		-	The previously created tokens will be parsed into an AST.
+
+		-	The AST is a binary tree-like data structure which contains 
+			the hierarchy of the commands.
+
+		-	We will use the following grammar, which is based on real bash:
+
+			<command line>	::= 	<job> ';' <command line>
+								|	<job> ';'
+								| 	<job> '&' <command line>
+								|	<job> '&'
+									<job>
+
+			<job>			::=		<command> '|' <job>
+								|	<command>
+
+			<command>		::=		<simple command> '<' <filename> // this grammer is a bit incorrect, see grammer.llf
+								|	<simple command> '>' <filename>
+								|	<simple command>
+
+			<simple command>::=		<pathname> <token list>
+
+			<token list>	::=		<token> <token list>
+								|	(EMPTY)
+
+		-	tokens will be parsed after these grammar rules
+
+		-	for each grammar rule there will be a function which will check
+			the constellation of tokens.
+
+		-	each node in the tree will be represented by this struct:
+
+			typedef struct s_astree
+			{
+				struct s_astree	*left;
+				struct s_astree	*right;
+				char			*str;
+				int				type;
+			}	t_astree;
+
+		-	node types can have the folling values:
+			
+			PIPE		=	1		//	<command> '|' <job>
+			LIST		=	2		//	<job> ';' <command line>
+			REDIR_IN	=	4		//	<simple command> '<' <filename>
+			REDIR_OUT	=	8		//	<simple command> '>' <filename>
+			S_CMD		=	16		//	<pathname> <token list>	// S_CMD means simple command
+			CMD_ARGV	=	32		//	<token> <token list>	// CMD_ARGV means argument vector for a command
+			WORD		=	64		//	<token>
+
+		-	Example:
+			Input: echo "42 is $VAR" -n | grep "1" < 1.txt	# VAR equals 42
+			Tokens (after expansion):
+
+					token->str		token.type
+					"echo"			|	TOKEN
+					"42 is 42"		|	TOKEN
+					"-n"			|	TOKEN
+					"|"				|	PIPE
+					"/usr/bin/grep"	|	TOKEN
+					"1"				|	TOKEN
+					"<"				|	REDIR
+					"1.txt"			|	TOKEN
+					NULL			|	0
+
+			AST:
+
+              	    ________PIPE_______
+                   /		           \
+                  /			            \
+			   __/			             \__
+	    WORD|S_CMD,                      WORD|REDIR_IN, 
+		   "echo"			                "1.txt"
+		 /        \                        /        \
+		/          \                      /          \
+	   /            \                    /            \
+	NULL    WORD|CMD_ARGV,             NULL         WORD|S_CMD,
+		     "42 is 42"                           "/usr/bin/grep"       
+		      /       \                        	      /     \
+			 /         \                       	     /       \
+			/	        \                      	    /         \
+		  NULL    WORD|CMD_ARGV,               	  NULL    WORD|CMD_ARGV
+			  	      "-n"                     	              "1"
+			          /  \							          /  \
+				     /    \							         /    \
+			        /      \						        /      \
+                  NULL    NULL						      NULL    NULL
+
+
+	
+	4.	Execute AST nodes	-	only theory - code still has to be written
+
+		-	While reading the AST we will use the following data structure
+			to build the command arguments which we will later pass to execve():
+		
+			typedef struct s_command
+			{
+				int argc;
+				char **argv;
+				/**
+				*	maybe add some more variables
+				*	for storing pipe fd's
+				*	and redirections
+				**/
+			}	t_command;
+
+			// Example: echo "42" "21"
+
+			t_command	*cmd;
+
+			cmd->argc = 3;
+			cmd->argv = {"echo", "42", "21"};
+
+		-	The executor will start to read the AST from the root node.
+			The root node will decide how the commands will be executed.
+
+		Let's reconsider the example from step 3:
+
+			AST:
+
+              	    ________PIPE_______
+                   /		           \
+                  /			            \
+			   __/			             \__
+	    WORD|S_CMD,                      WORD|REDIR_IN, 
+		   "echo"			                "1.txt"
+		 /        \                        /        \
+		/          \                      /          \
+	   /            \                    /            \
+	NULL    WORD|CMD_ARGV,             NULL         WORD|S_CMD,
+		     "42 is 42"                           "/usr/bin/grep"       
+		      /       \                        	      /     \
+			 /         \                       	     /       \
+			/	        \                      	    /         \
+		  NULL    WORD|CMD_ARGV,               	  NULL    WORD|CMD_ARGV
+			  	      "-n"                     	              "1"
+			          /  \							          /  \
+				     /    \							         /    \
+			        /      \						        /      \
+                  NULL    NULL						      NULL    NULL
+		
+		-	PIPE is the root node so we need to call a function
+			which creates a pipe with the
+			simple command 'echo "42 is 42" -n' as the write end,
+			and the redirection job 'grep "1" < 1.txt' as the read end.
+
+		-	So the following steps have to be done:
+			1.	Create pipe
+			2.	Execute simple command 'echo "42 is 42" -n'
+				->	pipe write end
+			3.	Execute simple command with redirection 'grep "1" < 1.txt'
+				->	pipe read end

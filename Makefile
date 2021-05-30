@@ -21,7 +21,7 @@ OS = $(shell uname)
 #all the files
 
 SRC = main.c exit_shell.c get_next_line.c get_next_line_utils.c \
-	signals.c tokenizer.c
+	signals.c tokenizer.c init_data.c tokenizer_utils.c
 
 
 TEST = test_tokenizer.c
@@ -59,6 +59,8 @@ DBG := $(patsubst %,$(DDIR)/%,$(OBJ))
 #flags
 
 C_DEBUG := -g -Wall -Werror -Wextra -fsanitize=address $(HEADER)
+C_DEBUG_1 := -g $(HEADER) -D DEBUG_1=1
+C_DEBUG_2 := -g -Wall -Werror -Wextra $(HEADER) -D DEBUG_2=1
 C_REGULAR := -Wall -Werror -Wextra $(HEADER)
 
 #nasm compiler
@@ -75,8 +77,12 @@ endif
 
 #id febug
 
-ifdef DEBUG
+ifeq ($(DEBUG), 1)
 	FLAGS = $(C_DEBUG)
+else ifeq ($(DEBUG_1), 1)
+	FLAGS = $(C_DEBUG_1)
+else ifeq ($(DEBUG_2), 1)
+	FLAGS = $(C_DEBUG_2)
 else
 	FLAGS = $(C_REGULAR)
 endif
@@ -122,5 +128,14 @@ test: $(OBJS) $(LIBFT)/libft.a
 
 debug: fclean
 	@make DEBUG=1
+
+debug_1: fclean
+	@make DEBUG_1=1
+
+debug_2: fclean
+	@make DEBUG_2=1
+
+valgrind: debug_1
+	valgrind --leak-check=full --show-leak-kinds=all --track-origins=yes ./$(NAME)
 
 .PHONY: all bonus test test_d clean fclean re run

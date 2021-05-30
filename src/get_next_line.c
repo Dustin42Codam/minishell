@@ -73,7 +73,7 @@ int	read_from_fd(t_gnl_list *b_node, char **buf)
 		b_node->read_bytes = r_bytes;
 	}
 	nl = find_char(b_node->buf, '\n');
-	*buf = concat_buffer(*buf, b_node->buf, nl);
+	*buf = concat_buffer(*buf, b_node->buf, nl + 1);
 	if (*buf == NULL)
 		return (-1);
 	if (nl < b_node->read_bytes)
