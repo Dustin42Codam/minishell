@@ -1,5 +1,4 @@
 #include "minishell.h"
-#include "get_next_line.h"
 #include "libft.h"
 
 #include <errno.h>
@@ -36,11 +35,7 @@ int	main(void)
 	while (1)
 	{
 		print_prompt();
-		get_next_line(0, &line);
-		if (errno)
-			exit_shell(errno);
-		if (!call(line))
-			exit(1);
+		line = read_line();
 		free(line);
 		line = NULL;
 	}

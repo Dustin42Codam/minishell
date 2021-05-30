@@ -17,14 +17,8 @@ typedef struct s_built_in
 
 void		exit_shell(int error_id);
 char		*read_line(void);
-int		call(char *line);
-char		**tokenizer(char const *s, const char *delim);
+int			call(char *line);
 t_built_in	*init(void);
-
-/*
-**	BUILT IN FUNCTIONS
-*/
-
-int	pwd(void);
+char		*read_line(void);
 
 #endif

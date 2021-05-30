@@ -20,8 +20,7 @@ OS = $(shell uname)
 
 #all the files
 
-SRC = main.c exit_shell.c get_next_line.c get_next_line_utils.c \
-	signals.c tokenizer.c
+SRC = main.c exit_shell.c read_line.c
 
 
 TEST = test_tokenizer.c
@@ -59,7 +58,7 @@ DBG := $(patsubst %,$(DDIR)/%,$(OBJ))
 #flags
 
 C_DEBUG := -g -Wall -Werror -Wextra -fsanitize=address $(HEADER)
-C_REGULAR := -Wall -Werror -Wextra $(HEADER)
+C_REGULAR := -g -Wall -Werror -Wextra $(HEADER)
 
 #nasm compiler
 
@@ -116,11 +115,9 @@ run: all
 	@./$(NAME)
 
 test: $(OBJS) $(LIBFT)/libft.a
-	@echo "${BLUE}Building test cases!${NC}"
-	@$(CC) -lcriterion $(FLAGS) src/tokenizer.c $(TDIR)/test_tokenizer.c $(LIBS) -o test_tokenizer.out
-	@./test_*.out
+	@echo "${BLUE}No test cases available!${NC}"
 
 debug: fclean
 	@make DEBUG=1
 
-.PHONY: all bonus test test_d clean fclean re run
+.PHONY: all bonus test clean fclean re run
