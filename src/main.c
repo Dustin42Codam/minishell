@@ -1,6 +1,5 @@
 #include "minishell.h"
 #include "libft.h"
-
 #include <errno.h>
 #include <stdlib.h>
 #include <unistd.h>
@@ -28,16 +27,20 @@ static void	print_prompt(void)
 		exit_shell(errno);
 }
 
-int	main(void)
+int	main(int argc, char *argv[], char **envp)
 {
-	char	*line;
+	t_data	*data;
 
+	data = init_data(envp);
 	while (1)
 	{
 		print_prompt();
-		line = read_line();
-		free(line);
-		line = NULL;
+		data->line_len = read_line(&data->line);
+		free(data->line);
+		data->line = NULL;
 	}
+	free_data(data);
+	(void)argc;
+	(void)argv;
 	return (0);
 }

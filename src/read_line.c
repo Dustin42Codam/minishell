@@ -19,25 +19,27 @@ static char	*ft_charjoin(char *line, char const c)
 	return (str);
 }
 
-char	*read_line(void)
+size_t	read_line(char **line)
 {
-	char	*line;
-	char	buf;
 	ssize_t	ret;
+	ssize_t	len;
+	char	buf;
 
-	line = ft_calloc(1, 1);
-	buf = 0;
 	ret = 1;
+	len = 0;
+	buf = 0;
+	*line = (char *)ft_calloc(1, sizeof(char));
 	while (line && ret > 0)
 	{
 		ret = read(0, &buf, 1);
 		if (ret == -1)
 			exit_shell(errno);
-		line = ft_charjoin(line, buf);
+		*line = ft_charjoin(*line, buf);
+		len++;
 		if (buf == '\n')
 			break ;
 	}
 	if (errno)
 		exit_shell(errno);
-	return (line);
+	return (len);
 }
