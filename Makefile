@@ -20,11 +20,14 @@ OS = $(shell uname)
 
 #all the files
 
-SRC = main.c exit_shell.c get_next_line.c get_next_line_utils.c \
-	signals.c tokenizer.c init_data.c tokenizer_utils.c
+SRC = main.c exit_shell.c tokenizer.c init_data.c \
+	tokenizer_utils.c read_line.c \
+	parse_astree.c astree_utils.c \
+	parse_command_line.c parse_job.c parse_command.c parse_simple_command.c
 
 
-TEST = test_tokenizer.c
+
+TEST =
 
 OBJ = $(SRC:.c=.o)
 
@@ -114,7 +117,6 @@ fclean: clean
 	@rm -rf $(NAME)
 	@echo "${RED}Deleting libft!${NC}"
 	@make -C $(LIBFT) fclean
-	@rm -f test_*.out
 
 re: fclean all
 
@@ -122,9 +124,7 @@ run: all
 	@./$(NAME)
 
 test: $(OBJS) $(LIBFT)/libft.a
-	@echo "${BLUE}Building test cases!${NC}"
-	@$(CC) -lcriterion $(FLAGS) src/tokenizer.c $(TDIR)/test_tokenizer.c $(LIBS) -o test_tokenizer.out
-	@./test_*.out
+	@echo "${BLUE}No test cases to build!${NC}"
 
 debug: fclean
 	@make DEBUG=1

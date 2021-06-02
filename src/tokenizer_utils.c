@@ -14,8 +14,10 @@ int	get_token_id(char c)
 		return (SEMICOLON);
 	else if (c == '|')
 		return (PIPE);
-	else if (c == '<' || c == '>')
-		return (REDIR);
+	else if (c == '>')
+		return (REDIR_OUT);
+	else if (c == '<')
+		return (REDIR_IN);
 	return (-1);
 }
 
@@ -52,6 +54,8 @@ int	token_quote(t_token **token, t_data **data, size_t *i, char c)
 				next_quote - ((*data)->line + (*i)));
 	(*token)->id = get_token_id(c);
 	(*i) += ft_strlen((*token)->str) + 1;
+/* 	if (ft_strchr("\t\n ", (*data)->line[(*i) + 1]))
+		return (0); */
 	init_next_token(token, (*data)->line_len, *i);
 	return (0);
 }

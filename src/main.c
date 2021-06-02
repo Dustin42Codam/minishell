@@ -1,11 +1,10 @@
 #include "minishell.h"
-#include "get_next_line.h"
 #include "libft.h"
-
 #include <errno.h>
 #include <stdlib.h>
 #include <unistd.h>
 #include <limits.h>
+#include <signal.h>
 #include <stdio.h>
 
 static void	print_prompt(void)
@@ -30,33 +29,47 @@ static void	print_prompt(void)
 		exit_shell(errno);
 }
 
-int	main(void)
+int	main(int argc, char *argv[], char **envp)
 {
 	t_data	*data;
 
-	data = init_data();
+	data = init_data(envp);
 	while (1)
 	{
 		print_prompt();
-		get_next_line(0, &data->line);
+		data->line_len = read_line(&data->line);
 		if (errno)
 			exit_shell(errno);
-		data->line_len = ft_strlen(data->line);
+		
+		/**
+		 *  fake ctrl - d exit condition to be able to check for memleaks
+		 * 	just use for debugging - delete later
+		**/
+		if (data->line_len == 0)
+			break ;
+
 		if (tokenizer(&data, data->line))
 			printf("Syntax error!\n");
-		#ifdef DEBUG_2
-			t_token *token;
-			token = data->token;
-			while (token)
-			{
-				printf("[%s] [%d]\n", token->str, token->id);
-				token = token->next;
-			}
-		#endif
-		free_token_list(data->token);
+		else
+		{
+			#ifdef DEBUG_2
+				t_token *token;
+				token = data->token;
+				while (token)
+				{
+					printf("[%s] [%d]\n", token->str, token->id);
+					token = token->next;
+				}
+			#endif
+			parse_astree(data);
+			free_token_list(data->token);
+			delete_ast(data->astree);
+		}
 		free(data->line);
 		data->line = NULL;
 	}
-	free(data);
+	(void)argc;
+	(void)argv;
+	free_data(data);
 	return (0);
 }

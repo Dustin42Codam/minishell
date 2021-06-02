@@ -12,29 +12,25 @@ void	free_token_list(t_token *token)
 	{
 		tmp = token->next;
 		free(token->str);
-		token->str = NULL;
 		free(token);
-		token = NULL;
 		token = tmp;
 	}
 }
 
-static t_token	*init_token_list(size_t len)
+t_token	*init_token_list(size_t len)
 {
 	t_token	*new_token;
 
-	new_token = (t_token *)ft_calloc(len, sizeof(t_token));
+	new_token = (t_token *)ft_calloc(len + 1, sizeof(t_token));
 	if (errno)
 		exit_shell(errno);
-	new_token->str = (char *)ft_calloc(len, sizeof(char));
+	new_token->str = (char *)ft_calloc(len + 1, sizeof(char));
 	if (errno)
 		exit_shell(errno);
-	new_token->id = WORD;
-	new_token->next = NULL;
 	return (new_token);
 }
 
-int	init_next_token(t_token **token, size_t len, size_t i)
+void	init_next_token(t_token **token, size_t len, size_t i)
 {
 	(*token)->next = (t_token *)ft_calloc(1, sizeof(t_token));
 	if (errno)
@@ -43,8 +39,6 @@ int	init_next_token(t_token **token, size_t len, size_t i)
 	(*token)->str = (char *)ft_calloc(len - i, sizeof(char));
 	if (errno)
 		exit_shell(errno);
-	(*token)->next = NULL;
-	return (0);
 }
 
 static int	switch_ctype(t_data **data, t_token **token, size_t *i, size_t *j)
@@ -53,10 +47,11 @@ static int	switch_ctype(t_data **data, t_token **token, size_t *i, size_t *j)
 	int		ret;
 
 	c = (*data)->line[(*i)];
-	if (ft_strchr(" \t\n;<>|\"\'", c))
+	ret = 0;
+	if (ft_strchr(" \n\t;<>|\"\'", c))
 	{
 		if ((*j) > 0)
-			ret = init_next_token(token, (*data)->line_len, *i);
+			init_next_token(token, (*data)->line_len, *i);
 		if (ft_strchr("<>|;", c))
 			ret = token_meta(token, data, i, c);
 		else if (ft_strchr("\"\'", c))
@@ -73,6 +68,25 @@ static int	switch_ctype(t_data **data, t_token **token, size_t *i, size_t *j)
 	return (0);
 }
 
+void	handle_quotes(t_data *data)
+{
+	/**
+	 * - parsing quotes -
+	 * still has to be done
+	 * currently just setting all quote token ids
+	 * to zero so i can build and test the abstract syntax tree
+	**/
+	data->token_ptr = data->token;
+	while (data->token_ptr)
+	{
+		if (data->token_ptr->id == SQUOTE || 
+			data->token_ptr->id == DQUOTE)
+			data->token_ptr->id = WORD;
+		// if (data->token_ptr->next->)
+		data->token_ptr = data->token_ptr->next;
+	}
+}
+
 int	tokenizer(t_data **data, char *line)
 {
 	t_token		*tmp_token;
@@ -83,11 +97,12 @@ int	tokenizer(t_data **data, char *line)
 	j = 0;
 	(*data)->token = init_token_list((*data)->line_len);
 	tmp_token = (*data)->token;
-	while (line[i])
+	while (line[i]/*  != '\n' */)
 	{
 		if (switch_ctype(data, &tmp_token, &i, &j))
 			return (1);
 		i++;
 	}
+	handle_quotes(*data);
 	return (0);
 }

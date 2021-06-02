@@ -13,13 +13,16 @@ All the changes I've done so far on the lexer branch:
 	if compiling with "make debug_2" all tokens will be printed out after a line input
 
 -	added new files:
+	read_line.c		->	readded the old read_line() functions to read input byte by byte
 	tokenizer.c		->	root file for the new tokenizer
 	tokenizer_utils.c ->	subfunctions for tokenizer
 	init_data		->	initializes data for new struct
+	parse_astree.c	->	root file for building abstract syntax tree
+	parse_*.c		->	contain subfunctions for the AST parser
+	astree_utils.c	->	utilities for building/deleting tree nodes inside the AST
+
 
 -	changes in files:
 	main.c			->	added data struct which holds the input line received from gnl
 	minishell.h		->	added some more structs
-	get_next_line	->	gnl reads also the newline character into the line buffer.
-						this mimics the behaviour like in bash
-						and makes it easier to parse tokens.
+	get_next_line	->	removed get_next_line because it is shitty

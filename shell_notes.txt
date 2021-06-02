@@ -10,14 +10,10 @@ Bash reference: 	https://www.gnu.org/software/bash/manual/bash.html#Shell-Expans
 
 minishell
 
-	1.	First things first: Read user input with good ol' get_next_line
-		-	a call to get_next_line(0, &line) reads a line from stdin.
-		-	get_next_line will read the whole line
-			including the '\n' character
+	1.	First things first: Read user input with read_line() function
 
 		1.x To do:
 			-	Read environment variables
-			-	Replace get_next_line with a lightweight function
 
 	2.	Lexical analysis
 
@@ -63,16 +59,18 @@ minishell
 				->	j++;
 				->	i++;
 
-			3.	If line[i] is a space, tab or newline character then stop reading the current token
-				and create a new empty token
+			3.	If line[i] is a space, tab or newline character 
+				and there were non metacharacters read into the token string previously
+				then stop reading the current token and create a new empty token
 				(token strings are allocated with ft_calloc so null termination is not needed)
 				->	token->next = ft_calloc(1, sizeof(t_token));
 				->	token = token->next;
 				->	token->str = ft_calloc(strlen(line) - i, sizeof(char));
 
-			4.	If line[i] matches one of those chars in this string ";<>|" then do the same instructions
-				as mentioned in step 3 and additionally create a new token
-				which contains the operator character itself. Then make a new empty token
+			4.	If line[i] matches one of those chars in this string ";<>|"
+				then do the same instructions as in step 3.
+				Additionally create a new token which contains the operator character itself.
+				Then make a new empty token.
 				->	token->str[0] = '<'		// example
 				->	token->next = ft_calloc(1, sizeof(t_token));
 				->	token = token->next;
@@ -96,18 +94,14 @@ minishell
 		
 		-	Each token gets a value assigned as described below.
 
-			#define TOKEN -1
-			#define WORD 0
-			#define SQUOTE 1
-			#define DQUOTE 2
-			#define SEMICOLON 3
-			#define PIPE 4
-			#deinfe REDIR 5
-		
-		-	WORD, SQUOTE and DQUOTE will be used only for the next
-			parsing step (Variable expansion, path expansion).
-			Their value will result in TOKEN = -1 right before
-			the creation of the syntax tree.
+			#define EMPTY 0
+			#define WORD 1
+			#define SQUOTE 2
+			#define DQUOTE 4
+			#define SEMICOLON 8
+			#define PIPE 16
+			#deinfe REDIR_IN 32
+			#deinfe REDIR_OUT 64
 
 		-	Let's consider the following input line:
 			// VAR=42
@@ -122,42 +116,62 @@ minishell
 			"|"			|	PIPE
 			"grep"		|	WORD
 			"1"			|	DQUOTE
-			"<"			|	REDIR
+			"<"			|	REDIR_IN
 			"1.txt"		|	WORD
-			NULL		|	0
+			""			|	EMPTY
 
 
-		2.2	Shell Expansions	-	only theory - code still has to be written
+		2.2	Shell Expansions	-	still to do
 			
 			-	As stated in the bash manual:
 				"Expansion is performed on the command line after it has been split into tokens."
 			
-			-	Work in progress - See the manual for more details
+			-	Order of expansions:
+				1.	Tilde expansion - dunno if mandatory
+				2.	Parameter and variable expansion
+					->	$?, $SHLVL, $ARG, "$ARG"
+				3.	Word splitting after expansion
+					-> 	Explicit null arguments ("" or '') are retained and
+						passed to commands as empty strings.
+					-> 	Unquoted implicit null arguments resulting from expansion
+						are removed
+					-> 	If a parameter with no value is expanded within double quotes,
+						a null argument results and passed to command as empty string
+					->	When a quoted null argument appears as part of a word whose
+						expansion is non-null, the null argument is removed.
+					->	the word -d'' becomes -d after word splitting and null argument removal.
+				4.	Pathname expansion
+		
+			-	After these expansions are performed, quote characters present in the original
+				word are removed unless they have been quoted themselves
 
-			-	Must be done before building parse tree
+			-	Expansions must be done before building abstract syntax tree
 
 			After expanding the pathnames and variables the token list 
 			will look like this:
 
-			// echo "42 is 42" -n | /usr/bin/grep "1" < 1.txt
+			// VAR=42
+				echo "42 is $VAR" -n | grep "1" < 1.txt		# initial command
 
 			token->str		token->type
-			"echo"			|	TOKEN
-			"42 is 42"		|	TOKEN		<--- Variable expansion
-			"-n"			|	TOKEN
+			"echo"			|	WORD
+			"42 is 42"		|	WORD		<--- Variable expansion
+			"-n"			|	WORD
 			"|"				|	PIPE
-			"/usr/bin/grep"	|	TOKEN		<--- Path expansion
-			"1"				|	TOKEN
-			"<"				|	REDIR
-			"1.txt"			|	TOKEN
-			NULL			|	0
+			"/usr/bin/grep"	|	WORD		<--- Path expansion
+			"1"				|	WORD
+			"<"				|	REDIR_IN
+			"1.txt"			|	WORD
+			""				|	EMPTY
 		
 		2.3	To do
 				-	Parse backslashes 'echo \"'
 				-	Expand variables 'ARG1=42; echo $ARG1' -> 'echo 42'
 				-	Expand pathnames 'cat file.txt' -> '/usr/bin/cat file.txt'
+				-	Variable assignment
+					->	info env
 	
-	3.	Build an abstract syntax tree (AST)	-	only theory - code still has to be written
+	3.	Build an abstract syntax tree (AST)	-	most of code done - need more tests
 
 		-	The previously created tokens will be parsed into an AST.
 
@@ -168,14 +182,12 @@ minishell
 
 			<command line>	::= 	<job> ';' <command line>
 								|	<job> ';'
-								| 	<job> '&' <command line>
-								|	<job> '&'
 									<job>
 
 			<job>			::=		<command> '|' <job>
 								|	<command>
 
-			<command>		::=		<simple command> '<' <filename> // this grammer is a bit incorrect, see grammer.llf
+			<command>		::=		<simple command> '<' <filename>
 								|	<simple command> '>' <filename>
 								|	<simple command>
 
@@ -187,7 +199,7 @@ minishell
 		-	tokens will be parsed after these grammar rules
 
 		-	for each grammar rule there will be a function which will check
-			the constellation of tokens.
+			the constellation of tokens recursively.
 
 		-	each node in the tree will be represented by this struct:
 
@@ -201,46 +213,46 @@ minishell
 
 		-	node types can have the folling values:
 			
-			PIPE		=	1		//	<command> '|' <job>
-			LIST		=	2		//	<job> ';' <command line>
-			REDIR_IN	=	4		//	<simple command> '<' <filename>
-			REDIR_OUT	=	8		//	<simple command> '>' <filename>
-			S_CMD		=	16		//	<pathname> <token list>	// S_CMD means simple command
-			CMD_ARGV	=	32		//	<token> <token list>	// CMD_ARGV means argument vector for a command
-			WORD		=	64		//	<token>
+			AST_PIPE		=	1		//	<command> '|' <job>
+			AST_LIST		=	2		//	<job> ';' <command line>
+			AST_REDIR_IN	=	4		//	<simple command> '<' <filename>
+			AST_REDIR_OUT	=	8		//	<simple command> '>' <filename>
+			AST_CMD			=	16		//	<pathname> <token list>	// S_CMD means simple command
+			AST_CMD_ARG		=	32		//	<token> <token list>	// CMD_ARGV means argument vector for a command
+			AST_TOKEN		=	64		//	<token>
 
 		-	Example:
 			Input: echo "42 is $VAR" -n | grep "1" < 1.txt	# VAR equals 42
 			Tokens (after expansion):
 
 					token->str		token.type
-					"echo"			|	TOKEN
-					"42 is 42"		|	TOKEN
-					"-n"			|	TOKEN
+					"echo"			|	WORD
+					"42 is 42"		|	WORD
+					"-n"			|	WORD
 					"|"				|	PIPE
-					"/usr/bin/grep"	|	TOKEN
-					"1"				|	TOKEN
-					"<"				|	REDIR
-					"1.txt"			|	TOKEN
-					NULL			|	0
+					"/usr/bin/grep"	|	WORD
+					"1"				|	WORD
+					"<"				|	REDIR_IN
+					"1.txt"			|	WORD
+					""				|	EMPTY
 
 			AST:
 
-              	    ________PIPE_______
+              	    ______AST_PIPE_______
                    /		           \
                   /			            \
 			   __/			             \__
-	    WORD|S_CMD,                      WORD|REDIR_IN, 
+	    WORD|AST_CMD,                   WORD|AST_REDIR_IN, 
 		   "echo"			                "1.txt"
 		 /        \                        /        \
 		/          \                      /          \
 	   /            \                    /            \
-	NULL    WORD|CMD_ARGV,             NULL         WORD|S_CMD,
+	NULL    WORD|AST_CMD_ARG,         NULL         WORD|AST_CMD,
 		     "42 is 42"                           "/usr/bin/grep"       
 		      /       \                        	      /     \
 			 /         \                       	     /       \
 			/	        \                      	    /         \
-		  NULL    WORD|CMD_ARGV,               	  NULL    WORD|CMD_ARGV
+		  NULL    WORD|AST_CMD_ARG,         	 NULL    WORD|AST_CMD_ARG,
 			  	      "-n"                     	              "1"
 			          /  \							          /  \
 				     /    \							         /    \
@@ -279,21 +291,21 @@ minishell
 
 			AST:
 
-              	    ________PIPE_______
+              	    ______AST_PIPE_______
                    /		           \
                   /			            \
 			   __/			             \__
-	    WORD|S_CMD,                      WORD|REDIR_IN, 
+	    WORD|AST_CMD,                   WORD|AST_REDIR_IN, 
 		   "echo"			                "1.txt"
 		 /        \                        /        \
 		/          \                      /          \
 	   /            \                    /            \
-	NULL    WORD|CMD_ARGV,             NULL         WORD|S_CMD,
+	NULL    WORD|AST_CMD_ARG,         NULL         WORD|AST_CMD,
 		     "42 is 42"                           "/usr/bin/grep"       
 		      /       \                        	      /     \
 			 /         \                       	     /       \
 			/	        \                      	    /         \
-		  NULL    WORD|CMD_ARGV,               	  NULL    WORD|CMD_ARGV
+		  NULL    WORD|AST_CMD_ARG,              NULL    WORD|AST_CMD_ARG,
 			  	      "-n"                     	              "1"
 			          /  \							          /  \
 				     /    \							         /    \
