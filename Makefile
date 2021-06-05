@@ -20,7 +20,7 @@ OS = $(shell uname)
 
 #all the files
 
-SRC = main.c exit_shell.c read_line.c
+SRC = main.c exit_shell.c read_line.c init_data.c
 
 
 TEST = test_tokenizer.c
@@ -58,11 +58,11 @@ DBG := $(patsubst %,$(DDIR)/%,$(OBJ))
 #flags
 
 C_DEBUG := -g -Wall -Werror -Wextra -fsanitize=address $(HEADER)
-C_REGULAR := -g -Wall -Werror -Wextra $(HEADER)
+C_REGULAR := -g -Wall $(HEADER)
 
 #nasm compiler
 
-CC := clang 
+CC := clang
 
 #if bonus
 
