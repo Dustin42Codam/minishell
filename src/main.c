@@ -38,8 +38,6 @@ int	main(int argc, char *argv[], char **envp)
 	{
 		print_prompt();
 		data->line_len = read_line(&data->line);
-		if (errno)
-			exit_shell(errno);
 		
 		/**
 		 *  fake ctrl - d exit condition to be able to check for memleaks
@@ -48,7 +46,7 @@ int	main(int argc, char *argv[], char **envp)
 		if (data->line_len == 0)
 			break ;
 
-		if (tokenizer(&data, data->line))
+		if (tokenizer(&data, data->line) == EXIT_FAILURE)
 			printf("Syntax error!\n");
 		else
 		{
@@ -57,13 +55,19 @@ int	main(int argc, char *argv[], char **envp)
 				token = data->token;
 				while (token)
 				{
-					printf("[%s] [%d]\n", token->str, token->id);
+					// printf("[%s] [%d] [%d]\n", token->str, token->bitmask, token->type);
+					analyze_token(token);
 					token = token->next;
 				}
+				free(data->line);
+				data->line = NULL;
+				free_token_list(data->token);
+				continue ;
 			#endif
-			parse_astree(data);
+			// parse_astree(data);
+			// execute(data);
+			// delete_ast(data->astree);
 			free_token_list(data->token);
-			delete_ast(data->astree);
 		}
 		free(data->line);
 		data->line = NULL;

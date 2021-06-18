@@ -10,10 +10,49 @@ Bash reference: 	https://www.gnu.org/software/bash/manual/bash.html#Shell-Expans
 
 minishell
 
-	1.	First things first: Read user input with read_line() function
+	0.	Preparation
 
-		1.x To do:
-			-	Read environment variables
+		0.1	Data initialization
+
+			-	A pointer to a struct of type "t_data" is used to store all data which
+				will be used for the process of command line interpretation.
+			-	The function t_data *init_data(char **envp) handles the data initialization
+				in the following way:
+				-	a pointer to t_data gets created with a call to ft_calloc(1, sizof(t_data))
+				-	in order to create a copy of the environment list the parameter char **envp
+					is passed to the subfunction copy_envp(char **envp),
+					where a deep copy of char **envp is created and stored at t_data.env.
+				-	the t_data pointer with the environment list and all other members set to zero
+					is returned.
+			TODO:
+				-	make a copy of the environment outside of init_data() for modularity
+				-	store environment inside a linked list instead of a 2d array for simpler
+					variable modification.
+
+		0.2	Printing a prompt
+
+			-	a call to print_prompt() prints the shell prompt
+			-	with the help of getcwd() the current working directory is printed
+			-	the macros BGRN, WHT, BBLU, and END are used to display colors
+			
+			TODO:
+				-	if we have time we can add the username and hostname to the prompt string
+					similar to this: "greg@ubuntu:/home/greg$ "
+
+
+	1.	Reading input
+
+		-	the function size_t read_line(char **line) reads from stdin one byte at a time
+			and stores the data inside its first parameter 'char **line'.
+		-	size_t read_line(char **) is not meant to be a recreation
+			of the libc char *readline(const char *).
+			That's a coincidence that both functions share almost the same name.
+		-	every character gets copied up until a newline, and the newline itself.
+		-	the total sum of bytes that have been read is returned.
+
+		TODO:
+			-	size_t read_line(char **) covers only basic input reading so we need to
+				add some command line discipline with termcaps.
 
 	2.	Lexical analysis
 
@@ -25,62 +64,89 @@ minishell
 
 			typedef struct	s_token
 			{
-				int				id;		//	token type		(e.g: WORD)
+				int				type;	//	token type		(e.g: WORD)
 				char			*str;	//	token string	(e.g: "echo")
 				struct s_token	*next;	//	pointer to next token
 			}				t_token;
 
-			Shell Manual:
-			"A character that, when unquoted, separates words. A metacharacter is a space, tab, newline, 
-			or one of the following characters: ‘|’, ‘&’, ‘;’, ‘(’, ‘)’, ‘<’, or ‘>’."
+		-	Each character inside the input line gets analyzed one byte at a time.
 
-			For the mandatory part these characters are considered as metacharacters:
-			
-			' '		-	single space	-	word seperator
-			'\t'	-	tab space		-	word seperator
-			'\n'	-	newline			-	word seperator
-			';'		-	semicolon		-	list terminator
-			'\''	-	single quote	-	enlosing character
-			'\"'	-	double quote	-	enlosing character
-			'<'		-	less than		-	redirection operator
-			'>'		-	bigger than		-	redirection operator
-			'>>'	-	2x bigger than	-	redirection operator
-			'|'		-	pipe			-	pipe operator
+		-	Characters are grouped into different categories:
+
+			break:			indicates when to break a line into a new token.
+			blank:			used to interpret empty blanks.
+			quote:			marks start or endpoint of quotation.
+			bsdquote:		chars that have a special meaning when backslashed in double quotes.
+			meta:			shell operators.
+			expansion:		triggers variable expansion.
+			escape:			a char which preserves the literal value of the next character.
+			special_var:	chars with special meaning for variable expansion.
+			end:			command line terminators.
+
+			Char	|	Description		|	Category
+			' '		-	single space	-	break/blank
+			'\t'	-	tab space		-	break/blank
+			'\n'	-	newline			-	break/bsdquote/end
+			';'		-	semicolon		-	meta/break
+			'\''	-	single quote	-	quote
+			'\"'	-	double quote	-	quote/bsdquote
+			'<'		-	less than		-	meta/break
+			'>'		-	bigger than		-	meta/break
+			'|'		-	pipe			-	meta/break
+			'$'		-	dollar sign		-	expansion/bsdquote
+			'\\'	-	backslash		-	bsdquote/escape
+			'`'		-	back quote		-	bsdquote
+			'?'		-	question mark	-	special_var
+			'\0'	-	null terminator	-	end
 		
-		-	Redirection oparators, pipes and list terminators will also 
-			get parsed into seperate tokens. ("<", ">", "|", ";" or ">>")
-		
-		-	Parsing steps for words and oparator tokens:
+		-	Tokens are marked with defined values to distinguish their purpose.
+			These values can be bitwise ORed so that it is possible to mark and
+			identify multitype tokens. (e.g. "$SHLVL", which is a WORD|DQUOTE|EXPAND)
 
-			1.	Start iterating through input line with an index variabel i = 0.
+			# define EMPTY		0x0000	//	Empty token		""
+			# define WORD		0x0001	//	Simple word		"echo"
+			# define SEMICOLON	0x0002	//	";"
+			# define PIPE		0x0004	//	"|"
+			# define REDIR_IN	0x0008	//	"<"
+			# define REDIR_OUT	0x0010	//	">"
+			# define APPEND		0x0020	//	">>"
+			# define EXPAND		0x0040	//	"$"
+			# define SQUOTE		0x0080	//	"'42'"
+			# define DQUOTE		0x0100	//	""42""
 
-			2.	If line[i] is not a metacharacter then copy the character into a token string.
-				->	token[j] = line[i]
+		-	Basic steps of the tokenizer:
+
+			1.	Start iterating through input line with an index variable i = 0.
+
+			2.	If line[i] has no special meaning then copy the character into the token string.
+				->	token->str[j] = line[i]
 				->	j++;
 				->	i++;
 
-			3.	If line[i] is a space, tab or newline character 
-				and there were non metacharacters read into the token string previously
-				then stop reading the current token and create a new empty token
+			3.	If line[i] is a break ("<>;| \t\n") or a quote ("\"\'") and the current
+				token string is not empty then create a new empty token.
 				(token strings are allocated with ft_calloc so null termination is not needed)
 				->	token->next = ft_calloc(1, sizeof(t_token));
 				->	token = token->next;
 				->	token->str = ft_calloc(strlen(line) - i, sizeof(char));
 
-			4.	If line[i] matches one of those chars in this string ";<>|"
-				then do the same instructions as in step 3.
-				Additionally create a new token which contains the operator character itself.
-				Then make a new empty token.
-				->	token->str[0] = '<'		// example
+			4.	If line[i] is a meta char ("<>;|") then make a token only containing the meta char.
+				Mark the token type depending on the current meta char.
+				Then initialize a new empty token.
+				->	token->str[0] = line[i]
 				->	token->next = ft_calloc(1, sizeof(t_token));
 				->	token = token->next;
 				->	token->str = ft_calloc(strlen(line) - i, sizeof(char));
 			
-			5.	If line[i] is a quote character '\"' or '\'' then minishell
-				checks first if the quotes have a matching closing quote.
-				If so then everything between those quotes gets copied into new token.
-				If there is no second quote of the same type present in the input string then
-				the behaviour results in a syntax error.
+			5.	Quoted input starting with '\"' or '\'' gets tokenized as follows:
+				5.1	If line[i] is a single quote '\'' all characters until the
+					next single quote are copied into the token string.
+					If the quotes are empty '' then return.
+					If end of line was reached and no closing single quote was found,
+					the input is seen as a syntax error.
+				5.2	If line[i] is a double quote '\"' the same instructions are done like
+					processing single quotes.
+					But it is additionally checked for escape characters and variable expansions.
 
 			6.	Basic syntax checks are currently present within the tokenizer.
 				Deep syntax checking will happen at a later stage.
@@ -89,19 +155,6 @@ minishell
 					-	multiple semicolons "echo ;;"
 					-	open quotes	"echo 'abc "
 					-	invalid operators "echo >>>"
-					-	and a bit more...
-	
-		
-		-	Each token gets a value assigned as described below.
-
-			#define EMPTY 0
-			#define WORD 1
-			#define SQUOTE 2
-			#define DQUOTE 4
-			#define SEMICOLON 8
-			#define PIPE 16
-			#deinfe REDIR_IN 32
-			#deinfe REDIR_OUT 64
 
 		-	Let's consider the following input line:
 			// VAR=42
@@ -111,26 +164,25 @@ minishell
 
 			token->str		token->type
 			"echo"		|	WORD
-			"42 is $VAR"|	DQUOTE
+			"42 is $VAR"|	WORD|EXPAND|DQUOTE
 			"-n"		|	WORD
 			"|"			|	PIPE
 			"grep"		|	WORD
-			"1"			|	DQUOTE
+			"1"			|	WORD|DQUOTE
 			"<"			|	REDIR_IN
 			"1.txt"		|	WORD
-			""			|	EMPTY
+			"\n"		|	EMPTY
 
 
-		2.2	Shell Expansions	-	still to do
+		2.2	Shell Expansions	-	in progress
 			
 			-	As stated in the bash manual:
 				"Expansion is performed on the command line after it has been split into tokens."
 			
 			-	Order of expansions:
-				1.	Tilde expansion - dunno if mandatory
-				2.	Parameter and variable expansion
+				1.	Parameter and variable expansion
 					->	$?, $SHLVL, $ARG, "$ARG"
-				3.	Word splitting after expansion
+				2.	Word splitting after expansion
 					-> 	Explicit null arguments ("" or '') are retained and
 						passed to commands as empty strings.
 					-> 	Unquoted implicit null arguments resulting from expansion
@@ -140,35 +192,28 @@ minishell
 					->	When a quoted null argument appears as part of a word whose
 						expansion is non-null, the null argument is removed.
 					->	the word -d'' becomes -d after word splitting and null argument removal.
-				4.	Pathname expansion
-		
-			-	After these expansions are performed, quote characters present in the original
-				word are removed unless they have been quoted themselves
-
-			-	Expansions must be done before building abstract syntax tree
 
 			After expanding the pathnames and variables the token list 
 			will look like this:
 
 			// VAR=42
-				echo "42 is $VAR" -n | grep "1" < 1.txt		# initial command
+				echo "42 is $VAR" -n | grep "1" < 1.txt
 
-			token->str		token->type
+			token->str			token->type
 			"echo"			|	WORD
-			"42 is 42"		|	WORD		<--- Variable expansion
+			"42 is 42"		|	WORD|EXPAND|DQUOTE	<--- Variable expansion
 			"-n"			|	WORD
 			"|"				|	PIPE
-			"/usr/bin/grep"	|	WORD		<--- Path expansion
-			"1"				|	WORD
+			"/usr/bin/grep"	|	WORD				<--- Pathname expansion
+			"1"				|	WORD|DQUOTE
 			"<"				|	REDIR_IN
 			"1.txt"			|	WORD
-			""				|	EMPTY
+			"\n"			|	EMPTY
 		
 		2.3	To do
-				-	Parse backslashes 'echo \"'
 				-	Expand variables 'ARG1=42; echo $ARG1' -> 'echo 42'
 				-	Expand pathnames 'cat file.txt' -> '/usr/bin/cat file.txt'
-				-	Variable assignment
+				-	Variable assignment ???
 					->	info env
 	
 	3.	Build an abstract syntax tree (AST)	-	most of code done - need more tests
@@ -196,9 +241,9 @@ minishell
 			<token list>	::=		<token> <token list>
 								|	(EMPTY)
 
-		-	tokens will be parsed after these grammar rules
+		-	tokens are parsed after these grammar rules
 
-		-	for each grammar rule there will be a function which will check
+		-	for each grammar rule there is function which checks
 			the constellation of tokens recursively.
 
 		-	each node in the tree will be represented by this struct:
@@ -217,24 +262,24 @@ minishell
 			AST_LIST		=	2		//	<job> ';' <command line>
 			AST_REDIR_IN	=	4		//	<simple command> '<' <filename>
 			AST_REDIR_OUT	=	8		//	<simple command> '>' <filename>
-			AST_CMD			=	16		//	<pathname> <token list>	// S_CMD means simple command
-			AST_CMD_ARG		=	32		//	<token> <token list>	// CMD_ARGV means argument vector for a command
+			AST_CMD			=	16		//	<pathname> <token list>
+			AST_CMD_ARG		=	32		//	<token> <token list
 			AST_TOKEN		=	64		//	<token>
 
 		-	Example:
 			Input: echo "42 is $VAR" -n | grep "1" < 1.txt	# VAR equals 42
 			Tokens (after expansion):
 
-					token->str		token.type
-					"echo"			|	WORD
-					"42 is 42"		|	WORD
-					"-n"			|	WORD
-					"|"				|	PIPE
-					"/usr/bin/grep"	|	WORD
-					"1"				|	WORD
-					"<"				|	REDIR_IN
-					"1.txt"			|	WORD
-					""				|	EMPTY
+				token->str			token->type
+				"echo"			|	WORD
+				"42 is 42"		|	WORD|EXPAND|DQUOTE
+				"-n"			|	WORD
+				"|"				|	PIPE
+				"/usr/bin/grep"	|	WORD
+				"1"				|	WORD|DQUOTE
+				"<"				|	REDIR_IN
+				"1.txt"			|	WORD
+				"\n"			|	EMPTY
 
 			AST:
 
@@ -261,7 +306,7 @@ minishell
 
 
 	
-	4.	Execute AST nodes	-	only theory - code still has to be written
+	4.	Execute AST nodes	-	still to do
 
 		-	While reading the AST we will use the following data structure
 			to build the command arguments which we will later pass to execve():
@@ -282,7 +327,7 @@ minishell
 			t_command	*cmd;
 
 			cmd->argc = 3;
-			cmd->argv = {"echo", "42", "21"};
+			cmd->argv = {"echo", "42", "21", NULL};
 
 		-	The executor will start to read the AST from the root node.
 			The root node will decide how the commands will be executed.
@@ -317,9 +362,15 @@ minishell
 			simple command 'echo "42 is 42" -n' as the write end,
 			and the redirection job 'grep "1" < 1.txt' as the read end.
 
-		-	So the following steps have to be done:
+		-	So we need to follow these steps:
 			1.	Create pipe
 			2.	Execute simple command 'echo "42 is 42" -n'
 				->	pipe write end
 			3.	Execute simple command with redirection 'grep "1" < 1.txt'
 				->	pipe read end
+
+
+
+weird inputs:
+
+ls | grep "o" | wc -l > file.out < file.in > errfile

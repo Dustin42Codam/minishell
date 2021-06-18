@@ -3,9 +3,7 @@
 #include <errno.h>
 #include <unistd.h>
 #include <stdlib.h>
-
-# include <stdio.h>
-# include <signal.h>
+#include <stdio.h>
 
 static char	*ft_charjoin(char *line, char const c)
 {
@@ -22,7 +20,7 @@ static char	*ft_charjoin(char *line, char const c)
 	return (str);
 }
 
-ssize_t	read_line(char **line)
+size_t	read_line(char **line)
 {
 	ssize_t	ret;
 	ssize_t	len;
@@ -40,7 +38,7 @@ ssize_t	read_line(char **line)
 			printf("exit\n");
 			break ;
 		}
-		if (ret == -1)
+		if (ret == -1 || errno)
 			exit_shell(errno);
 		*line = ft_charjoin(*line, buf);
 		len += ret;

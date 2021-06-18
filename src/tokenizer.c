@@ -1,7 +1,6 @@
 #include "libft.h"
 #include "minishell.h"
 #include <stdlib.h>
-#include <stdio.h>
 #include <errno.h>
 
 void	free_token_list(t_token *token)
@@ -30,60 +29,47 @@ t_token	*init_token_list(size_t len)
 	return (new_token);
 }
 
-void	init_next_token(t_token **token, size_t len, size_t i)
+void	init_new_token(t_token **token, size_t len, size_t *j)
 {
-	(*token)->next = (t_token *)ft_calloc(1, sizeof(t_token));
-	if (errno)
-		exit_shell(errno);
-	(*token) = (*token)->next;
-	(*token)->str = (char *)ft_calloc(len - i, sizeof(char));
-	if (errno)
-		exit_shell(errno);
+	if (len <= 1)
+		len = 2;
+	if ((*token)->type != EMPTY)
+	{
+		(*token)->next = (t_token *)ft_calloc(1, sizeof(t_token));
+		if (errno)
+			exit_shell(errno);
+		(*token) = (*token)->next;
+		(*token)->str = (char *)ft_calloc(len, sizeof(char));
+		if (errno)
+			exit_shell(errno);
+		(*j) = 0;
+	}
 }
 
-static int	switch_ctype(t_data **data, t_token **token, size_t *i, size_t *j)
+static void	analyze_char(t_data **data, t_token **token, size_t *i, size_t *j)
 {
 	char	c;
-	int		ret;
 
 	c = (*data)->line[(*i)];
-	ret = 0;
-	if (ft_strchr(" \n\t;<>|\"\'", c))
+	if (is_break(c) || is_quote(c))
+		init_new_token(token, (*data)->line_len - (*i), j);
+	if (is_meta(c))
+		make_token_meta(token, data, i, j);
+	else if (is_quote(c))
+		make_token_quote(token, data, i, j);
+	else if (is_blank(c) == NULL && (*data)->error == FALSE)
 	{
-		if ((*j) > 0)
-			init_next_token(token, (*data)->line_len, *i);
-		if (ft_strchr("<>|;", c))
-			ret = token_meta(token, data, i, c);
-		else if (ft_strchr("\"\'", c))
-			ret = token_quote(token, data, i, c);
-		(*j) = 0;
-		return (ret);
-	}
-	else
-	{
+		if (c == '\\')
+		{
+			(*i)++;
+			c = (*data)->line[(*i)];
+		}
+		else if (c == '$')
+			(*token)->type |= EXPAND;
 		(*token)->str[(*j)] = c;
-		(*token)->id = WORD;
+		if (is_end(c) == NULL)
+			(*token)->type |= WORD;
 		(*j)++;
-	}
-	return (0);
-}
-
-void	handle_quotes(t_data *data)
-{
-	/**
-	 * - parsing quotes -
-	 * still has to be done
-	 * currently just setting all quote token ids
-	 * to zero so i can build and test the abstract syntax tree
-	**/
-	data->token_ptr = data->token;
-	while (data->token_ptr)
-	{
-		if (data->token_ptr->id == SQUOTE || 
-			data->token_ptr->id == DQUOTE)
-			data->token_ptr->id = WORD;
-		// if (data->token_ptr->next->)
-		data->token_ptr = data->token_ptr->next;
 	}
 }
 
@@ -97,12 +83,16 @@ int	tokenizer(t_data **data, char *line)
 	j = 0;
 	(*data)->token = init_token_list((*data)->line_len);
 	tmp_token = (*data)->token;
-	while (line[i]/*  != '\n' */)
+	while (line[i] && (*data)->error == FALSE)
 	{
-		if (switch_ctype(data, &tmp_token, &i, &j))
-			return (1);
+		analyze_char(data, &tmp_token, &i, &j);
 		i++;
 	}
-	handle_quotes(*data);
-	return (0);
+	if ((*data)->error == TRUE)
+	{
+		(*data)->error = FALSE;
+		return (EXIT_FAILURE);
+	}
+	print_token_types((*data)->token);
+	return (EXIT_SUCCESS);
 }

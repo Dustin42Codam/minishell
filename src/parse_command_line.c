@@ -10,7 +10,7 @@
 **/
 t_astree	*parse_command_line(t_data *data)
 {
-	t_astree	*cmd_line_node;
+	t_astree	*command_line;
 	t_token		*save;
 
 	save = data->token_ptr;			/**
@@ -19,19 +19,19 @@ t_astree	*parse_command_line(t_data *data)
 									* with the initial state of data->token_ptr value.
 									**/
 
-	cmd_line_node = parse_cmd_line_sequence(data);
-	if (cmd_line_node)
-		return (cmd_line_node);
+	command_line = parse_cmd_line_sequence(data);
+	if (command_line)
+		return (command_line);
 
 	data->token_ptr = save;
-	cmd_line_node = parse_cmd_line_semi(data);
-	if (cmd_line_node)
-		return (cmd_line_node);
+	command_line = parse_cmd_line_semi(data);
+	if (command_line)
+		return (command_line);
 
 	data->token_ptr = save;
-	cmd_line_node = parse_job(data);
-	if (cmd_line_node)
-		return (cmd_line_node);
+	command_line = parse_job(data);
+	if (command_line)
+		return (command_line);
 	
 
 	/**

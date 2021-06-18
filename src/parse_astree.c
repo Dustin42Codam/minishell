@@ -5,9 +5,9 @@
 
 int	get_next_token(t_data *data, char **token_str, int token_type)
 {
-	if (data->token_ptr->id == EMPTY)
+	if (data->token_ptr->type == EMPTY)
 		return (EXIT_FAILURE);
-	else if (data->token_ptr->id == token_type)
+	else if (data->token_ptr->type == token_type)
 	{
 		if (token_str)
 		{

@@ -20,10 +20,12 @@ OS = $(shell uname)
 
 #all the files
 
-SRC = main.c exit_shell.c tokenizer.c init_data.c \
-	tokenizer_utils.c read_line.c \
+SRC = main.c exit_shell.c init_data.c read_line.c \
+	tokenizer.c tokenizer_utils_1.c tokenizer_utils_2.c tokenizer_utils_3.c \
+	token_debug.c \
 	parse_astree.c astree_utils.c \
-	parse_command_line.c parse_job.c parse_command.c parse_simple_command.c
+	parse_command_line.c parse_job.c parse_command.c parse_simple_command.c \
+	execute.c execute_utils.c
 
 
 

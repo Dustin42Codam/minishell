@@ -32,6 +32,8 @@ char	**copy_envp(char **envp)
 	char	**copy;
 
 	len = 0;
+	if (envp == NULL)
+		return (NULL);
 	while (envp[len])
 		len++;
 	copy = (char **)ft_calloc(len + 1, sizeof(char *));

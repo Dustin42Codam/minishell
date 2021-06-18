@@ -55,7 +55,7 @@ t_astree	*parse_command_redir_in(t_data *data)
 	operator = (t_astree *)ft_calloc(1, sizeof(t_astree));
 	if (errno)
 		exit_shell(errno);
-	init_ast_node(operator, filename, AST_REDIR_IN);	//test redundancy with AST_REDIR_IN
+	init_ast_node(operator, filename, AST_REDIR_IN);
 	insert_ast_node(operator, NULL, simple_command);
 	return (operator);
 }
@@ -83,7 +83,7 @@ t_astree	*parse_command_redir_out(t_data *data)
 	operator = (t_astree *)ft_calloc(1, sizeof(t_astree));
 	if (errno)
 		exit_shell(errno);
-	init_ast_node(operator, filename, AST_REDIR_OUT);	//test redundancy with AST_REDIR_IN
+	init_ast_node(operator, filename, AST_REDIR_OUT);
 	insert_ast_node(operator, NULL, simple_command);
 	return (operator);
 }
