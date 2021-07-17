@@ -16,7 +16,6 @@ void	free_data(t_data *data)
 	}
 	free(data->env);
 	data->env = NULL;
-
 	if (data->line)
 	{
 		free(data->line);
@@ -36,9 +35,7 @@ char	**copy_envp(char **envp)
 		return (NULL);
 	while (envp[len])
 		len++;
-	copy = (char **)ft_calloc(len + 1, sizeof(char *));
-	if (errno)
-		exit_shell(errno);
+	copy = (char **)secure_calloc(len + 1, sizeof(char *));
 	len = 0;
 	while (envp[len])
 	{
@@ -54,9 +51,7 @@ t_data	*init_data(char **envp)
 {
 	t_data	*data;
 
-	data = (t_data *)ft_calloc(1, sizeof(t_data));
-	if (errno)
-		exit_shell(errno);
+	data = (t_data *)secure_calloc(1, sizeof(t_data));
 	data->env = copy_envp(envp);
 	return (data);
 }

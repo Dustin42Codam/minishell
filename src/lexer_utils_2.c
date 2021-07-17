@@ -1,20 +1,21 @@
 #include "minishell.h"
+#include "lexer.h"
 #include "libft.h"
 
 int	get_token_type(char *s)
 {
 	if (s[0] == ' ')
 		return (WORD);
-	else if (s[0] == ';')
-		return (SEMICOLON);
 	else if (s[0] == '|')
 		return (PIPE);
+	else if (s[0] == '<' && s[1] == '<')
+		return (HERE_DOC);
 	else if (s[0] == '<')
 		return (REDIR_IN);
-	else if (s[0] == '>')
-		return (REDIR_OUT);
 	else if (s[0] == '>' && s[1] == '>')
 		return (APPEND);
+	else if (s[0] == '>')
+		return (REDIR_OUT);
 	else if (s[0] == '$')
 		return (EXPAND);
 	else if (s[0] == '\'')
@@ -22,11 +23,6 @@ int	get_token_type(char *s)
 	else if (s[0] == '\"')
 		return (DQUOTE);
 	return (EMPTY);
-}
-
-char	*is_escape(char c)
-{
-	return (ft_strchr(ESCAPE_CHAR, c));
 }
 
 char	*is_specvar(char c)

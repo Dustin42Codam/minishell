@@ -21,11 +21,14 @@ OS = $(shell uname)
 #all the files
 
 SRC = main.c exit_shell.c init_data.c read_line.c \
-	tokenizer.c tokenizer_utils_1.c tokenizer_utils_2.c tokenizer_utils_3.c \
-	token_debug.c \
-	parse_astree.c astree_utils.c \
-	parse_command_line.c parse_job.c parse_command.c parse_simple_command.c \
-	execute.c execute_utils.c
+	lexer.c lexer_utils_1.c lexer_utils_2.c \
+	make_token_meta.c make_token_quote.c \
+	expand_variables.c expand_utils_1.c expand_utils_2.c \
+	split_words.c word_splitter.c \
+	parser.c parser_utils.c \
+	parse_pipeline.c parse_word_list.c parse_command.c parse_redirection.c \
+	execute.c execute_utils.c search_command.c \
+	secure_calloc.c
 
 
 
@@ -66,7 +69,7 @@ DBG := $(patsubst %,$(DDIR)/%,$(OBJ))
 C_DEBUG := -g -Wall -Werror -Wextra -fsanitize=address $(HEADER)
 C_DEBUG_1 := -g $(HEADER) -D DEBUG_1=1
 C_DEBUG_2 := -g -Wall -Werror -Wextra $(HEADER) -D DEBUG_2=1
-C_REGULAR := -Wall -Werror -Wextra $(HEADER)
+C_REGULAR := -g -Wall -Wextra $(HEADER)
 
 #nasm compiler
 

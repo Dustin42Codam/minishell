@@ -1,4 +1,5 @@
 #include "minishell.h"
+#include "lexer.h"
 #include "libft.h"
 
 char	*is_meta(char c)
@@ -18,10 +19,10 @@ char	*is_quote(char c)
 
 char	*is_expansion(char c)
 {
-	return (ft_strchr(EXP_CHAR, c));
+	return (ft_strchr(EXPANSION_CHAR, c));
 }
 
-char	*is_bsdquote(char c)
+int	is_valid_expansion(char *str)
 {
-	return (ft_strchr(BSDQUOTE_CHAR, c));
+	return (str[0] == '$' && str[1] && str[1] != ' ');
 }

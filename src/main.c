@@ -1,10 +1,12 @@
 #include "minishell.h"
+#include "lexer.h"
+#include "parser.h"
+#include "executor.h"
 #include "libft.h"
 #include <errno.h>
 #include <stdlib.h>
 #include <unistd.h>
 #include <limits.h>
-#include <signal.h>
 #include <stdio.h>
 
 static void	print_prompt(void)
@@ -38,35 +40,15 @@ int	main(int argc, char *argv[], char **envp)
 	{
 		print_prompt();
 		data->line_len = read_line(&data->line);
-		
-		/**
-		 *  fake ctrl - d exit condition to be able to check for memleaks
-		 * 	just use for debugging - delete later
-		**/
 		if (data->line_len == 0)
 			break ;
-
-		if (tokenizer(&data, data->line) == EXIT_FAILURE)
+		if (lexer(&data, data->line) == EXIT_FAILURE)
 			printf("Syntax error!\n");
 		else
 		{
-			#ifdef DEBUG_2
-				t_token *token;
-				token = data->token;
-				while (token)
-				{
-					// printf("[%s] [%d] [%d]\n", token->str, token->bitmask, token->type);
-					analyze_token(token);
-					token = token->next;
-				}
-				free(data->line);
-				data->line = NULL;
-				free_token_list(data->token);
-				continue ;
-			#endif
-			// parse_astree(data);
-			// execute(data);
-			// delete_ast(data->astree);
+			parser(data);
+			execute(data);
+			delete_ast(data->astree);
 			free_token_list(data->token);
 		}
 		free(data->line);

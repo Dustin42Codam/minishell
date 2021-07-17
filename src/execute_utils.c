@@ -1,4 +1,6 @@
 #include "minishell.h"
+#include "executor.h"
+#include "parser.h"
 #include "libft.h"
 #include <errno.h>
 #include <unistd.h>
@@ -6,7 +8,7 @@
 #include <sys/types.h>
 #include <sys/wait.h>
 
-void free_command_argv(t_command *cmd)
+void	free_command_argv(t_command *cmd)
 {
 	size_t	i;
 
@@ -21,31 +23,31 @@ void free_command_argv(t_command *cmd)
 	cmd = NULL;
 }
 
-void make_command_argv(t_astree *node, t_command *cmd)
+void	make_command_argv(t_data *data, t_astree *node, t_command *cmd)
 {
 	t_astree	*tmp;
 
 	cmd->argc = 0;
 	tmp = node;
-	while (tmp && tmp->type & (AST_CMD_ARG | AST_CMD))
+	while (tmp && tmp->type & (AST_WORD))
 	{
 		cmd->argc++;
 		tmp = tmp->right;
 	}
-	cmd->argv = (char **)ft_calloc(cmd->argc + 1, sizeof(char*));
-	if (errno)
-		exit_shell(errno);
-
+	cmd->argv = (char **)secure_calloc(cmd->argc + 1, sizeof(char *));
 	cmd->argc = 0;
 	tmp = node;
-	while (tmp && tmp->type & (AST_CMD_ARG | AST_CMD))
+	while (tmp && tmp->type & (AST_WORD))
 	{
+		if (cmd->argc == 0)
+			search_command(tmp);
 		cmd->argv[cmd->argc] = ft_strdup(tmp->str);
 		if (errno)
 			exit_shell(errno);
 		cmd->argc++;
 		tmp = tmp->right;
 	}
+	(void)data;
 }
 
 void	execute_command_argv(t_command *cmd, char **env)

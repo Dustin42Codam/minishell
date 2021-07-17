@@ -1,5 +1,7 @@
 #include "libft.h"
 #include "minishell.h"
+#include "lexer.h"
+#include "expansion.h"
 #include <stdlib.h>
 #include <errno.h>
 
@@ -20,12 +22,8 @@ t_token	*init_token_list(size_t len)
 {
 	t_token	*new_token;
 
-	new_token = (t_token *)ft_calloc(len + 1, sizeof(t_token));
-	if (errno)
-		exit_shell(errno);
-	new_token->str = (char *)ft_calloc(len + 1, sizeof(char));
-	if (errno)
-		exit_shell(errno);
+	new_token = (t_token *)secure_calloc(len + 1, sizeof(t_token));
+	new_token->str = (char *)secure_calloc(len + 1, sizeof(char));
 	return (new_token);
 }
 
@@ -35,13 +33,9 @@ void	init_new_token(t_token **token, size_t len, size_t *j)
 		len = 2;
 	if ((*token)->type != EMPTY)
 	{
-		(*token)->next = (t_token *)ft_calloc(1, sizeof(t_token));
-		if (errno)
-			exit_shell(errno);
+		(*token)->next = (t_token *)secure_calloc(1, sizeof(t_token));
 		(*token) = (*token)->next;
-		(*token)->str = (char *)ft_calloc(len, sizeof(char));
-		if (errno)
-			exit_shell(errno);
+		(*token)->str = (char *)secure_calloc(len, sizeof(char));
 		(*j) = 0;
 	}
 }
@@ -59,21 +53,17 @@ static void	analyze_char(t_data **data, t_token **token, size_t *i, size_t *j)
 		make_token_quote(token, data, i, j);
 	else if (is_blank(c) == NULL && (*data)->error == FALSE)
 	{
-		if (c == '\\')
-		{
-			(*i)++;
-			c = (*data)->line[(*i)];
-		}
-		else if (c == '$')
+		if (is_valid_expansion((*data)->line + (*i)))
 			(*token)->type |= EXPAND;
 		(*token)->str[(*j)] = c;
 		if (is_end(c) == NULL)
 			(*token)->type |= WORD;
 		(*j)++;
 	}
+	(*data)->token_mask |= (*token)->type;
 }
 
-int	tokenizer(t_data **data, char *line)
+int	lexer(t_data **data, char *line)
 {
 	t_token		*tmp_token;
 	size_t		i;
@@ -93,6 +83,7 @@ int	tokenizer(t_data **data, char *line)
 		(*data)->error = FALSE;
 		return (EXIT_FAILURE);
 	}
-	print_token_types((*data)->token);
+	if ((*data)->token_mask & EXPAND)
+		expand_variables(*data);
 	return (EXIT_SUCCESS);
 }
