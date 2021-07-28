@@ -1,46 +1,46 @@
+#include "terminal_capabilities.h"
 #include "minishell.h"
+#include "lexer.h"
+#include "parser.h"
+#include "executor.h"
 #include "libft.h"
 #include <errno.h>
 #include <stdlib.h>
-#include <unistd.h>
-#include <limits.h>
+#include <curses.h>
+#include <term.h>
 
-static void	print_prompt(void)
+static void	init_terminal(struct termios *term)
 {
-	char	*cwd;
+	char		*term_name;
 
-	cwd = getcwd(0, PATH_MAX);
-	if (cwd)
-	{
-		ft_putstr(BGRN);
-		ft_putstr("@minishell");
-		ft_putstr(WHT);
-		ft_putchar(':');
-		ft_putstr(BBLU);
-		ft_putstr(cwd);
-		ft_putstr(WHT);
-		ft_putstr("$ ");
-		ft_putstr(END);
-		free(cwd);
-	}
-	if (errno)
-		exit_shell(errno);
+	term_name = getenv("TERM");
+	if (term_name == NULL)
+		exit_minishell(errno);
+	tcgetattr(0, term);
+	term->c_lflag &= ~(ECHO);
+	term->c_lflag &= ~(ICANON);
+	term->c_lflag &= ~(VERASE);
+	term->c_cc[VMIN] = 1;
+	term->c_cc[VTIME] = 0;
+	tcsetattr(0, TCSANOW, term);
+	if (tgetent(0, term_name) == -1)
+		exit_minishell_custom("Name of type of terminal is unknown fix $env\n");
 }
 
 int	main(int argc, char *argv[], char **envp)
 {
-	t_data	*data;
+	struct termios	term;
+	t_prompt		*prompt;
+	t_data			*data;
 
+	init_terminal(&term);
+	init_prompt(&prompt);
 	data = init_data(envp);
-	while (1)
-	{
-		print_prompt();
-		data->line_len = read_line(&data->line);
-		free(data->line);
-		data->line = NULL;
-	}
+	data->prompt = prompt;
+	if (argc == 1)
+		interactive_shell(data);
+	else
+		non_interactive_shell(data, argc, argv);
 	free_data(data);
-	(void)argc;
-	(void)argv;
 	return (0);
 }

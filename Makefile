@@ -20,37 +20,82 @@ OS = $(shell uname)
 
 #all the files
 
-SRC = main.c exit_shell.c read_line.c init_data.c
+SRC = main.c \
+	minishell.c \
+	exit_shell.c \
+	signals.c \
+	utiles.c \
+	init_data.c \
+	minishell_calloc.c \
+	increment_shlvl.c \
+	built_in_functions/builtin_echo.c \
+	built_in_functions/builtin_env.c \
+	built_in_functions/builtin_pwd.c \
+	terminal_capabilities/0_read_line.c \
+	terminal_capabilities/DLL_history.c \
+	terminal_capabilities/DLL_input_line.c \
+	terminal_capabilities/DLL_input_line_2.c \
+	terminal_capabilities/DLL_input_line_3.c \
+	terminal_capabilities/del_char.c \
+	terminal_capabilities/functions_calling_termcap_database.c \
+	terminal_capabilities/functions_calling_termcap_database_2.c \
+	terminal_capabilities/get_functions.c \
+	terminal_capabilities/get_functions_2.c \
+	terminal_capabilities/get_functions_3.c \
+	terminal_capabilities/get_functions_4.c \
+	terminal_capabilities/get_functions_5.c \
+	terminal_capabilities/history_behaviur.c \
+	terminal_capabilities/init_functions.c \
+	terminal_capabilities/free_functions.c \
+	terminal_capabilities/is_functions_keys.c \
+	terminal_capabilities/is_functions_2.c \
+	terminal_capabilities/is_functions_3.c \
+	terminal_capabilities/is_functions_4.c \
+	terminal_capabilities/move_cursor_left.c \
+	terminal_capabilities/move_cursor_right.c \
+	terminal_capabilities/print_functions.c \
+	terminal_capabilities/print_functions_2.c \
+	terminal_capabilities/termcap_utils.c \
+	terminal_capabilities/functions_calling_termcap_database_3.c \
+	terminal_capabilities/DLL_input_line_4.c \
+	terminal_capabilities/DLL_history_2.c \
+	lexer/lexer.c \
+	lexer/lexer_utils_1.c \
+	lexer/lexer_utils_2.c \
+	lexer/make_token_meta.c \
+	lexer/make_token_quote.c \
+	lexer/expand_variables.c \
+	lexer/expand_utils_1.c \
+	lexer/expand_utils_2.c \
+	lexer/split_words.c \
+	lexer/word_splitter.c \
+	lexer/quote_removal.c \
+	parser/parser.c \
+	parser/parser_utils.c \
+	parser/parse_pipeline.c \
+	parser/parse_word_list.c \
+	parser/parse_command.c \
+	parser/parse_redirection.c \
+	executor/execute.c \
+	executor/execute_builtin.c \
+	executor/execute_utils.c \
+	executor/search_command.c \
+	environ/environ.c \
+	environ/environ_utils.c
 
+OBJ = $(addprefix $(ODIR)/$(SDIR)/, $(SRC:.c=.o))
 
-TEST = test_tokenizer.c
-
-OBJ = $(SRC:.c=.o)
-
-SRCS = $(addprefix $(SDIR)/, $(SRC))
-OBJS = $(addprefix $(ODIR)/, $(OBJ))
-TESTS = $(addprefix $(TDIR)/, $(TEST))
+#SRCS = $(addprefix $(SDIR)/, $(SRC))
+#OBJS = $(addprefix $(ODIR)/, $(OBJ))
+#TESTS = $(addprefix $(TDIR)/, $(TEST))
 
 LIBFT = libft
-
-LIBS = -L $(LIBFT) -lft
+TERMCAPS = -ltermcap
+LIBS = -L $(LIBFT) -lft $(TERMCAPS)
 
 #headers aka dependencys
 
 HEADER := -I $(IDIR) -I $(LIBFT)
-
-#check what os we are one 
-
-#ifeq ($(OS), Linux)
-#	NASM_FLAGS := -felf64 -I$(IDIR)
-#	#need to change this
-#	LIB := -L/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/lib -lSystem
-#else
-#	NASM_FLAGS := -fmacho64 -I$(IDIR)
-#	LIB := -L/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/lib -lSystem
-#endif
-
-# set paths
 
 # OBJ := $(patsubst %,$(ODIR)/%,$(OBJ))
 DBG := $(patsubst %,$(DDIR)/%,$(OBJ))
@@ -58,11 +103,11 @@ DBG := $(patsubst %,$(DDIR)/%,$(OBJ))
 #flags
 
 C_DEBUG := -g -Wall -Werror -Wextra -fsanitize=address $(HEADER)
-C_REGULAR := -g -Wall $(HEADER)
+C_REGULAR := -Wall -Werror -Wextra -g $(HEADER)
 
 #nasm compiler
 
-CC := clang
+CC := clang 
 
 #if bonus
 
@@ -82,14 +127,19 @@ endif
 
 all: $(NAME)
 
-$(NAME): $(LIBFT)/libft.a $(OBJS)
+$(NAME): $(LIBFT)/libft.a $(OBJ)
 	@echo "${GREEN}Building minishell${NC}"
-	@$(CC) $(FLAGS) $(OBJS) $(LIBS) -o $(NAME)
+	@$(CC) $(FLAGS) $(OBJ) $(LIBS) -o $(NAME)
 	@echo "${GREEN}minishell ready!${NC}"
 
-$(OBJS): $(ODIR)/%.o: $(SDIR)/%.c
-	@mkdir -p $(ODIR)
-	@$(CC) $(FLAGS) -c $< -o $@
+$(ODIR)/%.o: %.c
+	@mkdir -p $(ODIR)/$(SDIR)/built_in_functions \
+		$(ODIR)/$(SDIR)/terminal_capabilities \
+		$(ODIR)/$(SDIR)/lexer \
+		$(ODIR)/$(SDIR)/parser \
+		$(ODIR)/$(SDIR)/executor \
+		$(ODIR)/$(SDIR)/environ
+	@$(CC) $(FLAGS) $(HEADER) -c $< -o $@
 
 $(LIBFT)/libft.a:
 	@echo "${GREEN}Building libft${NC}"
@@ -101,23 +151,36 @@ clean:
 	@rm -rf $(ODIR)
 	@echo "${RED}Cleaning libft!${NC}"
 	@make -C $(LIBFT) clean
+	@cd tests && bash test_all.sh --cleanup
 
 fclean: clean
 	@echo "${RED}Deleting minishell!${NC}"
 	@rm -rf $(NAME)
 	@echo "${RED}Deleting libft!${NC}"
 	@make -C $(LIBFT) fclean
-	@rm -f test_*.out
 
 re: fclean all
 
 run: all
 	@./$(NAME)
 
-test: $(OBJS) $(LIBFT)/libft.a
-	@echo "${BLUE}No test cases available!${NC}"
+test_expansions: all
+	cd $(TDIR)/expansions && bash test_expansions.sh
+
+test_environ: all
+	cd $(TDIR)/environ && bash test_environ.sh
+
+test_echo: all
+	cd $(TDIR)/echo && bash test_echo.sh
+
+test_all: all
+	cd tests && bash test_all.sh
+
+valgrind: debug_1
+	valgrind --leak-check=full --show-leak-kinds=all --track-origins=yes \
+		./$(NAME)
 
 debug: fclean
 	@make DEBUG=1
 
-.PHONY: all bonus test clean fclean re run
+.PHONY: all bonus clean fclean re run
