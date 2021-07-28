@@ -11,7 +11,15 @@
 		"param.h": "c",
 		"vlimit.h": "c",
 		"resource.h": "c",
-		"structs.h": "c"
+		"structs.h": "c",
+		"libft.h": "c",
+		"minishell.h": "c",
+		"expansion.h": "c",
+		"array": "c",
+		"string": "c",
+		"string_view": "c",
+		"ranges": "c",
+		"lexer.h": "c"
 	},
 	"spellright.language": [
 		"en_US"

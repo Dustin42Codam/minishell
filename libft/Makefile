@@ -38,7 +38,7 @@ ifdef DEBUG
 else ifdef FAST
 	CFLAGS =-Wall -Werror -Wextra -O3
 else
-	CFLAGS =-Wall -Werror -Wextra
+	CFLAGS =-Wall -Werror -Wextra -g
 endif
 
 

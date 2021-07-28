@@ -5,10 +5,11 @@
 		"name": "(gdb) Launch",
 		"type": "cppdbg",
 		"request": "launch",
-		"program": "${workspaceFolder}/minishell",
+		"program": "/home/dustin/Projects/minishell_cd/minishell",
+		// "program": "${workspaceFolder}/tests/environ/test_environ.out",
 		"args": [],
 		"stopAtEntry": false,
-		"cwd": "${fileDirname}",
+		"cwd": "/home/dustin/Projects/minishell_cd",
 		"environment": [],
 		"externalConsole": false,
 		"MIMode": "gdb",
@@ -21,6 +22,4 @@
 		]
 	}
 	]
-	// "program": "${workspaceFolder}/minishell",
-
 }

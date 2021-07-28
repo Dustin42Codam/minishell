@@ -14,7 +14,7 @@ int	get_next_token(t_data *data, char **token_str, int token_type)
 		if (token_str)
 		{
 			*token_str = ft_strdup(data->token_ptr->str);
-			if (errno)
+			if (*token_str == NULL)
 				exit_shell(errno);
 		}
 		data->token_ptr = data->token_ptr->next;

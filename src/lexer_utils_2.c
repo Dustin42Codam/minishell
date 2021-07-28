@@ -1,4 +1,3 @@
-#include "minishell.h"
 #include "lexer.h"
 #include "libft.h"
 
@@ -25,9 +24,9 @@ int	get_token_type(char *s)
 	return (EMPTY);
 }
 
-char	*is_specvar(char c)
+int	is_special_expansion(char *str)
 {
-	return (ft_strchr(SPECIAL_VAR_CHAR, c));
+	return (str[0] == '$' && str[1] && str[1] == '?');
 }
 
 char	*is_blank(char c)
@@ -35,7 +34,24 @@ char	*is_blank(char c)
 	return (ft_strchr(BLANK_CHAR, c));
 }
 
-char	*is_end(char c)
+char	*is_break(char c)
 {
-	return (ft_strchr(END_CHAR, c));
+	return (ft_strchr(BREAK_CHAR, c));
+}
+
+void	get_exit_status(t_data **data, t_token **token, size_t *i, size_t *j)
+{
+	size_t	index;
+	char	*str;
+
+	index = 0;
+	str = ft_itoa((*data)->exit_status);
+	while (str[index])
+	{
+		(*token)->str[(*j)] = str[index];
+		(*j)++;
+		index++;
+	}
+	(*i)++;
+	(*token)->type |= WORD;
 }

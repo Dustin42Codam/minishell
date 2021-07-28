@@ -1,8 +1,6 @@
 #include "minishell.h"
 #include "parser.h"
 #include "lexer.h"
-#include "libft.h"
-#include <errno.h>
 
 /**
  *	<word list>		::=	<word>
@@ -10,8 +8,8 @@
 **/
 t_astree	*parse_word_list(t_data *data)
 {
-	t_astree	*child_token;
-	t_astree	*parent_token;
+	t_astree	*child_node;
+	t_astree	*parent_node;
 	t_token		*token_backup;
 	char		*word_string;
 
@@ -21,9 +19,9 @@ t_astree	*parse_word_list(t_data *data)
 		data->token_ptr = token_backup;
 		return (NULL);
 	}
-	child_token = parse_word_list(data);
-	parent_token = (t_astree *)secure_calloc(1, sizeof(t_astree));
-	init_ast_node(parent_token, word_string, AST_WORD);
-	insert_ast_node(parent_token, NULL, child_token);
-	return (parent_token);
+	child_node = parse_word_list(data);
+	parent_node = (t_astree *)secure_calloc(1, sizeof(t_astree));
+	init_ast_node(parent_node, word_string, AST_WORD);
+	insert_ast_node(parent_node, NULL, child_node);
+	return (parent_node);
 }

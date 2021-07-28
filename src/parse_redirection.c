@@ -1,8 +1,6 @@
 #include "minishell.h"
-#include "libft.h"
 #include "parser.h"
 #include "lexer.h"
-#include <errno.h>
 
 /**
  * parse_redirection - creates a AST node for <redirection>

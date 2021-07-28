@@ -1,8 +1,5 @@
 #include "minishell.h"
 #include "parser.h"
-#include "lexer.h"
-#include "libft.h"
-#include <errno.h>
 
 /**
  * parse_command - creates a AST node for a <command>

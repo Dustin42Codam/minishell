@@ -1,13 +1,13 @@
 #include "minishell.h"
 #include "libft.h"
-#include <sys/types.h>
+#include "environ.h"
+#include "builtins.h"
 #include <sys/stat.h>
 #include <unistd.h>
 #include <errno.h>
-#include 	<stdio.h>
-#include 	<stdlib.h>
+#include <stdlib.h>
 
-char	*get_try_path(char *file, char *path)
+static char	*get_try_path(char *file, char *path)
 {
 	char	*try_path;
 	size_t	len;
@@ -20,16 +20,37 @@ char	*get_try_path(char *file, char *path)
 	return (try_path);
 }
 
-void	search_command(t_astree *node)
+static int	check_if_builtin(char *s)
+{
+	if (ft_strncmp("echo", s, 5) == 0)
+		return (ECHO);
+	else if (ft_strncmp("cd", s, 3) == 0)
+		return (CD);
+	else if (ft_strncmp("pwd", s, 4) == 0)
+		return (PWD);
+	else if (ft_strncmp("export", s, 7) == 0)
+		return (EXPORT);
+	else if (ft_strncmp("unset", s, 6) == 0)
+		return (UNSET);
+	else if (ft_strncmp("env", s, 4) == 0)
+		return (ENV);
+	else if (ft_strncmp("exit", s, 5) == 0)
+		return (EXIT);
+	return (0);
+}
+
+int	search_command(t_astree *node, t_environ *env)
 {
 	struct stat	statbuf;
 	char		**path;
 	char		*try_path;
 	int			i;
+	int			builtin_id;
 
-	if (ft_strchr(node->str, '/'))
-		return ;
-	path = ft_split(getenv("PATH"), ':');
+	builtin_id = check_if_builtin(node->str);
+	if (ft_strchr(node->str, '/') || builtin_id)
+		return (builtin_id);
+	path = ft_split(environ_get(env, "PATH"), ':');
 	i = 0;
 	while (path[i])
 	{
@@ -39,9 +60,10 @@ void	search_command(t_astree *node)
 			free(node->str);
 			node->str = try_path;
 			errno = 0;
-			return ;
+			return (0);
 		}
 		free(try_path);
 		i++;
 	}
+	return (0);
 }

@@ -1,9 +1,9 @@
 #include "minishell.h"
 #include "executor.h"
 #include "parser.h"
+#include "environ.h"
 #include "libft.h"
 #include <errno.h>
-#include <unistd.h>
 #include <stdlib.h>
 #include <sys/types.h>
 #include <sys/wait.h>
@@ -40,27 +40,29 @@ void	make_command_argv(t_data *data, t_astree *node, t_command *cmd)
 	while (tmp && tmp->type & (AST_WORD))
 	{
 		if (cmd->argc == 0)
-			search_command(tmp);
+			cmd->builtin_id = search_command(tmp, data->env);
 		cmd->argv[cmd->argc] = ft_strdup(tmp->str);
-		if (errno)
+		if (cmd->argv[cmd->argc] == NULL)
 			exit_shell(errno);
 		cmd->argc++;
 		tmp = tmp->right;
 	}
-	(void)data;
+	cmd->env = data->env;
 }
 
-void	execute_command_argv(t_command *cmd, char **env)
+int	execute_command_argv(t_command *cmd, t_environ *env)
 {
 	pid_t	pid;
 	int		statloc;
+	char	**env_array;
 
+	env_array = environ_get_array(env);
 	pid = fork();
-	if (errno)
+	if (pid == -1)
 		exit_shell(errno);
 	else if (pid == 0)
 	{
-		if (execve(cmd->argv[0], cmd->argv, env) == -1)
+		if (execve(cmd->argv[0], cmd->argv, env_array) == -1)
 			exit_shell(errno);
 	}
 	else
@@ -68,4 +70,5 @@ void	execute_command_argv(t_command *cmd, char **env)
 		wait(&statloc);
 	}
 	free_command_argv(cmd);
+	return (0);
 }

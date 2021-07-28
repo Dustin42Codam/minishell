@@ -16,26 +16,24 @@ static void	print_prompt(void)
 	cwd = getcwd(NULL, PATH_MAX);
 	if (cwd)
 	{
-		ft_putstr(BGRN);
+		ft_putstr(GREEN);
 		ft_putstr("@minishell");
-		ft_putstr(WHT);
+		ft_putstr(WHITE);
 		ft_putchar(':');
-		ft_putstr(BBLU);
+		ft_putstr(BLUE);
 		ft_putstr(cwd);
-		ft_putstr(WHT);
+		ft_putstr(WHITE);
 		ft_putstr("$ ");
-		ft_putstr(END);
+		ft_putstr(RESET);
 		free(cwd);
 	}
 	if (errno)
 		exit_shell(errno);
 }
 
-int	main(int argc, char *argv[], char **envp)
+static void	interactive_mode(t_data *data)
 {
-	t_data	*data;
-
-	data = init_data(envp);
+	data->interactive = TRUE;
 	while (1)
 	{
 		print_prompt();
@@ -54,8 +52,17 @@ int	main(int argc, char *argv[], char **envp)
 		free(data->line);
 		data->line = NULL;
 	}
-	(void)argc;
-	(void)argv;
+}
+
+int	main(int argc, char *argv[], char **envp)
+{
+	t_data	*data;
+
+	data = init_data(envp);
+	if (argc == 1)
+		interactive_mode(data);
+	else
+		non_interactive_mode(data, argc, argv);
 	free_data(data);
 	return (0);
 }

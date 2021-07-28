@@ -1,7 +1,6 @@
-#include <stdlib.h>
-#include <errno.h>
-#include "libft.h"
 #include "minishell.h"
+#include "libft.h"
+#include <stdlib.h>
 
 static size_t	get_array_size(char const *s, const char *delim)
 {

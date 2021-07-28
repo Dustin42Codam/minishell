@@ -1,9 +1,8 @@
-#include "libft.h"
 #include "minishell.h"
+#include "libft.h"
 #include <errno.h>
 #include <unistd.h>
 #include <stdlib.h>
-#include <stdio.h>
 
 static char	*ft_charjoin(char *line, char const c)
 {
@@ -32,10 +31,7 @@ size_t	read_line(char **line)
 	{
 		ret = read(0, &buf, 1);
 		if (ret == 0 && len == 0)
-		{
-			// printf("exit\n");
 			break ;
-		}
 		if (ret == -1 || errno)
 			exit_shell(errno);
 		*line = ft_charjoin(*line, buf);

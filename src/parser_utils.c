@@ -1,8 +1,6 @@
 #include "minishell.h"
-#include "libft.h"
 #include "parser.h"
 #include "lexer.h"
-#include <errno.h>
 #include <stdlib.h>
 
 void	init_ast_node(t_astree *node, char *arg, int type)

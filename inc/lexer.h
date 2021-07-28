@@ -10,9 +10,7 @@
 # define BREAK_CHAR			"<>| \t\n"
 # define QUOTE_CHAR			"\"\'"
 # define EXPANSION_CHAR		"$"
-# define SPECIAL_VAR_CHAR	"?"
 # define BLANK_CHAR			"\t "
-# define END_CHAR			"\n\0"
 
 /**
  * Token type macros
@@ -31,7 +29,7 @@
 int		lexer(t_data **data, char *line);
 
 t_token	*init_token_list(size_t len);
-void	init_new_token(t_token **token, size_t len, size_t *j);
+void	init_new_token(t_token **token, size_t len, size_t *j, size_t i);
 void	free_token_list(t_token *token);
 void	make_token_meta(t_token **token, t_data **data, size_t *i, size_t *j);
 void	make_token_quote(t_token **token, t_data **data, size_t *i, size_t *j);
@@ -41,10 +39,10 @@ char	*is_meta(char c);
 char	*is_break(char c);
 char	*is_quote(char c);
 char	*is_expansion(char c);
-char	*is_escape(char c);
-char	*is_special_var(char c);
 char	*is_blank(char c);
-char	*is_end(char c);
+void	get_exit_status(t_data **data, t_token **token, size_t *i, size_t *j);
 int		is_valid_expansion(char *str);
+int		is_special_expansion(char *str);
+int		is_quote_edge_case(t_data *data, size_t i);
 
 #endif

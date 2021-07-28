@@ -60,7 +60,7 @@ void	add_expanded_variable(t_expansion *exp)
 		exit_shell(errno);
 }
 
-void	do_variable_expansion(t_token *token)
+void	do_variable_expansion(t_token *token, t_environ *env)
 {
 	t_expansion	exp;
 
@@ -70,7 +70,7 @@ void	do_variable_expansion(t_token *token)
 		if (is_valid_expansion(token->str + exp.i))
 		{
 			add_substring(&exp, token->str);
-			get_keyvalue(&exp, token->str + exp.i);
+			get_keyvalue(&exp, token->str + exp.i, env);
 			add_expanded_variable(&exp);
 			exp.i += ft_strlen(exp.var_key) + 1;
 			exp.copy_start = exp.i;

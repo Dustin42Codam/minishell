@@ -20,15 +20,17 @@ OS = $(shell uname)
 
 #all the files
 
-SRC = main.c exit_shell.c init_data.c read_line.c \
+SRC = main.c non_interactive.c exit_shell.c init_data.c read_line.c \
 	lexer.c lexer_utils_1.c lexer_utils_2.c \
 	make_token_meta.c make_token_quote.c \
 	expand_variables.c expand_utils_1.c expand_utils_2.c \
-	split_words.c word_splitter.c \
+	split_words.c word_splitter.c quote_removal.c \
 	parser.c parser_utils.c \
 	parse_pipeline.c parse_word_list.c parse_command.c parse_redirection.c \
-	execute.c execute_utils.c search_command.c \
-	secure_calloc.c
+	execute.c execute_builtin.c execute_utils.c search_command.c \
+	secure_calloc.c environ.c environ_utils.c increment_shlvl.c \
+	builtin_echo.c builtin_pwd.c builtin_env.c \
+
 
 
 
@@ -140,7 +142,20 @@ debug_1: fclean
 debug_2: fclean
 	@make DEBUG_2=1
 
+test_expansions: all
+	cd $(TDIR)/expansions && bash test_expansions.sh
+
+test_environ: all
+	cd $(TDIR)/environ && bash test_environ.sh
+
+test_echo: all
+	cd $(TDIR)/echo && bash test_echo.sh
+
+test_all: all
+	cd tests && bash test_all.sh
+
 valgrind: debug_1
-	valgrind --leak-check=full --show-leak-kinds=all --track-origins=yes ./$(NAME)
+	valgrind --leak-check=full --show-leak-kinds=all --track-origins=yes \
+		./$(NAME)
 
 .PHONY: all bonus test test_d clean fclean re run

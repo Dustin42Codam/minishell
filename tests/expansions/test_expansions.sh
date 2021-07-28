@@ -1,7 +1,22 @@
 #!/bin/bash
 
 # Path to root directory of minishell
-MINISHELL_DIR=".."
+MINISHELL_DIR="../.."
+
+# Test input/output files
+INPUT="test_expansions.in"
+BASH_OUT="bash.out"
+MINISHELL_OUT="minishell.out"
+RESULTS="results.txt"
+
+if [ "$1" == "--cleanup" ]; then
+	rm -f $BASH_OUT
+	rm -f $MINISHELL_OUT
+	rm -f $RESULTS
+	rm -f ./minishell
+	make fclean -C $MINISHELL_DIR
+	exit 0
+fi
 
 # Build minishell and copy the executable into current directory
 make -C $MINISHELL_DIR &>/dev/null
@@ -11,13 +26,6 @@ if [ $? -ne 0 ]; then
 	exit $RET
 fi
 cp $MINISHELL_DIR/minishell .
-
-# printf "\n${BYEL}+%.18s${REDB} ${BHWHT}Testing variable expansions${RESET}${BYEL}%.18s+\n${RESET}" $div1 $div1
-
-INPUT="test_expansions.in"
-BASH_OUT="bash.out"
-MINISHELL_OUT="minishell.out"
-RESULTS="results.txt"
 
 # Create empty output files
 echo > $BASH_OUT
@@ -40,10 +48,8 @@ export ARG_11="echo abc"
 # Read input file and use each single line as an argument for 'echo'
 while IFS= read -r line
 do
-	# echo $line >> $BASH_OUT
-	# echo $line >> $MINISHELL_OUT
-	echo "echo $line" | bash >> $BASH_OUT
-	echo "echo $line" | ./minishell >> $MINISHELL_OUT
+	bash -c "echo $line" >> $BASH_OUT
+	./minishell -c "echo $line" >> $MINISHELL_OUT
 done < "$INPUT"
 
 # Check differences

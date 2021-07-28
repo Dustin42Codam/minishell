@@ -1,5 +1,6 @@
 #include "expansion.h"
 #include "lexer.h"
+#include "environ.h"
 #include <stdlib.h>
 #include <errno.h>
 
@@ -47,7 +48,7 @@ int	is_valid_variable_char(char c)
 	return (ft_isalnum(c) || c == '_');
 }
 
-void	get_keyvalue(t_expansion *exp, char *str)
+void	get_keyvalue(t_expansion *exp, char *str, t_environ *env)
 {
 	size_t	i;
 	size_t	j;
@@ -62,7 +63,7 @@ void	get_keyvalue(t_expansion *exp, char *str)
 		i++;
 		j++;
 	}
-	value = getenv(exp->var_key);
+	value = environ_get(env, exp->var_key);
 	if (value == NULL)
 		value = "";
 	exp->var_value = ft_strdup(value);
