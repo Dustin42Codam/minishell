@@ -22,6 +22,7 @@ t_data	*init_data(char **envp)
 
 	data = (t_data *)minishell_calloc(1, sizeof(t_data));
 	data->env = environ_deep_copy(envp);
+	data->exit_status = 123;
 	increment_shlvl(data->env);
 	return (data);
 }

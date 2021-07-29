@@ -52,6 +52,6 @@ void	get_exit_status(t_data **data, t_token **token, size_t *i, size_t *j)
 		(*j)++;
 		index++;
 	}
-	(*i)++;
+	(*i) += 2;
 	(*token)->type |= WORD;
 }

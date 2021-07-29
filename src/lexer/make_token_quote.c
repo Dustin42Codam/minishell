@@ -51,10 +51,7 @@ void	make_token_dquote(t_token **token, t_data **data, size_t *i, size_t *j)
 		if (is_valid_expansion((*data)->line + (*i)))
 			(*token)->type |= EXPAND;
 		if (is_special_expansion((*data)->line + (*i)))
-		{
 			get_exit_status(data, token, i, j);
-			(*i)++;
-		}
 		else
 		{
 			(*token)->str[(*j)] = (*data)->line[(*i)];
