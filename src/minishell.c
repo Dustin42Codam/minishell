@@ -40,7 +40,7 @@ static int	read_flags(int argc, char *argv[])
 	return (i);
 }
 
-void	non_interactive_shell(t_data *data, int argc, char *argv[])
+void	minishell_non_interactive(t_data *data, int argc, char *argv[])
 {
 	int	flags;
 
@@ -61,9 +61,10 @@ void	non_interactive_shell(t_data *data, int argc, char *argv[])
 	}
 	free(data->line);
 	data->line = NULL;
+	exit(data->exit_status);
 }
 
-void	interactive_shell(t_data *data)
+void	minishell_interactive(t_data *data)
 {
 	data->interactive = TRUE;
 	while (1)

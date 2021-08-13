@@ -5,6 +5,10 @@
 
 # include "structs.h"
 
+// delete later
+#include <stdio.h>
+
+
 /**
  *	Boolean defines - Because we are too cool for stdbool.
 **/
@@ -19,16 +23,22 @@
 # define WHITE "\033[97;0;4m"
 # define RESET "\033[0m"
 
-void	non_interactive_shell(t_data *data, int argc, char *argv[]);
-void	interactive_shell(t_data *data);
-size_t	get_size_of_tokens(char **arr);
-size_t	read_line(char **line);
+void	minishell_non_interactive(t_data *data, int argc, char *argv[]);
+void	minishell_interactive(t_data *data);
 void	exit_minishell(int error_id);
 void	exit_minishell_custom(char *str);
 t_data	*init_data(char **envp);
 void	free_data(t_data *data);
 void	increment_shlvl(t_environ *env);
 void	quote_removal(t_data **data);
+
+/**
+ * Libft and glibc wrapper functions 
+ * */
 void	*minishell_calloc(size_t nmemb, size_t size);
+ssize_t	minishell_write(int fd, const void *buf, size_t count);
+ssize_t	minishell_putchar_fd(const char c, int fd);
+ssize_t	minishell_putstr_fd(const char *s, int fd);
+ssize_t	minishell_putendl_fd(const char *s, int fd);
 
 #endif

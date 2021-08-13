@@ -3,6 +3,7 @@
 
 # include "libft.h"
 # include "terminal_capabilities.h"
+# include <sys/types.h>
 
 /**
  * s_expansion - Struct for expanding environment variables
@@ -78,6 +79,29 @@ typedef struct s_environ
 }	t_environ;
 
 /**
+ * s_file_io - File descriptors for input/output
+ * Member description:
+ * @pipe:			Pipe array.
+ * @read:			Read from this file descriptor.
+ * @write:			Write into this file descriptor.
+ * @dup_stdin:		Has value 1 if a pipe reads from stdin, otherwise 0.
+ * @dup_stdout:		Has value 1 if a pipe writes to stdout, otherwise 0.
+ * @save_stdout:	A copy of stdout.
+ * */
+typedef struct s_file_io
+{
+	int		pipe[2];
+	int		read;
+	int		write;
+	int		dup_stdin;
+	int		dup_stdout;
+	int		save_stdin;
+	int		save_stdout;
+	int		redirect_out;
+	int		redirect_in;
+}	t_file_io;
+
+/**
  * s_command - Struct for building a command
  * Member description:
  * @argv:			List of a command and its arguments.
@@ -88,6 +112,8 @@ typedef struct s_command
 	char		**argv;
 	int			argc;
 	int			builtin_id;
+	int			last_exit_code;
+	t_file_io	fd;
 	t_environ	*env;
 }	t_command;
 

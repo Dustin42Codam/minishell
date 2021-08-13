@@ -24,13 +24,20 @@ SRC = main.c \
 	minishell.c \
 	exit_shell.c \
 	signals.c \
-	utiles.c \
 	init_data.c \
 	minishell_calloc.c \
+	minishell_write.c \
+	minishell_putchar_fd.c \
+	minishell_putstr_fd.c \
+	minishell_putendl_fd.c \
 	increment_shlvl.c \
 	built_in_functions/builtin_echo.c \
-	built_in_functions/builtin_env.c \
+	built_in_functions/builtin_cd.c \
 	built_in_functions/builtin_pwd.c \
+	built_in_functions/builtin_export.c \
+	built_in_functions/builtin_unset.c \
+	built_in_functions/builtin_env.c \
+	built_in_functions/builtin_exit.c \
 	terminal_capabilities/0_read_line.c \
 	terminal_capabilities/DLL_history.c \
 	terminal_capabilities/DLL_input_line.c \
@@ -77,6 +84,9 @@ SRC = main.c \
 	parser/parse_command.c \
 	parser/parse_redirection.c \
 	executor/execute.c \
+	executor/execute_pipeline.c \
+	executor/execute_command.c \
+	executor/execute_word_list.c \
 	executor/execute_builtin.c \
 	executor/execute_utils.c \
 	executor/search_command.c \
@@ -103,7 +113,7 @@ DBG := $(patsubst %,$(DDIR)/%,$(OBJ))
 #flags
 
 C_DEBUG := -g -Wall -Werror -Wextra -fsanitize=address $(HEADER)
-C_REGULAR := -Wall -Werror -Wextra -g $(HEADER)
+C_REGULAR := -Wall -Wextra -g $(HEADER)
 
 #nasm compiler
 

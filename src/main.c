@@ -38,9 +38,9 @@ int	main(int argc, char *argv[], char **envp)
 	data = init_data(envp);
 	data->prompt = prompt;
 	if (argc == 1)
-		interactive_shell(data);
+		minishell_interactive(data);
 	else
-		non_interactive_shell(data, argc, argv);
+		minishell_non_interactive(data, argc, argv);
 	free_data(data);
 	return (0);
 }

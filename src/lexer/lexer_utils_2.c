@@ -21,6 +21,8 @@ int	get_token_type(char *s)
 		return (SQUOTE);
 	else if (s[0] == '\"')
 		return (DQUOTE);
+/* 	else if (s[0] == ';')
+		return (SEMICOLON); */
 	return (EMPTY);
 }
 

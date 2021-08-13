@@ -12,7 +12,11 @@
 # define EXIT	7
 
 int	builtin_echo(t_command *cmd);
-int	builtin_pwd(t_command *cmd, t_environ *env);
+int	builtin_cd(t_command *cmd, t_environ *env);
+int	builtin_pwd(t_command *cmd);
+int	builtin_export(t_command *cmd, t_environ *env);
+int	builtin_unset(t_command *cmd, t_environ *env);
 int	builtin_env(t_command *cmd, t_environ *env);
+int	builtin_exit(t_command *cmd);
 
 #endif

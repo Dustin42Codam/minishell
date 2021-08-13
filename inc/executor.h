@@ -4,15 +4,13 @@
 # include "minishell.h"
 
 void		execute(t_data *data);
-
-void		execute_pipeline(t_data *data);
-void		execute_command(t_data *data);
+void		execute_pipeline(t_data *data, t_file_io fd);
+void		execute_command(t_data *data, t_astree *node, t_file_io fd);
+void		execute_word_list(t_data *data, t_astree *node, t_file_io fd);
 int			execute_builtin(t_command *cmd, t_environ *env);
-
-void		make_command_argv(t_data *data, t_astree *node, t_command *cmd);
+void		make_command_argv(t_data *data, t_astree *node, t_command *cmd, t_file_io fd);
 int			execute_command_argv(t_command *cmd, t_environ *env);
 void		free_command_argv(t_command *cmd);
-
 void		expand_variables(t_data *data);
 int			search_command(t_astree *node, t_environ *env);
 
