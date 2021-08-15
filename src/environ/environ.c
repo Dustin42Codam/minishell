@@ -3,7 +3,7 @@
 #include <errno.h>
 #include <stdlib.h>
 
-static void	environ_add_back(t_environ **env, t_environ *new)
+void	environ_add_back(t_environ **env, t_environ *new)
 {
 	t_environ	*tmp;
 
@@ -15,12 +15,24 @@ static void	environ_add_back(t_environ **env, t_environ *new)
 	else
 	{
 		while (tmp->next)
+		{
+			if (environ_compare(new->key, tmp->key))
+			{
+				free(tmp->value);
+				free(tmp->key_value);
+				tmp->value = new->value;
+				tmp->key_value = new->key_value;
+				free(new->key);
+				free(new);
+				return ;
+			}
 			tmp = tmp->next;
+		}
 		tmp->next = new;
 	}
 }
 
-static t_environ	*environ_new(const char *key_value)
+t_environ	*environ_new(const char *key_value)
 {
 	t_environ	*new;
 	size_t		key_len;

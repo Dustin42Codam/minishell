@@ -5,6 +5,19 @@ echo abc$PWD''"$HOME"lol
 echo $POEP
 echo $POEP $MEERPOEP
 echo hallo $POEP
+echo a"bc"d
+echo $HO"ME"
+echo "$HOME"
+echo '"$HOME"'
+echo -n
+echo -n abc
+echo -nABC
+echo -n$HOME
+echo -n$"HOME"
+echo $ a
+echo "$   a"
+echo ""
+echo $"HOME"
 echo ";;;"
 echo "./hello".
 echo ./hello

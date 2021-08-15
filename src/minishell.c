@@ -40,11 +40,13 @@ static int	read_flags(int argc, char *argv[])
 	return (i);
 }
 
-void	non_interactive_shell(t_data *data, int argc, char *argv[])
+void	minishell_non_interactive(t_data *data, int argc, char *argv[])
 {
-	int	flags;
+	const static int	no_signal = 0;
+	int					flags;
 
 	data->interactive = FALSE;
+	data->sig_NO = no_signal;
 	flags = read_flags(argc, argv);
 	data->line = ft_strdup(argv[flags]);
 	if (data->line == NULL)
@@ -61,19 +63,24 @@ void	non_interactive_shell(t_data *data, int argc, char *argv[])
 	}
 	free(data->line);
 	data->line = NULL;
+	exit(data->exit_status);
 }
 
-void	interactive_shell(t_data *data)
+void	minishell_interactive(t_data *data)
 {
+	static const int	new_line_signal = 42;
+
+	data->sig_NO = 42;
 	data->interactive = TRUE;
 	while (1)
 	{
-		print_prompt(data->prompt);
-		update_prompt(&data->prompt);
-		ft_readline(&data->line, data->prompt);
+		if (data->sig_NO == SIGINT || data->sig_NO == new_line_signal)
+			print_prompt(data->prompt);
+		update_prompt(&data->prompt, data->sig_NO);
+		data->sig_NO = ft_readline(&data->line, data->prompt);
+		if (data->sig_NO == EOF)
+			exit(data->exit_status);
 		data->line_len = ft_strlen(data->line);
-		if (data->line == NULL)
-			exit_minishell(errno);
 		if (lexer(&data, data->line) == EXIT_FAILURE)
 			printf("Syntax error!\n");
 		else

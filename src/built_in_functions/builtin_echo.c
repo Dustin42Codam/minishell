@@ -47,14 +47,14 @@ int	builtin_echo(t_command *cmd)
 		i = get_option(cmd, &option);
 		while (i < cmd->argc && write_ret >= 0)
 		{
-			write_ret = ft_putstr_fd(cmd->argv[i], 1);
+			write_ret = ft_putstr_fd(cmd->argv[i], cmd->fd.write);
 			i++;
 			if (i < cmd->argc && write_ret >= 0)
-				write_ret = write(1, " ", 1);
+				write_ret = write(cmd->fd.write, " ", 1);
 		}
 	}
 	if (option == 0 && write_ret >= 0)
-		write_ret = write(1, "\n", 1);
+		write_ret = write(cmd->fd.write, "\n", 1);
 	if (write_ret == -1)
 		return (-1);
 	return (0);

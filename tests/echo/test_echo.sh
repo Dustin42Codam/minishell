@@ -52,25 +52,29 @@ SEGFAULT=0
 while read -r LINE
 do
 	MINI_OUTPUT=$(./minishell -c "$LINE")
-	RET=$?
+	MINI_RET=$?
 	while [ $RET -eq 139 ]
 	do
 		MINI_OUTPUT=$(./minishell -c "$LINE")
-		RET=$?
+		MINI_RET=$?
 		((SEGFAULT+=1))
 		if [ $SEGFAULT -ge 10 ]; then
 			break
 		fi
 		sleep 0.03
 	done
+	echo "$MINI_OUTPUT" >> $MINISHELL_OUT
+
 	BASH_OUTPUT=$(bash -c "$LINE")
+	BASH_RET=$?
+	echo "$BASH_OUTPUT" >> $BASH_OUT
 
 	if [ "$BASH_OUTPUT" == "$MINI_OUTPUT" ]; then
-	    COLOR=$GREEN
+		COLOR=$GREEN
 		TEST="[OK]"
 		((OK+=1))
 	else
-	    COLOR=$RED
+		COLOR=$RED
 		TEST="[KO]"
 		((KO+=1))
 	fi
@@ -87,6 +91,11 @@ do
 	((COUNT+=1))
 done < $INPUT
 
+diff $BASH_OUT $MINISHELL_OUT
+if [ $? -ne 0 ]; then
+	((KO+=1))
+fi
+
 if [ $KO -eq 0 ]; then
 	echo "Passed all the test cases!" > "$LOG"
 fi
@@ -94,3 +103,5 @@ fi
 printf "Results:\n"
 printf "${KO} KOs\n"
 printf "${OK} OKs\n"
+
+exit $KO

@@ -32,6 +32,7 @@ gcc -g test_environ.c \
 	$MINISHELL_DIR/src/minishell_calloc.c \
 	$MINISHELL_DIR/src/exit_shell.c \
 	$MINISHELL_DIR/src/terminal_*/*.c \
+	$MINISHELL_DIR/src/signals/*.c \
 	$MINISHELL_DIR/libft/libft.a \
 	-ltermcap \
 	-I $MINISHELL_DIR/inc \

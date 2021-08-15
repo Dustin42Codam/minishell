@@ -1,4 +1,4 @@
-#include "terminal_capabilities.h"
+#include "minishell_termcap_signal.h"
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
