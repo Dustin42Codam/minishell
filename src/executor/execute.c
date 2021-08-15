@@ -1,27 +1,41 @@
 #include "minishell.h"
+#include "parser.h"
 #include "executor.h"
+#include <errno.h>
 
-void	execute_pipeline(t_data *data)
+static void	setup_fd(t_file_io *fd)
 {
-	if (data->astree == NULL)
-		return ;
-	execute_command(data);
+	ft_memset(fd, 0, sizeof(t_file_io));
+	fd->read = STDIN_FILENO;
+	fd->write = STDOUT_FILENO;
+	fd->save_stdin = dup(STDIN_FILENO);
+	fd->save_stdout = dup(STDOUT_FILENO);
+	if (errno)
+		exit_minishell(errno);
 }
 
-void	execute_command(t_data *data)
+static void	restore_fd(t_file_io *fd)
 {
-	t_command	command;
-
-	if (data->astree == NULL)
-		return ;
-	make_command_argv(data, data->astree, &command);
-	if (command.builtin_id)
-		data->exit_status = execute_builtin(&command, data->env);
-	else
-		data->exit_status = execute_command_argv(&command, data->env);
+	dup2(fd->save_stdin, STDIN_FILENO);
+	dup2(fd->save_stdout, STDOUT_FILENO);
+	close(fd->save_stdin);
+	close(fd->save_stdout);
+	if (fd->output)
+		close(fd->output);
+	if (errno)
+		exit_minishell(errno);
 }
 
 void	execute(t_data *data)
 {
-	execute_pipeline(data);
+	t_file_io	fd;
+
+	if (data->astree == NULL)
+		return ;
+	setup_fd(&fd);
+	if (data->astree->type == AST_PIPE)
+		execute_pipeline(data, fd);
+	else
+		execute_command(data, data->astree, fd);
+	restore_fd(&fd);
 }

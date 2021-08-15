@@ -23,19 +23,19 @@ static char	*get_try_path(char *file, char *path)
 static int	check_if_builtin(char *s)
 {
 	if (ft_strncmp("echo", s, 5) == 0)
-		return (ECHO);
+		return (BUILTIN_ECHO);
 	else if (ft_strncmp("cd", s, 3) == 0)
-		return (CD);
+		return (BUILTIN_CD);
 	else if (ft_strncmp("pwd", s, 4) == 0)
-		return (PWD);
+		return (BUILTIN_PWD);
 	else if (ft_strncmp("export", s, 7) == 0)
-		return (EXPORT);
+		return (BUILTIN_EXPORT);
 	else if (ft_strncmp("unset", s, 6) == 0)
-		return (UNSET);
+		return (BUILTIN_UNSET);
 	else if (ft_strncmp("env", s, 4) == 0)
-		return (ENV);
+		return (BUILTIN_ENV);
 	else if (ft_strncmp("exit", s, 5) == 0)
-		return (EXIT);
+		return (BUILTIN_EXIT);
 	return (0);
 }
 
@@ -52,7 +52,7 @@ int	search_command(t_astree *node, t_environ *env)
 		return (builtin_id);
 	path = ft_split(environ_get(env, "PATH"), ':');
 	i = 0;
-	while (path[i])
+	while (path && path[i])
 	{
 		try_path = get_try_path(node->str, path[i]);
 		if (stat(try_path, &statbuf) == 0)

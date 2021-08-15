@@ -12,9 +12,10 @@ TEST_EXPANSION="./expansions"
 
 # Just clean up files and exit
 if [ "$1" == "--cleanup" ]; then
-	cd environ && bash test_environ.sh --cleanup &>/dev/null && cd ..
-	cd expansions && bash test_expansions.sh --cleanup && cd ..
+	cd ./environ && bash test_environ.sh --cleanup &>/dev/null && cd ..
+	cd ./expansions && bash test_expansions.sh --cleanup && cd ..
 	cd ./echo && bash test_echo.sh --cleanup &>/dev/null && cd ..
+	cd ./cd && bash test_cd.sh --cleanup &>/dev/null && cd ..
 	exit 0
 fi
 
@@ -39,11 +40,12 @@ fi
 cd ..
 
 printf "\n${WHITE}Testing echo builtin...\n"
-cd ./echo && bash test_echo.sh &>/dev/null
+cd ./echo
+bash test_echo.sh
 RET_ECHO=$?
 if [ $RET_ECHO -eq 0 ]; then
 	printf "Result:\t${GREEN}[OK]!\n${RESET}"
 else
 	printf "Result:\t${RED}[KO]!\n${RESET}"
+	exit $RET_ECHO
 fi
-cd ..

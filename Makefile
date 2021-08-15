@@ -23,42 +23,58 @@ OS = $(shell uname)
 SRC = main.c \
 	minishell.c \
 	exit_shell.c \
-	signals.c \
-	utiles.c \
 	init_data.c \
 	minishell_calloc.c \
+	minishell_write.c \
+	minishell_putchar_fd.c \
+	minishell_putstr_fd.c \
+	minishell_putendl_fd.c \
 	increment_shlvl.c \
 	built_in_functions/builtin_echo.c \
-	built_in_functions/builtin_env.c \
+	built_in_functions/builtin_cd.c \
 	built_in_functions/builtin_pwd.c \
-	terminal_capabilities/0_read_line.c \
-	terminal_capabilities/DLL_history.c \
-	terminal_capabilities/DLL_input_line.c \
-	terminal_capabilities/DLL_input_line_2.c \
-	terminal_capabilities/DLL_input_line_3.c \
-	terminal_capabilities/del_char.c \
-	terminal_capabilities/functions_calling_termcap_database.c \
-	terminal_capabilities/functions_calling_termcap_database_2.c \
-	terminal_capabilities/get_functions.c \
-	terminal_capabilities/get_functions_2.c \
-	terminal_capabilities/get_functions_3.c \
-	terminal_capabilities/get_functions_4.c \
-	terminal_capabilities/get_functions_5.c \
-	terminal_capabilities/history_behaviur.c \
-	terminal_capabilities/init_functions.c \
-	terminal_capabilities/free_functions.c \
-	terminal_capabilities/is_functions_keys.c \
-	terminal_capabilities/is_functions_2.c \
-	terminal_capabilities/is_functions_3.c \
-	terminal_capabilities/is_functions_4.c \
-	terminal_capabilities/move_cursor_left.c \
-	terminal_capabilities/move_cursor_right.c \
-	terminal_capabilities/print_functions.c \
-	terminal_capabilities/print_functions_2.c \
+	built_in_functions/builtin_export.c \
+	built_in_functions/builtin_unset.c \
+	built_in_functions/builtin_env.c \
+	built_in_functions/builtin_exit.c \
+	terminal_capabilities/termcap_functions_calling_termcap_database_2.c \
+	terminal_capabilities/termcap_is_functions_2.c \
+	terminal_capabilities/termcap_get_functions_2.c \
+	terminal_capabilities/termcap_print_functions_2.c \
+	terminal_capabilities/termcap_DLL_history_2.c \
+	terminal_capabilities/termcap_functions_calling_termcap_database_3.c \
+	terminal_capabilities/termcap_is_functions_3.c \
+	terminal_capabilities/termcap_get_functions_3.c \
+	terminal_capabilities/termcap_unsed.c \
+	terminal_capabilities/termcap_DLL_input_line_4.c \
+	terminal_capabilities/termcap_is_functions_4.c \
+	terminal_capabilities/termcap_get_functions_4.c \
+	terminal_capabilities/termcap_get_functions_5.c \
+	terminal_capabilities/termcap_read.c \
+	terminal_capabilities/termcap_DLL_input_line_new_node.c \
+	terminal_capabilities/termcap_DLL_history_new_node.c \
+	terminal_capabilities/termcap_DLL_input_line_free.c \
+	terminal_capabilities/termcap_DLL_history_free.c \
+	terminal_capabilities/termcap_0_read_line.c \
+	terminal_capabilities/termcap_functions_calling_termcap_database.c \
+	terminal_capabilities/termcap_DLL_history_update.c \
+	terminal_capabilities/termcap_write.c \
+	terminal_capabilities/termcap_is_functions_keys_size.c \
+	terminal_capabilities/termcap_DLL_input_pop.c \
+	terminal_capabilities/termcap_del_char.c \
+	terminal_capabilities/termcap_history_behaviur.c \
 	terminal_capabilities/termcap_utils.c \
-	terminal_capabilities/functions_calling_termcap_database_3.c \
-	terminal_capabilities/DLL_input_line_4.c \
-	terminal_capabilities/DLL_history_2.c \
+	terminal_capabilities/termcap_free_functions.c \
+	terminal_capabilities/termcap_get_functions.c \
+	terminal_capabilities/termcap_init_functions.c \
+	terminal_capabilities/termcap_print_functions.c \
+	terminal_capabilities/termcap_is_functions_keys.c \
+	terminal_capabilities/termcap_DLL_input_line_get.c \
+	terminal_capabilities/termcap_move_cursor_left.c \
+	terminal_capabilities/termcap_move_cursor_right.c \
+	terminal_capabilities/termcap_DLL_input_insert.c \
+	terminal_capabilities/termcap_DLL_history_insert.c \
+	terminal_capabilities/termcap_DLL_history_copy.c \
 	lexer/lexer.c \
 	lexer/lexer_utils_1.c \
 	lexer/lexer_utils_2.c \
@@ -77,11 +93,17 @@ SRC = main.c \
 	parser/parse_command.c \
 	parser/parse_redirection.c \
 	executor/execute.c \
+	executor/execute_pipeline.c \
+	executor/execute_command.c \
+	executor/execute_word_list.c \
 	executor/execute_builtin.c \
 	executor/execute_utils.c \
 	executor/search_command.c \
 	environ/environ.c \
-	environ/environ_utils.c
+	environ/environ_utils.c \
+	signals/signals_call_function_by_sig.c \
+	signals/signals_init_sig.c \
+	signals/signals.c
 
 OBJ = $(addprefix $(ODIR)/$(SDIR)/, $(SRC:.c=.o))
 
@@ -103,7 +125,8 @@ DBG := $(patsubst %,$(DDIR)/%,$(OBJ))
 #flags
 
 C_DEBUG := -g -Wall -Werror -Wextra -fsanitize=address $(HEADER)
-C_REGULAR := -Wall -Werror -Wextra -g $(HEADER)
+# C_REGULAR := -Wall -Wextra -Werror -g $(HEADER)
+C_REGULAR := -Wall -Wextra -g $(HEADER)
 
 #nasm compiler
 
@@ -138,7 +161,8 @@ $(ODIR)/%.o: %.c
 		$(ODIR)/$(SDIR)/lexer \
 		$(ODIR)/$(SDIR)/parser \
 		$(ODIR)/$(SDIR)/executor \
-		$(ODIR)/$(SDIR)/environ
+		$(ODIR)/$(SDIR)/environ \
+		$(ODIR)/$(SDIR)/signals
 	@$(CC) $(FLAGS) $(HEADER) -c $< -o $@
 
 $(LIBFT)/libft.a:

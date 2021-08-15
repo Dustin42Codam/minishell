@@ -1,13 +1,27 @@
 #include "minishell.h"
 #include "builtins.h"
 
-int	execute_builtin(t_command *cmd, t_environ *env)
+static int	is_end_of_pipe(t_command *cmd)
 {
-	if (cmd->builtin_id == ECHO)
-		return (builtin_echo(cmd));
-	else if (cmd->builtin_id == ENV)
-		return (builtin_env(cmd, env));
-	else if (cmd->builtin_id == PWD)
-		return (builtin_pwd(cmd, env));
-	return (0);
+	return (cmd->fd.dup_stdin == 1 && cmd->fd.dup_stdout == 0);
+}
+
+void	execute_builtin(t_data *data, t_command *cmd, t_environ *env)
+{
+	if (is_end_of_pipe(cmd))
+		cmd->fd.write = cmd->fd.save_stdout;
+	if (cmd->builtin_id == BUILTIN_ECHO)
+		data->exit_status = builtin_echo(cmd);
+	else if (cmd->builtin_id == BUILTIN_CD)
+		data->exit_status = builtin_cd(cmd, env);
+	else if (cmd->builtin_id == BUILTIN_PWD)
+		data->exit_status = builtin_pwd(cmd);
+	else if (cmd->builtin_id == BUILTIN_EXPORT)
+		data->exit_status = builtin_export(cmd, env);
+	else if (cmd->builtin_id == BUILTIN_UNSET)
+		data->exit_status = builtin_unset(cmd, env);
+	else if (cmd->builtin_id == BUILTIN_ENV)
+		data->exit_status = builtin_env(cmd, env);
+	else if (cmd->builtin_id == BUILTIN_EXIT)
+		data->exit_status = builtin_exit(cmd);
 }
