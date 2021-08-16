@@ -1,8 +1,8 @@
 #include "minishell.h"
-#include "parser.h"
 #include "executor.h"
-#include <errno.h>
+#include "parser.h"
 #include <string.h>
+#include <errno.h>
 #include <fcntl.h>
 
 void	print_error(t_data *data, char *str, int error_id)
