@@ -1,7 +1,61 @@
 #include "minishell.h"
 #include "parser.h"
 #include "executor.h"
+#include "minishell_termcap_signal.h"
+#include "libft.h"
+#include "lexer.h"
 #include <errno.h>
+#include <stdio.h>
+#include <unistd.h>
+#include <stdlib.h>
+#include <readline/readline.h>
+#include <stdbool.h>
+// #include <readline/readline.h>
+
+static bool	is_empty(char *line)
+{
+	size_t	i;
+	char	c;
+
+	i = 0;
+	if (line == NULL)
+		return (true);
+	while (line[i])
+	{
+		c = line[i];
+		if (c != '\t' && c != '\n' && c != '\v' && \
+        	c != '\f' && c != '\r' && c != ' ')
+			return (false);
+		i++;
+	}
+	return (true);
+}
+
+static void	pipe_to_stdin(t_data *data, t_file_io fd)
+{
+	// if (isatty(fd.save_stdin))
+		// tcsetattr(fd.save_stdin, TCSANOW, &data->old_term);
+	// errno = 0;
+	free(data->line);
+	data->line = NULL;
+
+	while (!data->line || !data->line[0] || is_empty(data->line))
+	{
+		ft_readline(&data->line, data->prompt);
+		// data->line = readline("> ");
+	}
+
+	data->line_len = ft_strlen(data->line);
+	free_token_list(data->token);
+	lexer(&data, data->line);
+	delete_ast(data->astree);
+	parser(data);
+	dup2(fd.pipe[0], STDIN_FILENO);
+	execute(data);
+	// if (isatty(fd.save_stdin))
+		// tcsetattr(fd.save_stdin, TCSANOW, &data->new_term);
+	// errno = 0;
+}
 
 static void	setup_pipe_start(t_file_io *fd)
 {
@@ -48,6 +102,9 @@ void	execute_pipeline(t_data *data, t_file_io fd)
 		node = node->right;
 	}
 	setup_pipe_end(&fd);
-	execute_command(data, node, fd);
+	if (node == NULL)
+		pipe_to_stdin(data, fd);
+	else
+		execute_command(data, node, fd);
 	close(fd.pipe[0]);
 }

@@ -113,7 +113,7 @@ OBJ = $(addprefix $(ODIR)/$(SDIR)/, $(SRC:.c=.o))
 
 LIBFT = libft
 TERMCAPS = -ltermcap
-LIBS = -L $(LIBFT) -lft $(TERMCAPS)
+LIBS = -L $(LIBFT) -lft $(TERMCAPS) -lreadline
 
 #headers aka dependencys
 
@@ -130,7 +130,7 @@ C_REGULAR := -Wall -Wextra -g $(HEADER)
 
 #nasm compiler
 
-CC := clang 
+CC := clang
 
 #if bonus
 

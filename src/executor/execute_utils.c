@@ -65,16 +65,31 @@ void	make_command(t_data *data, t_astree *node, t_command *cmd, t_file_io fd)
 	init_cmd(data, cmd, fd);
 }
 
+/**
+ * a little workaround for the fork() - errno - macOS bug:
+ * - macOS sets errno = 22 after fork() so we need to set errno to 0 manually
+ * - a call to isatty() guarantees that we don't reset
+ * 		the termios structure on a pipe/fifo file object
+ * - if isatty() fails it sets errno to ENOTTY
+ * 		(fd is not a terminal, we are in a pipe)
+ * 		so we need to set errno again back to 0
+ * - then we can use errno again inside short if statements.
+ * 		The first error that gets detected will be used as exit code.
+**/
 static void	execute_child(t_data *data, t_command *cmd, char **env_array)
 {
-	tcsetattr(cmd->fd.save_stdin, TCSANOW, &data->old_term);
-	if (cmd->fd.dup_stdin)
+	errno = 0;
+	if (isatty(cmd->fd.save_stdin))
+		tcsetattr(cmd->fd.save_stdin, TCSANOW, &data->old_term);
+	if (errno == ENOTTY)
+		errno = 0;
+	if (errno == 0 && cmd->fd.dup_stdin)
 		dup2(cmd->fd.read, STDIN_FILENO);
-	if (cmd->fd.dup_stdout)
+	if (errno == 0 && cmd->fd.dup_stdout)
 		dup2(cmd->fd.write, STDOUT_FILENO);
-	if (cmd->fd.output)
+	if (errno == 0 && cmd->fd.output)
 		dup2(cmd->fd.output, STDOUT_FILENO);
-	if (cmd->fd.input)
+	if (errno == 0 && cmd->fd.input)
 		dup2(cmd->fd.input, STDIN_FILENO);
 	if (errno || execve(cmd->argv[0], cmd->argv, env_array) == -1)
 	{
@@ -97,9 +112,11 @@ void	execute_command_argv(t_data *data, t_command *cmd, t_environ *env)
 		exit_minishell(errno);
 	else if (pid == 0)
 		execute_child(data, cmd, env_array);
-	errno = 0;
 	waitpid(pid, &stat, 0);
-	tcsetattr(cmd->fd.save_stdin, TCSANOW, &data->new_term);
+	if (isatty(cmd->fd.save_stdin))
+		tcsetattr(cmd->fd.save_stdin, TCSANOW, &data->new_term);
+	if (errno == ENOTTY)
+		errno = 0;
 	free_command_argv(cmd, env_array);
 	if (WIFEXITED(stat))
 		data->exit_status = WEXITSTATUS(stat);

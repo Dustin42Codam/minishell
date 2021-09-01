@@ -8,7 +8,7 @@
 
 #include <stdio.h>
 
-void	minishell_putstr(const char *str)
+void	minishell_putstr(char *str)
 {
 	const int	write_failed = -1;
 	int			size;
@@ -42,10 +42,7 @@ void	print_input_line(char *line)
 
 void	print_prompt(t_prompt *prompt)
 {
-	static const char	*name = "minishell$ ";
-
-	(void)prompt;
-	minishell_putstr(name);
+	minishell_putstr(prompt->PS1);
 }
 
 /*

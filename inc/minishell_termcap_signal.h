@@ -210,7 +210,7 @@ void			set_first_node(t_prompt **prompt, char *updated_line);
 void			match_key_with_fuc(char *user_input, t_prompt *prompt);
 void			insert_char(char *user_input, t_prompt *prompt);
 int				ft_putchar_ret_int(int c);
-void			minishell_putstr(const char *str);
+void			minishell_putstr(char *str);
 int				failed_to_write_exit_code(char *buf);
 void			update_prompt(t_prompt **prompt, int sig);
 void			update_node(t_prompt **prompt, char *updated_line);
