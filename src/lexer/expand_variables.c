@@ -10,7 +10,11 @@ static t_token	*delete_token(t_data *data, t_token *token_to_delete)
 
 	tmp = data->token;
 	while (tmp->next != token_to_delete)
+	{
+		if (token_to_delete == tmp)
+			return (tmp);
 		tmp = tmp->next;
+	}
 	tmp->next = token_to_delete->next;
 	if (tmp->end == token_to_delete->start - 1)
 		tmp->end = token_to_delete->end;

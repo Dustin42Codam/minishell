@@ -2,9 +2,6 @@
 # define STRUCTS_H
 
 # include "libft.h"
-# include "minishell_termcap_signal.h"
-# include <curses.h>
-# include <term.h>
 
 /**
  * s_expansion - Struct for expanding environment variables
@@ -160,9 +157,6 @@ typedef struct s_data
 	int				interactive;
 	int				exit_status;
 	int				sig_NO;
-	t_prompt		*prompt;
-	struct termios	new_term;
-	struct termios	old_term;
 }	t_data;
 
 #endif

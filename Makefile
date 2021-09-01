@@ -37,44 +37,6 @@ SRC = main.c \
 	built_in_functions/builtin_unset.c \
 	built_in_functions/builtin_env.c \
 	built_in_functions/builtin_exit.c \
-	terminal_capabilities/termcap_functions_calling_termcap_database_2.c \
-	terminal_capabilities/termcap_is_functions_2.c \
-	terminal_capabilities/termcap_get_functions_2.c \
-	terminal_capabilities/termcap_print_functions_2.c \
-	terminal_capabilities/termcap_DLL_history_2.c \
-	terminal_capabilities/termcap_functions_calling_termcap_database_3.c \
-	terminal_capabilities/termcap_is_functions_3.c \
-	terminal_capabilities/termcap_get_functions_3.c \
-	terminal_capabilities/termcap_unsed.c \
-	terminal_capabilities/termcap_DLL_input_line_4.c \
-	terminal_capabilities/termcap_is_functions_4.c \
-	terminal_capabilities/termcap_get_functions_4.c \
-	terminal_capabilities/termcap_get_functions_5.c \
-	terminal_capabilities/termcap_read.c \
-	terminal_capabilities/termcap_DLL_input_line_new_node.c \
-	terminal_capabilities/termcap_DLL_history_new_node.c \
-	terminal_capabilities/termcap_DLL_input_line_free.c \
-	terminal_capabilities/termcap_DLL_history_free.c \
-	terminal_capabilities/termcap_0_read_line.c \
-	terminal_capabilities/termcap_functions_calling_termcap_database.c \
-	terminal_capabilities/termcap_DLL_history_update.c \
-	terminal_capabilities/termcap_write.c \
-	terminal_capabilities/termcap_is_functions_keys_size.c \
-	terminal_capabilities/termcap_DLL_input_pop.c \
-	terminal_capabilities/termcap_del_char.c \
-	terminal_capabilities/termcap_history_behaviur.c \
-	terminal_capabilities/termcap_utils.c \
-	terminal_capabilities/termcap_free_functions.c \
-	terminal_capabilities/termcap_get_functions.c \
-	terminal_capabilities/termcap_init_functions.c \
-	terminal_capabilities/termcap_print_functions.c \
-	terminal_capabilities/termcap_is_functions_keys.c \
-	terminal_capabilities/termcap_DLL_input_line_get.c \
-	terminal_capabilities/termcap_move_cursor_left.c \
-	terminal_capabilities/termcap_move_cursor_right.c \
-	terminal_capabilities/termcap_DLL_input_insert.c \
-	terminal_capabilities/termcap_DLL_history_insert.c \
-	terminal_capabilities/termcap_DLL_history_copy.c \
 	lexer/lexer.c \
 	lexer/lexer_utils_1.c \
 	lexer/lexer_utils_2.c \
@@ -101,8 +63,6 @@ SRC = main.c \
 	executor/search_command.c \
 	environ/environ.c \
 	environ/environ_utils.c \
-	signals/signals_call_function_by_sig.c \
-	signals/signals_init_sig.c \
 	signals/signals.c
 
 OBJ = $(addprefix $(ODIR)/$(SDIR)/, $(SRC:.c=.o))
@@ -113,11 +73,12 @@ OBJ = $(addprefix $(ODIR)/$(SDIR)/, $(SRC:.c=.o))
 
 LIBFT = libft
 TERMCAPS = -ltermcap
-LIBS = -L $(LIBFT) -lft $(TERMCAPS) -lreadline
+READLINE = -lreadline -L/usr/local/opt/readline/lib
+LIBS = -L $(LIBFT) -lft $(READLINE) $(TERMCAPS)
 
 #headers aka dependencys
 
-HEADER := -I $(IDIR) -I $(LIBFT)
+HEADER := -I $(IDIR) -I $(LIBFT) -I/usr/local/opt/readline/include
 
 # OBJ := $(patsubst %,$(ODIR)/%,$(OBJ))
 DBG := $(patsubst %,$(DDIR)/%,$(OBJ))
@@ -130,7 +91,7 @@ C_REGULAR := -Wall -Wextra -g $(HEADER)
 
 #nasm compiler
 
-CC := clang
+CC := clang 
 
 #if bonus
 
@@ -151,13 +112,11 @@ endif
 all: $(NAME)
 
 $(NAME): $(LIBFT)/libft.a $(OBJ)
-	@echo "${GREEN}Building minishell${NC}"
 	@$(CC) $(FLAGS) $(OBJ) $(LIBS) -o $(NAME)
 	@echo "${GREEN}minishell ready!${NC}"
 
 $(ODIR)/%.o: %.c
 	@mkdir -p $(ODIR)/$(SDIR)/built_in_functions \
-		$(ODIR)/$(SDIR)/terminal_capabilities \
 		$(ODIR)/$(SDIR)/lexer \
 		$(ODIR)/$(SDIR)/parser \
 		$(ODIR)/$(SDIR)/executor \
@@ -169,6 +128,7 @@ $(LIBFT)/libft.a:
 	@echo "${GREEN}Building libft${NC}"
 	@make -C $(LIBFT)
 	@echo "${GREEN}libft ready!${NC}"
+	@echo "${GREEN}Building minishell${NC}"
 
 clean:
 	@echo "${RED}Cleaning build!${NC}"

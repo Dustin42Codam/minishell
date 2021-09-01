@@ -76,13 +76,9 @@ void	make_command(t_data *data, t_astree *node, t_command *cmd, t_file_io fd)
  * - then we can use errno again inside short if statements.
  * 		The first error that gets detected will be used as exit code.
 **/
-static void	execute_child(t_data *data, t_command *cmd, char **env_array)
+static void	execute_child(t_command *cmd, char **env_array)
 {
 	errno = 0;
-	if (isatty(cmd->fd.save_stdin))
-		tcsetattr(cmd->fd.save_stdin, TCSANOW, &data->old_term);
-	if (errno == ENOTTY)
-		errno = 0;
 	if (errno == 0 && cmd->fd.dup_stdin)
 		dup2(cmd->fd.read, STDIN_FILENO);
 	if (errno == 0 && cmd->fd.dup_stdout)
@@ -107,16 +103,15 @@ void	execute_command_argv(t_data *data, t_command *cmd, t_environ *env)
 	char	**env_array;
 
 	env_array = environ_get_array(env);
+	incrment_global_sig();
 	pid = fork();
 	if (pid == -1)
 		exit_minishell(errno);
 	else if (pid == 0)
-		execute_child(data, cmd, env_array);
+		execute_child(cmd, env_array);
+	errno = 0;
 	waitpid(pid, &stat, 0);
-	if (isatty(cmd->fd.save_stdin))
-		tcsetattr(cmd->fd.save_stdin, TCSANOW, &data->new_term);
-	if (errno == ENOTTY)
-		errno = 0;
+	decrement_global_sig();
 	free_command_argv(cmd, env_array);
 	if (WIFEXITED(stat))
 		data->exit_status = WEXITSTATUS(stat);

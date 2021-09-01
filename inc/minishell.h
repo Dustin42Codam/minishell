@@ -1,7 +1,7 @@
 #ifndef MINISHELL_H
 # define MINISHELL_H
 
-# include "minishell_termcap_signal.h"
+extern int g_sig;
 
 # include "structs.h"
 
@@ -27,6 +27,8 @@ t_data	*init_data(char **envp);
 void	free_data(t_data *data);
 void	increment_shlvl(t_environ *env);
 void	quote_removal(t_data **data);
+void	decrement_global_sig();
+void    incrment_global_sig();
 
 /**
  * Libft and glibc wrapper functions 
@@ -36,5 +38,12 @@ ssize_t	minishell_write(int fd, const void *buf, size_t count);
 ssize_t	minishell_putchar_fd(const char c, int fd);
 ssize_t	minishell_putstr_fd(const char *s, int fd);
 ssize_t	minishell_putendl_fd(const char *s, int fd);
+
+/*
+**	SIGNAL HOOK FUNCTIOMS
+*/
+
+void	print_pr(int ig);
+void	sig_quit(int ig);
 
 #endif

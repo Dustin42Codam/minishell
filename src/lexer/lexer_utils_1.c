@@ -4,7 +4,7 @@
 
 char	*is_meta(char c)
 {
-	return (ft_strchr(META_CHAR, c));
+	return (ft_strchr(METAS_CHAR, c));
 }
 
 char	*is_expansion(char c)
