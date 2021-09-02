@@ -27,8 +27,6 @@ static t_token	*delete_token(t_data *data, t_token *token_to_delete)
  * expand_variables - expands environment variables within token strings
  *	- iterates through list of tokens
  *	- does variable expansion on tokens marked with EXPAND
- *	TODO:
- *	- pass t_data struct with the copy of environment to do expansions
 **/
 void	expand_variables(t_data *data)
 {
@@ -37,17 +35,22 @@ void	expand_variables(t_data *data)
 	tmp = data->token;
 	while (tmp)
 	{
-		while (tmp->type & EXPAND)
+		if (tmp->type & HERE_DOC && tmp->next)
+			tmp = tmp->next;
+		else
 		{
-			do_variable_expansion(tmp, data->env);
-			if (check_expansion(tmp))
-				continue ;
-			if (tmp->type == WORD)
-				split_words(tmp);
-			if (tmp->type == WORD && tmp->str[0] == 0)
+			while (tmp->type & EXPAND)
 			{
-				tmp = delete_token(data, tmp);
-				continue ;
+				do_variable_expansion(tmp, data->env);
+				if (check_expansion(tmp))
+					continue ;
+				if (tmp->type == WORD)
+					split_words(tmp);
+				if (tmp->type == WORD && tmp->str[0] == 0)
+				{
+					tmp = delete_token(data, tmp);
+					continue ;
+				}
 			}
 		}
 		tmp = tmp->next;
