@@ -1,6 +1,8 @@
 #include "minishell.h"
 #include "environ.h"
 #include "libft.h"
+
+#include <stdlib.h>
 #include <errno.h>
 
 void	increment_shlvl(t_environ *env)
@@ -19,5 +21,7 @@ void	increment_shlvl(t_environ *env)
 	if (errno)
 		exit_minishell(errno);
 	new = environ_new(key_value);
+	free(key_value);
+	free(shlvl_str_new);
 	environ_add_back(&env, new);
 }

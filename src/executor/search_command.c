@@ -39,6 +39,19 @@ static int	check_if_builtin(char *s)
 	return (0);
 }
 
+static void	free_path(char **path)
+{
+	size_t	i;
+
+	i = 0;
+	while (path[i])
+	{
+		free(path[i]);
+		i++;
+	}
+	free(path);
+}
+
 int	search_command(t_astree *node, t_environ *env)
 {
 	struct stat	statbuf;
@@ -60,10 +73,12 @@ int	search_command(t_astree *node, t_environ *env)
 			free(node->str);
 			node->str = try_path;
 			errno = 0;
+			free_path(path);
 			return (0);
 		}
 		free(try_path);
 		i++;
 	}
+	free_path(path);
 	return (0);
 }
