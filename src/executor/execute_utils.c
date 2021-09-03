@@ -68,6 +68,7 @@ void	make_command(t_data *data, t_astree *node, t_command *cmd, t_file_io fd)
 static void	execute_child(t_data *data, t_command *cmd, char **env_array)
 {
 	tcsetattr(cmd->fd.save_stdin, TCSANOW, &data->old_term);
+	errno = 0;
 	if (cmd->fd.dup_stdin)
 		dup2(cmd->fd.read, STDIN_FILENO);
 	if (cmd->fd.dup_stdout)
@@ -81,7 +82,7 @@ static void	execute_child(t_data *data, t_command *cmd, char **env_array)
 		dup2(cmd->fd.save_stdout, STDOUT_FILENO);
 		printf("minishell: %s - Error: %s [%d]\n",
 			cmd->argv[0], strerror(errno), errno);
-		exit(errno);
+		errno = 0;
 	}
 }
 
@@ -92,6 +93,7 @@ void	execute_command_argv(t_data *data, t_command *cmd, t_environ *env)
 	char	**env_array;
 
 	env_array = environ_get_array(env);
+	incrment_global_sig();
 	pid = fork();
 	if (pid == -1)
 		exit_minishell(errno);
@@ -99,6 +101,7 @@ void	execute_command_argv(t_data *data, t_command *cmd, t_environ *env)
 		execute_child(data, cmd, env_array);
 	errno = 0;
 	waitpid(pid, &stat, 0);
+	decrement_global_sig();
 	tcsetattr(cmd->fd.save_stdin, TCSANOW, &data->new_term);
 	free_command_argv(cmd, env_array);
 	if (WIFEXITED(stat))

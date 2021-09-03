@@ -6,7 +6,7 @@
 /**
  *	Strings used by the lexical analyzer
 **/
-# define META_CHAR			"<>|"
+# define METAS_CHAR			"<>|"
 # define BREAK_CHAR			"<>| \t\n"
 # define QUOTE_CHAR			"\"\'"
 # define EXPANSION_CHAR		"$"

@@ -1,10 +1,14 @@
-#include "minishell.h"
-#include "lexer.h"
-#include "parser.h"
 #include "executor.h"
+#include "parser.h"
+#include "lexer.h"
 #include "libft.h"
-#include <stdlib.h>
+
+#include <readline/readline.h>
+#include <readline/history.h>
+
 #include <stdio.h>
+#include <signal.h>
+#include <stdlib.h>
 #include <errno.h>
 
 static int	check_option_flag(char *arg)
@@ -68,18 +72,17 @@ void	minishell_non_interactive(t_data *data, int argc, char *argv[])
 
 void	minishell_interactive(t_data *data)
 {
-	static const int	new_line_signal = 42;
-
-	data->sig_NO = 42;
+	signal(SIGINT, print_pr);
+	signal(SIGQUIT, sig_quit);
 	data->interactive = TRUE;
 	while (1)
 	{
-		if (data->sig_NO == SIGINT || data->sig_NO == new_line_signal)
-			print_prompt(data->prompt);
-		update_prompt(&data->prompt, data->sig_NO);
-		data->sig_NO = ft_readline(&data->line, data->prompt);
-		if (data->sig_NO == EOF)
-			exit(data->exit_status);
+		data->line = readline("minishell$ ");
+		if (data->line == NULL)
+			return ;
+		errno = 0;
+		if (ft_strlen(data->line) != 0)
+			add_history(data->line);
 		data->line_len = ft_strlen(data->line);
 		if (lexer(&data, data->line) == EXIT_FAILURE)
 			printf("Syntax error!\n");

@@ -10,9 +10,13 @@
 #                                                                              #
 # **************************************************************************** #
 
-NAME = libft.a
+NAME := libft.a
 
-HEADER = libft.h
+HEADER := libft.h
+
+SDIR := src
+IDIR := inc
+ODIR := .obj
 
 SRC = ft_atoi.c ft_isascii.c ft_memmove.c ft_putstr_fd.c \
 	ft_strlcpy.c ft_tolower.c ft_bzero.c ft_isdigit.c \
@@ -31,7 +35,7 @@ SRC = ft_atoi.c ft_isascii.c ft_memmove.c ft_putstr_fd.c \
 	ft_lstdelone.c ft_lstiter.c ft_lstmap.c ft_lstnew.c \
 	ft_lstsize.c ft_lstlast.c
 
-OBJ = $(SRC:.c=.o)
+OBJ = $(addprefix $(ODIR)/, $(SRC:.c=.o))
 
 ifdef DEBUG
 	CFLAGS =-Wall -Werror -Wextra -g -fsanitize=address
@@ -52,11 +56,12 @@ fast:
 debug:
 	$(MAKE) DEBUG=1 all
 
-%.o: %.c $(HEADER)
-	@$(CC) -c $(CFLAGS) -o $@ $< 
+$(ODIR)/%.o: %.c
+	@mkdir -p $(ODIR)
+	@$(CC) $(FLAGS) -I $(HEADER) -c $< -o $@
 
 clean:
-	@/bin/rm -f $(OBJ) 
+	@/bin/rm -rf $(ODIR)
 
 fclean: clean
 	@/bin/rm -f $(NAME)

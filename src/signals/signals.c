@@ -1,53 +1,43 @@
-#include "libft.h"
 #include "minishell.h"
-
 #include <signal.h>
-#include <stdlib.h>
 #include <stdio.h>
-#include <errno.h>
-#include <unistd.h>
+#include <readline/readline.h>
+#include <readline/history.h>
 
-
-void	handel_sig(int signal)
+void	sig_quit(int ig)
 {
-	int	retVal;
-
-	retVal = fork();
-	if (signal == SIGINT)
-		kill(retVal, SIGKILL);
+	(void)ig;
+	signal(SIGINT, print_pr);
+	signal(SIGQUIT, sig_quit);
+	if (g_sig == 0)
+	{
+		rl_replace_line("", 0);
+		ft_putchar('\n');
+		rl_on_new_line();
+		rl_redisplay();
+	}
 }
 
-int	call(char *line)
+void	print_pr(int ig)
 {
-	char		*env;
-//	char	*args[] = {"", NULL};
-	char		**parts;
-	pid_t		pid;
-	int		index;
+	(void)ig;
+	signal(SIGINT, print_pr);
+	signal(SIGQUIT, sig_quit);
+	if (g_sig == 0)
+	{
+		rl_replace_line("", 0);
+		ft_putchar('\n');
+		rl_on_new_line();
+		rl_redisplay();
+	}
+}
 
-//	args[0] = ft_strjoin("/bin/", line);
-	index = 0;
-	env = getenv("PATH");
-	printf("this is env %s\n", env);
-	parts = ft_split(line, ' ');
-	while (parts[index])
-	{
-		printf("this is parts %s\n", parts[index]);
-		index++;
-	}
-	if (errno)
-		exit_minishell(errno);
-	pid = fork();
-	if (pid < 0)
-		return (-1);
-	if (pid == 0)
-	{
-	/*
-		printf("one :%s 2: %s", args[0], args[1]);
-		execve(args[0], args, envp);
-		perror("Could not execve");
-		exit(1);
-	*/
-	}
-	return pid;
+void	incrment_global_sig(void)
+{
+	g_sig++;
+}
+
+void	decrement_global_sig(void)
+{
+	g_sig--;
 }
