@@ -2,12 +2,11 @@
 #include "parser.h"
 #include "lexer.h"
 #include "libft.h"
-
 #include <readline/readline.h>
 #include <readline/history.h>
+#include <stdio.h>
 #include <signal.h>
 #include <stdlib.h>
-#include <stdio.h>
 #include <errno.h>
 
 static int	check_option_flag(char *arg)

@@ -1,3 +1,4 @@
+#include "minishell.h"
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
@@ -11,7 +12,7 @@ void	exit_minishell(int error_id)
 
 void	exit_minishell_custom(char *str)
 {
-	printf("%s\n", str);
-	printf("Exiting minishell...\n");
+	minishell_putstr(str);
+	minishell_putstr("Exiting minishell...\n");
 	exit(1);
 }

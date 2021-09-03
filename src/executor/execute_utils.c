@@ -65,17 +65,6 @@ void	make_command(t_data *data, t_astree *node, t_command *cmd, t_file_io fd)
 	init_cmd(data, cmd, fd);
 }
 
-/**
- * a little workaround for the fork() - errno - macOS bug:
- * - macOS sets errno = 22 after fork() so we need to set errno to 0 manually
- * - a call to isatty() guarantees that we don't reset
- * 		the termios structure on a pipe/fifo file object
- * - if isatty() fails it sets errno to ENOTTY
- * 		(fd is not a terminal, we are in a pipe)
- * 		so we need to set errno again back to 0
- * - then we can use errno again inside short if statements.
- * 		The first error that gets detected will be used as exit code.
-**/
 static void	execute_child(t_command *cmd, char **env_array)
 {
 	errno = 0;

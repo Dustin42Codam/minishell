@@ -45,5 +45,7 @@ ssize_t	minishell_putendl_fd(const char *s, int fd);
 
 void	print_pr(int ig);
 void	sig_quit(int ig);
+void	decrement_global_sig(void);
+void	incrment_global_sig(void);
 
 #endif

@@ -156,7 +156,7 @@ typedef struct s_data
 	int				token_mask;
 	int				interactive;
 	int				exit_status;
-	int				sig_NO;
+	int				sig_NO;	// delete?
 }	t_data;
 
 #endif

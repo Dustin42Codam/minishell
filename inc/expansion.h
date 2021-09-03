@@ -3,7 +3,7 @@
 
 # include "minishell.h"
 
-void	expand_variables(t_token *token, t_environ *env);
+void	expand_variables(t_data *data);
 
 char	*merge_node_strings(t_list *head);
 void	append_string(char *dest, char *suffix);

@@ -48,7 +48,7 @@ while (True):
 		fout.close()
 		os._exit(1)
 	index_comand = random.randint(0, len_of_valid_comands - 1)
-	index_redirect = random.randint(0, 3 - 1)
+	index_redirect = random.randint(0, len_redirect - 1)
 	comand = vailabe_comands[index_comand] + " " + redirect[redirect]
 	fout.write(comand + "\n")
 	line_cnt = line_cnt + 1
