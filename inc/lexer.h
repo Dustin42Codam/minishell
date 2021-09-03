@@ -25,6 +25,7 @@
 # define EXPAND		0x0040
 # define SQUOTE		0x0080
 # define DQUOTE		0x0100
+# define RMQUOTE	0x0200
 
 int		lexer(t_data **data, char *line);
 

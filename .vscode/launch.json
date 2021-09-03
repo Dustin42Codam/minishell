@@ -8,7 +8,7 @@
 		"program": "/home/dustin/Projects/minishell_pipes/minishell",
 		// "program": "${workspaceFolder}/tests/environ/test_environ.out",
 		// "args": [ "-c", "./minishell"],
-		"args": [ "-c", "grep a << lol"],
+		// "args": [ "-c", "grep a << lo'l'"],
 		// "args": [ "-c", "< files cat | echo 123"],
 		// "args": [ "-c", "printf \"abc\" | wc -c"],
 		// "args": [ "-c", "ls -lahs / | grep 4.0 | wc -c"],

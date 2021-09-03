@@ -90,7 +90,7 @@ int	lexer(t_data **data, char *line)
 	if ((*data)->interactive == FALSE)
 		init_new_token(&tmp_token, 0, &j, i);
 	if ((*data)->token_mask & EXPAND)
-		expand_variables(*data);
+		expand_variables((*data)->token, (*data)->env);
 	quote_removal(data);
 	return (EXIT_SUCCESS);
 }

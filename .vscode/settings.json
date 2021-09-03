@@ -7,6 +7,8 @@
 		"ioctls.h": "c",
 		"ttydefaults.h": "c",
 		"curses.h": "c",
-		"cerrno": "c"
+		"cerrno": "c",
+		"lexer.h": "c",
+		"minishell.h": "c"
 	}
 }

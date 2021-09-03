@@ -37,6 +37,7 @@ void	merge_nodes(t_token *tmp)
 	free(tmp->next->str);
 	free(tmp->next);
 	tmp->str = new;
+	tmp->type |= RMQUOTE;
 	tmp->next = next;
 }
 

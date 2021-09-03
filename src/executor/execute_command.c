@@ -1,5 +1,4 @@
 #include "minishell.h"
-#include "environ.h"
 #include "executor.h"
 #include "parser.h"
 #include <string.h>
@@ -22,38 +21,6 @@ static void	execute_redirection_in(t_data *data, t_astree *node, t_file_io fd)
 		return (print_error(data, node->str, errno));
 	if (node->right)
 		execute_word_list(data, node->right, fd);
-}
-
-static void	execute_here_doc(t_data *data, t_astree *node, t_file_io fd)
-{
-	char	*input;
-	char	*delimeter;
-
-	if (pipe(fd.pipe) == -1)
-		exit_minishell(errno);
-
-	fd.dup_stdin = 1;
-	fd.dup_stdout = 0;
-	fd.read = fd.pipe[0];
-	fd.write = 1;
-
-	input = NULL;
-	delimeter = node->str;
-	while (1)
-	{
-		input = readline("> ");
-		if (input == NULL)
-			continue ;
-		else if (environ_compare(input, delimeter) == 1)
-			break ;
-		else if (errno)
-			exit_minishell(errno);
-		write(fd.pipe[1], input, ft_strlen(input));
-		write(fd.pipe[1], "\n", 1);
-	}
-	close(fd.pipe[1]);
-	execute_command(data, node->right, fd);
-	close(fd.pipe[0]);
 }
 
 static void	execute_redirection_out(t_data *data, t_astree *node, t_file_io fd)

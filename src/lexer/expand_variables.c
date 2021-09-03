@@ -4,11 +4,11 @@
 #include "expansion.h"
 #include <stdlib.h>
 
-static t_token	*delete_token(t_data *data, t_token *token_to_delete)
+static t_token	*delete_token(t_token *token, t_token *token_to_delete)
 {
 	t_token	*tmp;
 
-	tmp = data->token;
+	tmp = token;
 	while (tmp->next != token_to_delete)
 	{
 		if (token_to_delete == tmp)
@@ -28,11 +28,11 @@ static t_token	*delete_token(t_data *data, t_token *token_to_delete)
  *	- iterates through list of tokens
  *	- does variable expansion on tokens marked with EXPAND
 **/
-void	expand_variables(t_data *data)
+void	expand_variables(t_token *token, t_environ *env)
 {
 	t_token		*tmp;
 
-	tmp = data->token;
+	tmp = token;
 	while (tmp)
 	{
 		if (tmp->type & HERE_DOC && tmp->next)
@@ -41,14 +41,14 @@ void	expand_variables(t_data *data)
 		{
 			while (tmp->type & EXPAND)
 			{
-				do_variable_expansion(tmp, data->env);
+				do_variable_expansion(tmp, env);
 				if (check_expansion(tmp))
 					continue ;
 				if (tmp->type == WORD)
 					split_words(tmp);
 				if (tmp->type == WORD && tmp->str[0] == 0)
 				{
-					tmp = delete_token(data, tmp);
+					tmp = delete_token(token, tmp);
 					continue ;
 				}
 			}
