@@ -4,11 +4,11 @@
 #include "expansion.h"
 #include <stdlib.h>
 
-static t_token	*delete_token(t_data *data, t_token *token_to_delete)
+static t_token	*delete_token(t_token *token, t_token *token_to_delete)
 {
 	t_token	*tmp;
 
-	tmp = data->token;
+	tmp = token;
 	while (tmp->next != token_to_delete)
 	{
 		if (token_to_delete == tmp)
@@ -27,27 +27,30 @@ static t_token	*delete_token(t_data *data, t_token *token_to_delete)
  * expand_variables - expands environment variables within token strings
  *	- iterates through list of tokens
  *	- does variable expansion on tokens marked with EXPAND
- *	TODO:
- *	- pass t_data struct with the copy of environment to do expansions
 **/
-void	expand_variables(t_data *data)
+void	expand_variables(t_token *token, t_environ *env)
 {
 	t_token		*tmp;
 
-	tmp = data->token;
+	tmp = token;
 	while (tmp)
 	{
-		while (tmp->type & EXPAND)
+		if (tmp->type & HERE_DOC && tmp->next)
+			tmp = tmp->next;
+		else
 		{
-			do_variable_expansion(tmp, data->env);
-			if (check_expansion(tmp))
-				continue ;
-			if (tmp->type == WORD)
-				split_words(tmp);
-			if (tmp->type == WORD && tmp->str[0] == 0)
+			while (tmp->type & EXPAND)
 			{
-				tmp = delete_token(data, tmp);
-				continue ;
+				do_variable_expansion(tmp, env);
+				if (check_expansion(tmp))
+					continue ;
+				if (tmp->type == WORD)
+					split_words(tmp);
+				if (tmp->type == WORD && tmp->str[0] == 0)
+				{
+					tmp = delete_token(token, tmp);
+					continue ;
+				}
 			}
 		}
 		tmp = tmp->next;

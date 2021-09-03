@@ -46,9 +46,8 @@ static int	read_flags(int argc, char *argv[])
 
 void	minishell_non_interactive(t_data *data, int argc, char *argv[])
 {
-	const static int	no_signal = 0;
 	int					flags;
-
+	static const int	no_signal = 0;	// delete??
 	data->interactive = FALSE;
 	data->sig_NO = no_signal;
 	flags = read_flags(argc, argv);

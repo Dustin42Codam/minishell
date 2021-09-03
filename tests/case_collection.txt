@@ -16,3 +16,7 @@ todo:
 wc -l < file > file2
 ls | grep "o" | wc -l > file.out < file.in > file
 grep "a" << LOL ABC		# "ABC" gets passed as 2nd argument to grep after it got its input from the here doc
+
+here docs:
+grep a << lol > file
+grep a << lol 1 2 3

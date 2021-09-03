@@ -1,7 +1,9 @@
 #ifndef MINISHELL_H
 # define MINISHELL_H
+
+extern int g_sig;
+
 # include "structs.h"
-int	g_sig;
 
 /**
  *	Boolean defines - Because we are too cool for stdbool.

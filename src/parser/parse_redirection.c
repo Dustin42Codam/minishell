@@ -42,6 +42,8 @@ t_astree	*parse_redirection(t_data *data)
 		delete_ast(word_list);
 		return (NULL);
 	}
+	if (ast_node_type & AST_HERE_DOC && data->token_ptr->type & RMQUOTE)
+		ast_node_type |= RMQUOTE;
 	if (get_next_token(data, &filename, WORD))
 	{
 		delete_ast(word_list);

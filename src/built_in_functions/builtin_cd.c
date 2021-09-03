@@ -16,7 +16,7 @@ static int	builtin_cd_error(char *path, int error_id)
 
 int	builtin_cd(t_command *cmd, t_environ *env)
 {
-	char	*cwd;
+	char	cwd[PATH_MAX + 1];
 
 	errno = 0;
 	if (cmd->argc != 2)
@@ -24,18 +24,14 @@ int	builtin_cd(t_command *cmd, t_environ *env)
 		minishell_putendl_fd("minishell: cd: single argument required", 2);
 		return (1);
 	}
-	cwd = getcwd(NULL, PATH_MAX);
-	if (cwd == NULL)
+	if (getcwd(cwd, PATH_MAX) == NULL)
 		return (errno);
 	environ_set(env, "OLDPWD", cwd);
-	free(cwd);
-	chdir(cmd->argv[1]);
-	if (errno)
+	if (chdir(cmd->argv[1]) == -1)
 		return (builtin_cd_error(cmd->argv[1], errno));
-	cwd = getcwd(NULL, PATH_MAX);
-	if (cwd == NULL)
+	getcwd(cwd, PATH_MAX);
+	if (getcwd(cwd, PATH_MAX) == NULL)
 		return (errno);
 	environ_set(env, "PWD", cwd);
-	free(cwd);
 	return (0);
 }

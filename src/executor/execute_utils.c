@@ -65,24 +65,23 @@ void	make_command(t_data *data, t_astree *node, t_command *cmd, t_file_io fd)
 	init_cmd(data, cmd, fd);
 }
 
-static void	execute_child(t_data *data, t_command *cmd, char **env_array)
+static void	execute_child(t_command *cmd, char **env_array)
 {
-	tcsetattr(cmd->fd.save_stdin, TCSANOW, &data->old_term);
 	errno = 0;
-	if (cmd->fd.dup_stdin)
+	if (errno == 0 && cmd->fd.dup_stdin)
 		dup2(cmd->fd.read, STDIN_FILENO);
-	if (cmd->fd.dup_stdout)
+	if (errno == 0 && cmd->fd.dup_stdout)
 		dup2(cmd->fd.write, STDOUT_FILENO);
-	if (cmd->fd.output)
+	if (errno == 0 && cmd->fd.output)
 		dup2(cmd->fd.output, STDOUT_FILENO);
-	if (cmd->fd.input)
+	if (errno == 0 && cmd->fd.input)
 		dup2(cmd->fd.input, STDIN_FILENO);
 	if (errno || execve(cmd->argv[0], cmd->argv, env_array) == -1)
 	{
 		dup2(cmd->fd.save_stdout, STDOUT_FILENO);
 		printf("minishell: %s - Error: %s [%d]\n",
 			cmd->argv[0], strerror(errno), errno);
-		errno = 0;
+		exit(errno);
 	}
 }
 
@@ -98,11 +97,10 @@ void	execute_command_argv(t_data *data, t_command *cmd, t_environ *env)
 	if (pid == -1)
 		exit_minishell(errno);
 	else if (pid == 0)
-		execute_child(data, cmd, env_array);
+		execute_child(cmd, env_array);
 	errno = 0;
 	waitpid(pid, &stat, 0);
 	decrement_global_sig();
-	tcsetattr(cmd->fd.save_stdin, TCSANOW, &data->new_term);
 	free_command_argv(cmd, env_array);
 	if (WIFEXITED(stat))
 		data->exit_status = WEXITSTATUS(stat);

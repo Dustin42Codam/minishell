@@ -6,7 +6,7 @@
 #    By: alkrusts <alkrusts@student.codam.nl>         +#+                      #
 #                                                    +#+                       #
 #    Created: 2020/05/20 11:05:23 by alkrusts      #+#    #+#                  #
-#    Updated: 2020/11/14 14:54:04 by alkrusts      ########   odam.nl          #
+#    Updated: 2021/09/03 18:41:41 by dkrecisz      ########   odam.nl          #
 #                                                                              #
 # **************************************************************************** #
 
@@ -58,7 +58,7 @@ debug:
 
 $(ODIR)/%.o: %.c
 	@mkdir -p $(ODIR)
-	@$(CC) $(FLAGS) -I $(HEADER) -c $< -o $@
+	@$(CC) $(FLAGS) -c $< -o $@
 
 clean:
 	@/bin/rm -rf $(ODIR)

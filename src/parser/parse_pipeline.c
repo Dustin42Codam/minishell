@@ -10,7 +10,8 @@
  *	or just a single command (echo -n "abc").
  *
  *  Grammar:
- * 	<pipeline>	::=		<pipeline> '|' <command>
+ * 	<pipeline>	::=		<command> '|' <pipeline>
+ *				|		<pipeline> '|'
  *				|		<command>
 **/
 t_astree	*parse_pipeline(t_data *data)
@@ -31,6 +32,7 @@ t_astree	*parse_pipeline(t_data *data)
 
 /**
  *	<pipeline>	::=		<command> '|' <pipeline>
+ *				|		<pipeline> '|'
 **/
 t_astree	*parse_pipe_sequence(t_data *data)
 {

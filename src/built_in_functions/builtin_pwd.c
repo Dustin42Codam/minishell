@@ -5,7 +5,7 @@
 
 int	builtin_pwd(t_command *cmd)
 {
-	char	*cwd;
+	char	cwd[PATH_MAX + 1];
 
 	errno = 0;
 	if (cmd->argc > 1 && cmd->argv[1][0] == '-')
@@ -13,10 +13,8 @@ int	builtin_pwd(t_command *cmd)
 		minishell_putendl_fd("minishell: pwd: options are not supported", 2);
 		return (2);
 	}
-	cwd = getcwd(NULL, PATH_MAX);
-	if (cwd == NULL)
+	if (getcwd(cwd, PATH_MAX) == NULL)
 		return (errno);
 	minishell_putendl_fd(cwd, cmd->fd.write);
-	free(cwd);
 	return (0);
 }
