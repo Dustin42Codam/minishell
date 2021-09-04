@@ -5,7 +5,8 @@
 #include "lexer.h"
 #include <errno.h>
 #include <stdlib.h>
-#include <readline/readline.h>	//test on mac!
+#include <stdio.h>
+#include <readline/readline.h>
 #include <stdbool.h>
 
 static bool	is_empty(char *line)
