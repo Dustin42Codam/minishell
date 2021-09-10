@@ -29,6 +29,10 @@ int	main(int argc, char *argv[], char **envp)
 	t_data			*data;
 
 	g_sig = 0;
+	if (signal(SIGINT, sig_int_parent) == SIG_ERR)
+		exit_minishell_custom("Error SIGINT ");
+	if (signal(SIGQUIT, sig_quit_parent) == SIG_ERR)
+		exit_minishell_custom("Error SIGQUIT ");
 	data = init_data(envp);
 	init_terminal(data);
 	if (argc == 1)
@@ -36,5 +40,5 @@ int	main(int argc, char *argv[], char **envp)
 	else
 		minishell_non_interactive(data, argc, argv);
 	free_data(data);
-	return (0);
+	return (data->exit_status);
 }

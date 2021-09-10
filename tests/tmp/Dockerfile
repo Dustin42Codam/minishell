@@ -15,6 +15,7 @@ RUN apt-get install -y vim
 RUN apt-get install -y git
 RUN apt-get install -y clang
 RUN apt-get install -y bash
+RUN apt-get install -y libncurses5-dev libncursesw5-dev
 
 RUN git clone https://github.com/Dustin42Codam/minishell.git
 

@@ -45,9 +45,10 @@ ssize_t	minishell_putendl_fd(const char *s, int fd);
 **	SIGNAL HOOK FUNCTIOMS
 */
 
-void	print_pr(int ig);
-void	sig_quit(int ig);
-void	decrement_global_sig(void);
-void	incrment_global_sig(void);
+void	sig_quit_parent(int ig);
+void	sig_int_parent(int ig);
+void	sig_int_child(int ig);
+void	sig_quit_child(int ig);
+void	sig_herdocs(int ig);
 
 #endif

@@ -35,7 +35,7 @@ void	init_new_token(t_token **token, size_t len, size_t *j, size_t i)
 			(*token)->end = i - 1;
 		(*token)->next = (t_token *)minishell_calloc(1, sizeof(t_token));
 		(*token) = (*token)->next;
-		(*token)->str = (char *)minishell_calloc(len, sizeof(char));
+		(*token)->str = (char *)minishell_calloc(len + 1, sizeof(char));
 		(*j) = 0;
 	}
 }

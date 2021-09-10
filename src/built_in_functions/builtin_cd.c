@@ -11,7 +11,8 @@ static int	builtin_cd_error(char *path, int error_id)
 	minishell_putstr_fd(path, 2);
 	minishell_putstr_fd(": ", 2);
 	minishell_putendl_fd(strerror(error_id), 2);
-	return (error_id);
+	errno = 0;
+	return (1);
 }
 
 int	builtin_cd(t_command *cmd, t_environ *env)

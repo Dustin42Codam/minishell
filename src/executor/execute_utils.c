@@ -11,6 +11,9 @@
 #include <stdio.h>
 #include <string.h>
 
+#include <readline/readline.h>
+#include <readline/history.h>
+
 static void	free_command_argv(t_command *cmd, char **env_array)
 {
 	size_t	i;
@@ -86,6 +89,14 @@ static void	execute_child(t_command *cmd, char **env_array, t_data *data)
 	}
 }
 
+void	execute_parent(pid_t pid, int *stat)
+{
+	errno = 0;
+	waitpid(pid, stat, 0);
+	signal(SIGQUIT, sig_quit_parent);
+	signal(SIGINT, sig_int_parent);
+}
+
 void	execute_command_argv(t_data *data, t_command *cmd, t_environ *env)
 {
 	pid_t	pid;
@@ -93,17 +104,28 @@ void	execute_command_argv(t_data *data, t_command *cmd, t_environ *env)
 	char	**env_array;
 
 	env_array = environ_get_array(env);
-	incrment_global_sig();
+	if (signal(SIGINT, sig_int_child) == SIG_ERR)
+		exit_minishell_custom("ERROR SIGINT ");
+	if (signal(SIGQUIT, sig_quit_child) == SIG_ERR)
+		exit_minishell_custom("ERROR SIGQUIT ");
 	pid = fork();
 	if (pid == -1)
 		exit_minishell(errno);
 	else if (pid == 0)
 		execute_child(cmd, env_array, data);
-	errno = 0;
-	waitpid(pid, &stat, 0);
-	decrement_global_sig();
+	else if (pid > 0)
+		execute_parent(pid, &stat);
 	tcsetattr(cmd->fd.save_stdin, TCSANOW, &data->new_term);
 	free_command_argv(cmd, env_array);
 	if (WIFEXITED(stat))
 		data->exit_status = WEXITSTATUS(stat);
+	if (WTERMSIG(stat) == 2)
+		data->exit_status = 130;
+	if (WTERMSIG(stat) == 3)
+	{
+		write(1, "Quit: 3\n", 8);
+		data->exit_status = 131;
+	}
+	if (g_sig == 130 || g_sig == 131 || g_sig ==  1)
+		data->exit_status = g_sig;
 }

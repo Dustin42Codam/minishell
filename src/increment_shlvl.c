@@ -14,6 +14,8 @@ void	increment_shlvl(t_environ *env)
 	int			shlvl_nb;
 
 	shlvl_str = environ_get(env, "SHLVL");
+	if (shlvl_str == NULL)
+		exit_minishell_custom("no sudo allowed ");
 	shlvl_nb = ft_atoi(shlvl_str);
 	shlvl_nb++;
 	shlvl_str_new = ft_itoa(shlvl_nb);
