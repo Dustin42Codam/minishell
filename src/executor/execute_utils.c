@@ -82,10 +82,14 @@ static void	execute_child(t_command *cmd, char **env_array, t_data *data)
 		dup2(cmd->fd.input, STDIN_FILENO);
 	if (errno || execve(cmd->argv[0], cmd->argv, env_array) == -1)
 	{
+		write(1, "lol\n", 4);
 		dup2(cmd->fd.save_stdout, STDOUT_FILENO);
 		printf("minishell: %s - Error: %s [%d]\n",
 			cmd->argv[0], strerror(errno), errno);
-		exit(errno);
+		if (errno == 13)
+			exit(126);
+		if (errno == 2)
+			exit(127);
 	}
 }
 
