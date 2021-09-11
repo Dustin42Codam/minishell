@@ -48,3 +48,30 @@ void	execute_command(t_data *data, t_astree *node, t_file_io fd)
 	else if (node->type == AST_WORD)
 		execute_word_list(data, node, fd);
 }
+
+void	make_command(t_data *data, t_astree *node, t_command *cmd, t_file_io fd)
+{
+	t_astree	*tmp;
+
+	cmd->argc = 0;
+	tmp = node;
+	while (tmp && tmp->type & (AST_WORD))
+	{
+		cmd->argc++;
+		tmp = tmp->right;
+	}
+	cmd->argv = (char **)minishell_calloc(cmd->argc + 1, sizeof(char *));
+	cmd->argc = 0;
+	tmp = node;
+	while (tmp && tmp->type & (AST_WORD))
+	{
+		if (cmd->argc == 0)
+			cmd->builtin_id = search_command(tmp, data->env);
+		cmd->argv[cmd->argc] = ft_strdup(tmp->str);
+		if (cmd->argv[cmd->argc] == NULL)
+			exit_minishell(errno);
+		cmd->argc++;
+		tmp = tmp->right;
+	}
+	init_cmd(data, cmd, fd);
+}

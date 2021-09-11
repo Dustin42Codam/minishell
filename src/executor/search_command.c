@@ -44,6 +44,8 @@ static void	free_path(char **path)
 	size_t	i;
 
 	i = 0;
+	if (path == NULL)
+		return ;
 	while (path[i])
 	{
 		free(path[i]);
@@ -52,18 +54,12 @@ static void	free_path(char **path)
 	free(path);
 }
 
-int	search_command(t_astree *node, t_environ *env)
+static int	do_path(char **path, t_astree *node)
 {
-	struct stat	statbuf;
-	char		**path;
 	char		*try_path;
+	struct stat	statbuf;
 	int			i;
-	int			builtin_id;
 
-	builtin_id = check_if_builtin(node->str);
-	if (ft_strchr(node->str, '/') || builtin_id)
-		return (builtin_id);
-	path = ft_split(environ_get(env, "PATH"), ':');
 	i = 0;
 	while (path && path[i])
 	{
@@ -79,6 +75,20 @@ int	search_command(t_astree *node, t_environ *env)
 		free(try_path);
 		i++;
 	}
+	return (1);
+}
+
+int	search_command(t_astree *node, t_environ *env)
+{
+	char		**path;
+	int			builtin_id;
+
+	builtin_id = check_if_builtin(node->str);
+	if (ft_strchr(node->str, '/') || builtin_id)
+		return (builtin_id);
+	path = ft_split(environ_get(env, "PATH"), ':');
+	if (do_path(path, node) == 0)
+		return (0);
 	free_path(path);
 	return (0);
 }

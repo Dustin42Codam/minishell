@@ -13,5 +13,6 @@ void		make_command(t_data *data, t_astree *node, t_command *cmd, \
 				t_file_io fd);
 void		execute_command_argv(t_data *data, t_command *cmd, t_environ *env);
 int			search_command(t_astree *node, t_environ *env);
+void		init_cmd(t_data *data, t_command *cmd, t_file_io fd);
 
 #endif

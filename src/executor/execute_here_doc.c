@@ -42,15 +42,12 @@ static void	read_input(t_data *data, t_astree *node, t_file_io fd)
 	g_sig = 0;
 	while (1)
 	{
-		if (signal(SIGINT, sig_herdocs) == SIG_ERR)
-			exit_minishell_custom("ERROR SIGINT ");
-		if (signal(SIGQUIT, sig_herdocs) == SIG_ERR)
+		if (signal(SIGINT, sig_herdocs) == SIG_ERR
+			|| signal(SIGQUIT, sig_herdocs) == SIG_ERR)
 			exit_minishell_custom("ERROR SIGINT ");
 		input = readline("> ");
 		if (input == NULL)
 			break ;
-		if (errno)
-			exit_minishell(errno);
 		else if (environ_compare(input, delimeter) == 1)
 			break ;
 		if (!(node->type & RMQUOTE) && ft_strchr(input, '$'))
