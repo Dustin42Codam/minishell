@@ -1,10 +1,11 @@
-FROM ubuntu:20.04
+FROM ubuntu:14.04
 
 # sudo docker build -t minishell .
 # sudo docker run -it --rm minishell 
 
 RUN apt-get update
 RUN apt-get install -y gcc
+RUN apt-get install -y make
 RUN apt-get install -y valgrind
 # RUN apt-get install -y ltrace
 RUN apt-get install -y libc6-dev-i386

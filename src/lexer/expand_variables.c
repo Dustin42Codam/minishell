@@ -32,6 +32,7 @@ static t_token	*delete_token(t_token *token, t_token *token_to_delete)
  *	- iterates through list of tokens
  *	- does variable expansion on tokens marked with EXPAND
 **/
+
 void	expand_variables(t_token *token, t_environ *env)
 {
 	t_token		*tmp;
