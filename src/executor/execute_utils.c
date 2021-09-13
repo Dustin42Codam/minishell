@@ -10,6 +10,7 @@
 #include <fcntl.h>
 #include <stdio.h>
 #include <string.h>
+#include <signal.h>
 
 #include <readline/readline.h>
 #include <readline/history.h>
@@ -79,6 +80,7 @@ void	execute_command_argv(t_data *data, t_command *cmd, t_environ *env)
 	int		stat;
 	char	**env_array;
 
+	stat = 0;
 	env_array = environ_get_array(env);
 	if (signal(SIGINT, sig_int_child) == SIG_ERR
 		|| signal(SIGQUIT, sig_quit_child) == SIG_ERR)
@@ -88,8 +90,7 @@ void	execute_command_argv(t_data *data, t_command *cmd, t_environ *env)
 		exit_minishell(errno);
 	else if (pid == 0)
 		execute_child(cmd, env_array, data);
-	else if (pid > 0)
-		execute_parent(pid, &stat);
+	execute_parent(pid, &stat);
 	tcsetattr(cmd->fd.save_stdin, TCSANOW, &data->new_term);
 	free_command_argv(cmd, env_array);
 	if (WIFEXITED(stat))
