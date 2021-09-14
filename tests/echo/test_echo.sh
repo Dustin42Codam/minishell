@@ -51,11 +51,11 @@ SEGFAULT=0
 # Read input file and pass each LINE as an argument to bash and minishell
 while read -r LINE
 do
-	MINI_OUTPUT=$(./minishell -c "$LINE")
+	MINI_OUTPUT=$(./minishell -c $LINE)
 	MINI_RET=$?
 	while [ $RET -eq 139 ]
 	do
-		MINI_OUTPUT=$(./minishell -c "$LINE")
+		MINI_OUTPUT=$(./minishell -c $LINE)
 		MINI_RET=$?
 		((SEGFAULT+=1))
 		if [ $SEGFAULT -ge 10 ]; then
@@ -65,7 +65,7 @@ do
 	done
 	echo "$MINI_OUTPUT" >> $MINISHELL_OUT
 
-	BASH_OUTPUT=$(bash -c "$LINE")
+	BASH_OUTPUT=$(bash -c $LINE)
 	BASH_RET=$?
 	echo "$BASH_OUTPUT" >> $BASH_OUT
 

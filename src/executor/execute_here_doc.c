@@ -1,15 +1,3 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        ::::::::            */
-/*   execute_here_doc.c                                 :+:    :+:            */
-/*                                                     +:+                    */
-/*   By: alkrusts/dkrecisz <codam.nl>                 +#+                     */
-/*                                                   +#+                      */
-/*   Created: 2021/09/13 15:55:27 by alkrusts/dk   #+#    #+#                 */
-/*   Updated: 2021/09/13 15:58:16 by alkrusts/dk   ########   odam.nl         */
-/*                                                                            */
-/* ************************************************************************** */
-
 #include "minishell.h"
 #include "environ.h"
 #include "libft.h"
@@ -17,7 +5,6 @@
 #include "executor.h"
 #include "expansion.h"
 #include <errno.h>
-#include <signal.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <readline/readline.h>
@@ -52,15 +39,13 @@ static void	read_input(t_data *data, t_astree *node, t_file_io fd)
 
 	input = NULL;
 	delimeter = node->str;
-	g_sig = 0;
 	while (1)
 	{
-		if (signal(SIGINT, sig_herdocs) == SIG_ERR
-			|| signal(SIGQUIT, sig_herdocs) == SIG_ERR)
-			exit_minishell_custom("ERROR SIGINT ");
 		input = readline("> ");
 		if (input == NULL)
-			break ;
+			continue ;
+		if (errno)
+			exit_minishell(errno);
 		else if (environ_compare(input, delimeter) == 1)
 			break ;
 		if (!(node->type & RMQUOTE) && ft_strchr(input, '$'))

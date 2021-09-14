@@ -1,15 +1,3 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        ::::::::            */
-/*   minishell.c                                        :+:    :+:            */
-/*                                                     +:+                    */
-/*   By: alkrusts/dkrecisz <codam.nl>                 +#+                     */
-/*                                                   +#+                      */
-/*   Created: 2021/09/13 15:53:37 by alkrusts/dk   #+#    #+#                 */
-/*   Updated: 2021/09/13 15:53:58 by alkrusts/dk   ########   odam.nl         */
-/*                                                                            */
-/* ************************************************************************** */
-
 #include "executor.h"
 #include "parser.h"
 #include "lexer.h"
@@ -74,6 +62,7 @@ void	minishell_non_interactive(t_data *data, int argc, char *argv[])
 		execute(data);
 		delete_ast(data->astree);
 		free_token_list(data->token);
+		data->token_mask = 0;
 	}
 	free(data->line);
 	data->line = NULL;
@@ -82,13 +71,12 @@ void	minishell_non_interactive(t_data *data, int argc, char *argv[])
 
 void	minishell_interactive(t_data *data)
 {
+	signal(SIGINT, print_pr);
+	signal(SIGQUIT, sig_quit);
 	data->interactive = TRUE;
 	while (1)
 	{
-		g_sig = 0;
 		data->line = readline("minishell$ ");
-		if (g_sig == 1)
-			data->exit_status = 1;
 		if (data->line == NULL)
 			return ;
 		errno = 0;
@@ -103,6 +91,7 @@ void	minishell_interactive(t_data *data)
 			execute(data);
 			delete_ast(data->astree);
 			free_token_list(data->token);
+			data->token_mask = 0;
 		}
 		free(data->line);
 		data->line = NULL;

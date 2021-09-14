@@ -1,15 +1,3 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        ::::::::            */
-/*   execute_builtin.c                                  :+:    :+:            */
-/*                                                     +:+                    */
-/*   By: alkrusts/dkrecisz <codam.nl>                 +#+                     */
-/*                                                   +#+                      */
-/*   Created: 2021/09/13 15:55:21 by alkrusts/dk   #+#    #+#                 */
-/*   Updated: 2021/09/13 15:58:18 by alkrusts/dk   ########   odam.nl         */
-/*                                                                            */
-/* ************************************************************************** */
-
 #include "minishell.h"
 #include "builtins.h"
 
@@ -21,7 +9,10 @@ static int	is_end_of_pipe(t_command *cmd)
 void	execute_builtin(t_data *data, t_command *cmd, t_environ *env)
 {
 	if (is_end_of_pipe(cmd))
-		cmd->fd.write = cmd->fd.save_stdout;
+	{
+		if (cmd->fd.output == 0)
+			cmd->fd.write = cmd->fd.save_stdout;
+	}
 	if (cmd->builtin_id == BUILTIN_ECHO)
 		data->exit_status = builtin_echo(cmd);
 	else if (cmd->builtin_id == BUILTIN_CD)

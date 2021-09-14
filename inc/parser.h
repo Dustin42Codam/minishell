@@ -1,15 +1,3 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        ::::::::            */
-/*   parser.h                                           :+:    :+:            */
-/*                                                     +:+                    */
-/*   By: alkrusts/dkrecisz <codam.nl>                 +#+                     */
-/*                                                   +#+                      */
-/*   Created: 2021/09/13 15:54:32 by alkrusts/dk   #+#    #+#                 */
-/*   Updated: 2021/09/13 15:58:37 by alkrusts/dk   ########   odam.nl         */
-/*                                                                            */
-/* ************************************************************************** */
-
 #ifndef PARSER_H
 # define PARSER_H
 
@@ -37,6 +25,7 @@ t_astree	*parse_pipe_sequence(t_data *data);
 t_astree	*parse_command(t_data *data);
 t_astree	*parse_word_list(t_data *data);
 t_astree	*parse_redirection(t_data *data);
+t_astree	*parse_redirection_list(t_data *data);
 
 int			get_next_token(t_data *data, char **token_str, int token_type);
 

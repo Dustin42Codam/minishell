@@ -1,15 +1,3 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        ::::::::            */
-/*   builtin_export.c                                   :+:    :+:            */
-/*                                                     +:+                    */
-/*   By: alkrusts/dkrecisz <codam.nl>                 +#+                     */
-/*                                                   +#+                      */
-/*   Created: 2021/09/13 15:54:51 by alkrusts/dk   #+#    #+#                 */
-/*   Updated: 2021/09/13 15:58:23 by alkrusts/dk   ########   odam.nl         */
-/*                                                                            */
-/* ************************************************************************** */
-
 #include "minishell.h"
 #include "libft.h"
 #include "environ.h"
@@ -57,22 +45,38 @@ static int	export_error(char *arg)
 	return (1);
 }
 
+static void	add_new_variable(t_environ *env, t_environ *new)
+{
+	environ_modify(env, new->key, new->value);
+	free(new->key);
+	free(new->value);
+	free(new->key_value);
+	free(new);
+}
+
 int	builtin_export(t_command *cmd, t_environ *env)
 {
-	size_t	i;
-	int		error;
+	t_environ	*new;
+	size_t		i;
+	int			exit_status;
 
 	if (cmd->argc == 1)
 		return (print_exported_variables(cmd, env));
 	i = 1;
-	error = 0;
+	exit_status = 0;
 	while (cmd->argv[i])
 	{
 		if (check_variable_name(cmd->argv[i]))
-			error = export_error(cmd->argv[i]);
+			exit_status = export_error(cmd->argv[i]);
 		else
-			environ_add_back(&env, environ_new(cmd->argv[i]));
+		{
+			new = environ_new(cmd->argv[i]);
+			if (environ_get(env, new->key))
+				add_new_variable(env, new);
+			else
+				environ_add_back(&env, new);
+		}
 		i++;
 	}
-	return (error);
+	return (exit_status);
 }

@@ -1,15 +1,3 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        ::::::::            */
-/*   environ_utils.c                                    :+:    :+:            */
-/*                                                     +:+                    */
-/*   By: alkrusts/dkrecisz <codam.nl>                 +#+                     */
-/*                                                   +#+                      */
-/*   Created: 2021/09/13 15:55:01 by alkrusts/dk   #+#    #+#                 */
-/*   Updated: 2021/09/13 15:58:20 by alkrusts/dk   ########   odam.nl         */
-/*                                                                            */
-/* ************************************************************************** */
-
 #include "minishell.h"
 #include <stdlib.h>
 #include <errno.h>
@@ -105,8 +93,6 @@ char	**environ_get_array(t_environ *env)
 	tmp = env;
 	while (tmp)
 	{
-		if (tmp->key_value == NULL)
-			exit_minishell_custom(". environ_utils:97\n");
 		array[i] = ft_strdup(tmp->key_value);
 		if (array[i] == NULL)
 			exit_minishell(errno);

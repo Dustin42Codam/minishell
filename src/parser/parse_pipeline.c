@@ -1,15 +1,3 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        ::::::::            */
-/*   parse_pipeline.c                                   :+:    :+:            */
-/*                                                     +:+                    */
-/*   By: alkrusts/dkrecisz <codam.nl>                 +#+                     */
-/*                                                   +#+                      */
-/*   Created: 2021/09/13 15:56:45 by alkrusts/dk   #+#    #+#                 */
-/*   Updated: 2021/09/13 15:57:49 by alkrusts/dk   ########   odam.nl         */
-/*                                                                            */
-/* ************************************************************************** */
-
 #include "minishell.h"
 #include "parser.h"
 #include "lexer.h"
@@ -18,8 +6,9 @@
  *	parse_pipeline - creates a AST node for a <pipeline>
  *
  *	A <pipeline> can either consist of a sequence of pipes 
- *	(echo 1 | grep "1" | wc -l)
- *	or just a single command (echo -n "abc").
+ *	-> 'echo 1 | grep "1" | wc -l'
+ *	or an open pipe ->	'echo abc | '.
+ *	or just a single command -> 'echo -n "abc"'
  *
  *  Grammar:
  * 	<pipeline>	::=		<command> '|' <pipeline>

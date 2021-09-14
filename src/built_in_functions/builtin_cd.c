@@ -1,15 +1,3 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        ::::::::            */
-/*   builtin_cd.c                                       :+:    :+:            */
-/*                                                     +:+                    */
-/*   By: alkrusts/dkrecisz <codam.nl>                 +#+                     */
-/*                                                   +#+                      */
-/*   Created: 2021/09/13 15:54:41 by alkrusts/dk   #+#    #+#                 */
-/*   Updated: 2021/09/13 15:58:35 by alkrusts/dk   ########   odam.nl         */
-/*                                                                            */
-/* ************************************************************************** */
-
 #include "minishell.h"
 #include "environ.h"
 #include <errno.h>
@@ -23,8 +11,7 @@ static int	builtin_cd_error(char *path, int error_id)
 	minishell_putstr_fd(path, 2);
 	minishell_putstr_fd(": ", 2);
 	minishell_putendl_fd(strerror(error_id), 2);
-	errno = 0;
-	return (1);
+	return (error_id);
 }
 
 int	builtin_cd(t_command *cmd, t_environ *env)

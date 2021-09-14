@@ -1,15 +1,3 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        ::::::::            */
-/*   make_token_meta.c                                  :+:    :+:            */
-/*                                                     +:+                    */
-/*   By: alkrusts/dkrecisz <codam.nl>                 +#+                     */
-/*                                                   +#+                      */
-/*   Created: 2021/09/13 15:56:25 by alkrusts/dk   #+#    #+#                 */
-/*   Updated: 2021/09/13 15:57:53 by alkrusts/dk   ########   odam.nl         */
-/*                                                                            */
-/* ************************************************************************** */
-
 #include "minishell.h"
 #include "lexer.h"
 
@@ -37,6 +25,7 @@ void	make_token_meta(t_token **token, t_data **data, size_t *i, size_t *j)
 	(*token)->end = *i;
 	(*token)->str[(*j)] = (*data)->line[(*i)];
 	(*token)->type |= token_type;
+	(*data)->token_mask |= token_type;
 	if (is_meta((*data)->line[(*i) + 1]) == FALSE)
 		init_new_token(token, (*data)->line_len - *i, j, *i);
 }

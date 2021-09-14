@@ -1,17 +1,6 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        ::::::::            */
-/*   execute.c                                          :+:    :+:            */
-/*                                                     +:+                    */
-/*   By: alkrusts/dkrecisz <codam.nl>                 +#+                     */
-/*                                                   +#+                      */
-/*   Created: 2021/09/13 15:55:40 by alkrusts/dk   #+#    #+#                 */
-/*   Updated: 2021/09/13 15:57:59 by alkrusts/dk   ########   odam.nl         */
-/*                                                                            */
-/* ************************************************************************** */
-
 #include "minishell.h"
 #include "parser.h"
+#include "lexer.h"
 #include "executor.h"
 #include <errno.h>
 
@@ -45,7 +34,8 @@ void	execute(t_data *data)
 	if (data->astree == NULL)
 		return ;
 	setup_fd(&fd);
-	if (data->astree->type == AST_PIPE)
+	// if (data->astree->type == AST_PIPE)
+	if (data->token_mask & PIPE)
 		execute_pipeline(data, fd);
 	else
 		execute_command(data, data->astree, fd);

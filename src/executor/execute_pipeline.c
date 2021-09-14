@@ -1,15 +1,3 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        ::::::::            */
-/*   execute_pipeline.c                                 :+:    :+:            */
-/*                                                     +:+                    */
-/*   By: alkrusts/dkrecisz <codam.nl>                 +#+                     */
-/*                                                   +#+                      */
-/*   Created: 2021/09/13 15:55:29 by alkrusts/dk   #+#    #+#                 */
-/*   Updated: 2021/09/13 15:58:12 by alkrusts/dk   ########   odam.nl         */
-/*                                                                            */
-/* ************************************************************************** */
-
 #include "minishell.h"
 #include "parser.h"
 #include "executor.h"
@@ -42,12 +30,14 @@ static bool	is_empty(char *line)
 
 static void	pipe_to_stdin(t_data *data, t_file_io fd)
 {
+	if (isatty(STDIN_FILENO))
 	free(data->line);
 	data->line = NULL;
 	while (!data->line || !data->line[0] || is_empty(data->line))
 		data->line = readline("> ");
 	data->line_len = ft_strlen(data->line);
 	free_token_list(data->token);
+	data->token_mask = 0;
 	lexer(&data, data->line);
 	delete_ast(data->astree);
 	parser(data);

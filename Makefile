@@ -1,15 +1,3 @@
-# **************************************************************************** #
-#                                                                              #
-#                                                         ::::::::             #
-#    Makefile                                           :+:    :+:             #
-#                                                      +:+                     #
-#    By: alkrusts/dkrecisz <codam.nl>                 +#+                      #
-#                                                    +#+                       #
-#    Created: 2021/09/13 15:57:29 by alkrusts/dk   #+#    #+#                  #
-#    Updated: 2021/09/13 15:57:37 by alkrusts/dk   ########   odam.nl          #
-#                                                                              #
-# **************************************************************************** #
-
 NAME := minishell 
 
 #COLORS FOR FUN
@@ -76,6 +64,7 @@ SRC = main.c \
 	executor/search_command.c \
 	environ/environ.c \
 	environ/environ_utils.c \
+	environ/environ_get_keyvalue.c \
 	signals/signals.c
 
 OBJ = $(addprefix $(ODIR)/$(SDIR)/, $(SRC:.c=.o))

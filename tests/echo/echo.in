@@ -47,7 +47,6 @@ echo '$USER'$USER
 echo 123$USER----$		
 echo $"USERhallo"
 echo "hallo$USER***$USER$"
-echo "$poep"
 echo "$a5aap"
 echo "$halllo###"
 echo "$USER9582309582529"
@@ -156,7 +155,6 @@ echo "'$USER'$USER"
 echo "123$USER----$		"
 echo "$"USERhallo""
 echo ""hallo$USER***$USER$""
-echo ""$§poep""
 echo ""$a5aap""
 echo ""$halllo###""
 echo ""$USER9582309582529""
@@ -335,12 +333,3 @@ echo '""$USER=12$USER""'
 echo '"$PWD/file"'
 echo '""$PWD/file""'
 echo '""text" "text$USER" ... "$USER""'
-echo "§"
-echo
-echo "
-echo ">>"
-echo "--||--"
-echo "--<<--"
-echo "-->>--"
-echo "--<--"
-echo "----"

@@ -1,15 +1,3 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        ::::::::            */
-/*   main.c                                             :+:    :+:            */
-/*                                                     +:+                    */
-/*   By: alkrusts/dkrecisz <codam.nl>                 +#+                     */
-/*                                                   +#+                      */
-/*   Created: 2021/09/13 15:57:07 by alkrusts/dk   #+#    #+#                 */
-/*   Updated: 2021/09/13 15:57:43 by alkrusts/dk   ########   odam.nl         */
-/*                                                                            */
-/* ************************************************************************** */
-
 #include "executor.h"
 #include "parser.h"
 #include "lexer.h"
@@ -17,7 +5,6 @@
 
 #include <stdlib.h>
 #include <errno.h>
-#include <signal.h>
 
 int	g_sig;
 
@@ -42,10 +29,6 @@ int	main(int argc, char *argv[], char **envp)
 	t_data			*data;
 
 	g_sig = 0;
-	if (signal(SIGINT, sig_int_parent) == SIG_ERR)
-		exit_minishell_custom("Error SIGINT ");
-	if (signal(SIGQUIT, sig_quit_parent) == SIG_ERR)
-		exit_minishell_custom("Error SIGQUIT ");
 	data = init_data(envp);
 	init_terminal(data);
 	if (argc == 1)
@@ -53,5 +36,5 @@ int	main(int argc, char *argv[], char **envp)
 	else
 		minishell_non_interactive(data, argc, argv);
 	free_data(data);
-	return (data->exit_status);
+	return (0);
 }
