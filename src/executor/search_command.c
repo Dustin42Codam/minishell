@@ -56,7 +56,7 @@ static void	free_path(char **path)
 	size_t	i;
 
 	i = 0;
-	if (path == NULL)
+	if (!path)
 		return ;
 	while (path[i])
 	{

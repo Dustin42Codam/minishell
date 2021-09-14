@@ -54,9 +54,37 @@ static void	free_command_argv(t_command *cmd, char **env_array)
 	free(env_array);
 }
 
+void	make_command(t_data *data, t_astree *node, t_command *cmd, t_file_io fd)
+{
+	t_astree	*tmp;
+
+	cmd->argc = 0;
+	tmp = node;
+	while (tmp && tmp->type & (AST_WORD))
+	{
+		cmd->argc++;
+		tmp = tmp->right;
+	}
+	cmd->argv = (char **)minishell_calloc(cmd->argc + 1, sizeof(char *));
+	cmd->argc = 0;
+	tmp = node;
+	while (tmp && tmp->type & (AST_WORD))
+	{
+		if (cmd->argc == 0)
+			cmd->builtin_id = search_command(tmp, data->env);
+		cmd->argv[cmd->argc] = ft_strdup(tmp->str);
+		if (cmd->argv[cmd->argc] == NULL)
+			exit_minishell(errno);
+		cmd->argc++;
+		tmp = tmp->right;
+	}
+	init_cmd(data, cmd, fd);
+}
+
 static void	execute_child(t_command *cmd, char **env_array, t_data *data)
 {
-	tcsetattr(cmd->fd.save_stdin, TCSANOW, &data->old_term);
+	if (isatty(STDIN_FILENO))
+		tcsetattr(cmd->fd.save_stdin, TCSANOW, &data->old_term);
 	errno = 0;
 	if (errno == 0 && cmd->fd.dup_stdin)
 		dup2(cmd->fd.read, STDIN_FILENO);

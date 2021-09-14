@@ -76,6 +76,7 @@ SRC = main.c \
 	executor/search_command.c \
 	environ/environ.c \
 	environ/environ_utils.c \
+	environ/environ_get_keyvalue.c \
 	signals/signals.c
 
 OBJ = $(addprefix $(ODIR)/$(SDIR)/, $(SRC:.c=.o))

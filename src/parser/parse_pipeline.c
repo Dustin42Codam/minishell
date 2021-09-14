@@ -18,8 +18,9 @@
  *	parse_pipeline - creates a AST node for a <pipeline>
  *
  *	A <pipeline> can either consist of a sequence of pipes 
- *	(echo 1 | grep "1" | wc -l)
- *	or just a single command (echo -n "abc").
+ *	-> 'echo 1 | grep "1" | wc -l'
+ *	or an open pipe ->	'echo abc | '.
+ *	or just a single command -> 'echo -n "abc"'
  *
  *  Grammar:
  * 	<pipeline>	::=		<command> '|' <pipeline>
