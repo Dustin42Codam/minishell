@@ -10,6 +10,7 @@ RUN apt-get install -y valgrind
 RUN apt-get install -y libc6-dev-i386
 # RUN apt-get install -y libssl-dev
 # RUN apt-get install -y nasm
+RUN apt-get install -y libncurses5-dev libncursesw5-dev
 RUN apt-get install -y libreadline-dev
 RUN apt-get install -y vim
 RUN apt-get install -y git

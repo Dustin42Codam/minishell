@@ -44,6 +44,8 @@ static void	free_path(char **path)
 	size_t	i;
 
 	i = 0;
+	if (!path)
+		return ;
 	while (path[i])
 	{
 		free(path[i]);

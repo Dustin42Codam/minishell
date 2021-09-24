@@ -1,0 +1,15 @@
+{
+	"files.associations": {
+		"errno.h": "c",
+		"stdlib.h": "c",
+		"ioctl.h": "c",
+		"ioctl-types.h": "c",
+		"ioctls.h": "c",
+		"ttydefaults.h": "c",
+		"curses.h": "c",
+		"cerrno": "c",
+		"environ.h": "c",
+		"minishell.h": "c",
+		"structs.h": "c"
+	}
+}

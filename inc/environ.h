@@ -12,5 +12,7 @@ void		environ_unset(t_environ **head, char *key);
 void		environ_free(t_environ *head);
 char		**environ_get_array(t_environ *env);
 int			environ_compare(char *s1, char *s2);
+void		environ_modify(t_environ *head, char *key, char *value);
+char		*environ_get_keyvalue(char *key, char *value);
 
 #endif

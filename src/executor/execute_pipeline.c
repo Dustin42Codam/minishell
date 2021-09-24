@@ -36,6 +36,7 @@ static void	pipe_to_stdin(t_data *data, t_file_io fd)
 		data->line = readline("> ");
 	data->line_len = ft_strlen(data->line);
 	free_token_list(data->token);
+	data->token_mask = 0;
 	lexer(&data, data->line);
 	delete_ast(data->astree);
 	parser(data);

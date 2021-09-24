@@ -1,5 +1,6 @@
 #include "minishell.h"
 #include "parser.h"
+#include "lexer.h"
 #include "executor.h"
 #include <errno.h>
 
@@ -33,7 +34,8 @@ void	execute(t_data *data)
 	if (data->astree == NULL)
 		return ;
 	setup_fd(&fd);
-	if (data->astree->type == AST_PIPE)
+	// if (data->astree->type == AST_PIPE)
+	if (data->token_mask & PIPE)
 		execute_pipeline(data, fd);
 	else
 		execute_command(data, data->astree, fd);

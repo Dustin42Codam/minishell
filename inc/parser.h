@@ -25,6 +25,7 @@ t_astree	*parse_pipe_sequence(t_data *data);
 t_astree	*parse_command(t_data *data);
 t_astree	*parse_word_list(t_data *data);
 t_astree	*parse_redirection(t_data *data);
+t_astree	*parse_redirection_list(t_data *data);
 
 int			get_next_token(t_data *data, char **token_str, int token_type);
 

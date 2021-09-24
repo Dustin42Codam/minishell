@@ -67,7 +67,8 @@ void	make_command(t_data *data, t_astree *node, t_command *cmd, t_file_io fd)
 
 static void	execute_child(t_command *cmd, char **env_array, t_data *data)
 {
-	tcsetattr(cmd->fd.save_stdin, TCSANOW, &data->old_term);
+	if (isatty(STDIN_FILENO))
+		tcsetattr(cmd->fd.save_stdin, TCSANOW, &data->old_term);
 	errno = 0;
 	if (errno == 0 && cmd->fd.dup_stdin)
 		dup2(cmd->fd.read, STDIN_FILENO);
@@ -99,10 +100,11 @@ void	execute_command_argv(t_data *data, t_command *cmd, t_environ *env)
 		exit_minishell(errno);
 	else if (pid == 0)
 		execute_child(cmd, env_array, data);
-	errno = 0;
 	waitpid(pid, &stat, 0);
 	decrement_global_sig();
-	tcsetattr(cmd->fd.save_stdin, TCSANOW, &data->new_term);
+	if (isatty(STDIN_FILENO))
+		tcsetattr(cmd->fd.save_stdin, TCSANOW, &data->new_term);
+	errno = 0;
 	free_command_argv(cmd, env_array);
 	if (WIFEXITED(stat))
 		data->exit_status = WEXITSTATUS(stat);

@@ -62,6 +62,7 @@ void	minishell_non_interactive(t_data *data, int argc, char *argv[])
 		execute(data);
 		delete_ast(data->astree);
 		free_token_list(data->token);
+		data->token_mask = 0;
 	}
 	free(data->line);
 	data->line = NULL;
@@ -90,6 +91,7 @@ void	minishell_interactive(t_data *data)
 			execute(data);
 			delete_ast(data->astree);
 			free_token_list(data->token);
+			data->token_mask = 0;
 		}
 		free(data->line);
 		data->line = NULL;

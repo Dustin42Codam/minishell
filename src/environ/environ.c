@@ -70,7 +70,7 @@ t_environ	*environ_deep_copy(char **env)
 	return (head);
 }
 
-static void	environ_modify(t_environ *head, char *key, char *value)
+void	environ_modify(t_environ *head, char *key, char *value)
 {
 	t_environ	*tmp;
 
@@ -80,12 +80,14 @@ static void	environ_modify(t_environ *head, char *key, char *value)
 		if (environ_compare(tmp->key, key))
 		{
 			free(tmp->value);
+			free(tmp->key_value);
 			if (value == NULL)
 				tmp->value = ft_strdup("");
 			else
 				tmp->value = ft_strdup(value);
 			if (tmp->value == NULL)
 				exit_minishell(errno);
+			tmp->key_value = environ_get_keyvalue(key, value);
 			return ;
 		}
 		tmp = tmp->next;
