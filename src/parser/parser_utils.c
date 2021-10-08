@@ -16,7 +16,11 @@ void	init_ast_node(t_astree *node, char *arg, int type)
 void	insert_ast_node(t_astree *node, t_astree *left, t_astree *right)
 {
 	node->left = left;
+	if (left)
+		node->left->parent = node;
 	node->right = right;
+	if (right)
+		node->right->parent = node;
 }
 
 void	delete_ast(t_astree *node)

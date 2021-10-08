@@ -60,6 +60,8 @@ SRC = main.c \
 	executor/execute_word_list.c \
 	executor/execute_builtin.c \
 	executor/execute_here_doc.c \
+	executor/execute_redirection_in.c \
+	executor/execute_redirection_out.c \
 	executor/execute_utils.c \
 	executor/search_command.c \
 	environ/environ.c \

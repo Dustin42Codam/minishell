@@ -8,6 +8,7 @@
 #include <stdio.h>
 #include <readline/readline.h>
 #include <stdbool.h>
+#include <stdlib.h>
 
 static bool	is_empty(char *line)
 {

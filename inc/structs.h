@@ -49,6 +49,7 @@ typedef struct s_token
  * Root and interior nodes consist of operators.
  * Leaf nodes represent commands.
  * Member description:
+ * @parent:			Pointer to parent node.
  * @left:			Pointer to left neighbour node.
  * @right:			Pointer to right neighbour node. 
  * @str:			String representing a command, argument, path or operator. 
@@ -56,6 +57,7 @@ typedef struct s_token
  * */
 typedef struct s_astree
 {
+	struct s_astree	*parent;
 	struct s_astree	*left;
 	struct s_astree	*right;
 	char			*str;
