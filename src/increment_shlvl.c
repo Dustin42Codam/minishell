@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        ::::::::            */
+/*   increment_shlvl.c                                  :+:    :+:            */
+/*                                                     +:+                    */
+/*   By: alkrusts/dkrecisz <codam.nl>                 +#+                     */
+/*                                                   +#+                      */
+/*   Created: 2021/09/13 15:57:01 by alkrusts/dk   #+#    #+#                 */
+/*   Updated: 2021/09/13 15:57:44 by alkrusts/dk   ########   odam.nl         */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
 #include "environ.h"
 #include "libft.h"
@@ -14,6 +26,8 @@ void	increment_shlvl(t_environ *env)
 	int			shlvl_nb;
 
 	shlvl_str = environ_get(env, "SHLVL");
+	if (shlvl_str == NULL)
+		exit_minishell_custom("no sudo allowed ");
 	shlvl_nb = ft_atoi(shlvl_str);
 	shlvl_nb++;
 	shlvl_str_new = ft_itoa(shlvl_nb);

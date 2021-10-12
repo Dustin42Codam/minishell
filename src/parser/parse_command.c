@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        ::::::::            */
+/*   parse_command.c                                    :+:    :+:            */
+/*                                                     +:+                    */
+/*   By: alkrusts/dkrecisz <codam.nl>                 +#+                     */
+/*                                                   +#+                      */
+/*   Created: 2021/09/13 15:56:42 by alkrusts/dk   #+#    #+#                 */
+/*   Updated: 2021/09/13 15:57:50 by alkrusts/dk   ########   odam.nl         */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
 #include "parser.h"
 #include "lexer.h"
@@ -24,7 +36,8 @@ t_astree	*parse_command(t_data *data)
 
 	token_backup = data->token_ptr;
 	redirection_list = parse_redirection_list(data);
-	if (redirection_list && (data->token_ptr->type & (HERE_DOC | REDIR_IN | APPEND | REDIR_OUT)))
+	if (redirection_list && (data->token_ptr->type
+			& (HERE_DOC | REDIR_IN | APPEND | REDIR_OUT)))
 	{
 		delete_ast(redirection_list);
 		return (NULL);

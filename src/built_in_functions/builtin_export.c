@@ -3,10 +3,10 @@
 /*                                                        ::::::::            */
 /*   builtin_export.c                                   :+:    :+:            */
 /*                                                     +:+                    */
-/*   By: dkrecisz <dkrecisz@student.codam.nl>         +#+                     */
+/*   By: alkrusts/dkrecisz <codam.nl>                 +#+                     */
 /*                                                   +#+                      */
-/*   Created: 2021/10/12 07:29:15 by dkrecisz      #+#    #+#                 */
-/*   Updated: 2021/10/12 07:29:16 by dkrecisz      ########   odam.nl         */
+/*   Created: 2021/09/13 15:54:51 by alkrusts/dk   #+#    #+#                 */
+/*   Updated: 2021/09/13 15:58:23 by alkrusts/dk   ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 

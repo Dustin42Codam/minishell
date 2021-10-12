@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        ::::::::            */
+/*   execute_here_doc.c                                 :+:    :+:            */
+/*                                                     +:+                    */
+/*   By: alkrusts/dkrecisz <codam.nl>                 +#+                     */
+/*                                                   +#+                      */
+/*   Created: 2021/09/13 15:55:27 by alkrusts/dk   #+#    #+#                 */
+/*   Updated: 2021/09/13 15:58:16 by alkrusts/dk   ########   odam.nl         */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
 #include "environ.h"
 #include "libft.h"
@@ -5,6 +17,7 @@
 #include "executor.h"
 #include "expansion.h"
 #include <errno.h>
+#include <signal.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <readline/readline.h>
@@ -31,6 +44,7 @@ static void	setup_pipe(t_file_io *fd)
 	fd->read = fd->pipe[0];
 	if (fd->output == 0)
 		fd->write = STDOUT_FILENO;
+	//what is fd->write set to if fd->output != 0
 }
 
 static void	read_input(t_data *data, t_astree *node, t_file_io fd)
@@ -40,8 +54,12 @@ static void	read_input(t_data *data, t_astree *node, t_file_io fd)
 
 	input = NULL;
 	delimeter = node->str;
+	g_sig = 0;
 	while (1)
 	{
+		if (signal(SIGINT, sig_herdocs) == SIG_ERR
+			|| signal(SIGQUIT, sig_herdocs) == SIG_ERR)
+			exit_minishell_custom("ERROR SIGINT ");
 		input = readline("> ");
 		if (input == NULL)
 			continue ;

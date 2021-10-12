@@ -1,7 +1,20 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        ::::::::            */
+/*   parse_pipeline.c                                   :+:    :+:            */
+/*                                                     +:+                    */
+/*   By: alkrusts/dkrecisz <codam.nl>                 +#+                     */
+/*                                                   +#+                      */
+/*   Created: 2021/09/13 15:56:45 by alkrusts/dk   #+#    #+#                 */
+/*   Updated: 2021/09/13 15:57:49 by alkrusts/dk   ########   odam.nl         */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
 #include "parser.h"
 #include "lexer.h"
 
+#include <stdlib.h>
 /**
  *	parse_pipeline - creates a AST node for a <pipeline>
  *
@@ -15,6 +28,19 @@
  *				|		<pipeline> '|'
  *				|		<command>
 **/
+
+static void	delete_ast_2(t_astree	**pipeline)
+{
+	if ((*pipeline) == NULL)
+		return ;
+	if ((*pipeline)->str)
+		free((*pipeline)->str);
+	delete_ast((*pipeline)->right);
+	delete_ast((*pipeline)->left);
+	free(*pipeline);
+	*pipeline = NULL;
+}
+
 t_astree	*parse_pipeline(t_data *data)
 {
 	t_astree	*pipeline;
@@ -24,24 +50,18 @@ t_astree	*parse_pipeline(t_data *data)
 	pipeline = parse_pipe_sequence(data);
 	if (pipeline)
 	{
-		if (data->token_ptr->type & (HERE_DOC | REDIR_IN | APPEND | REDIR_OUT) ||
-			(data->token_ptr && data->token_ptr->type & PIPE))
-		{
-			delete_ast(pipeline);
-			pipeline = NULL;
-		}
+		if (data->token_ptr->type & (HERE_DOC | REDIR_IN | APPEND | REDIR_OUT)
+			|| (data->token_ptr && data->token_ptr->type & PIPE))
+			delete_ast_2(&pipeline);
 		return (pipeline);
 	}
 	data->token_ptr = token_backup;
 	pipeline = parse_command(data);
 	if (pipeline)
 	{
-		if (data->token_ptr->type & (HERE_DOC | REDIR_IN | APPEND | REDIR_OUT) ||
-			(data->token_ptr->next && data->token_ptr->next->type & PIPE))
-		{
-			delete_ast(pipeline);
-			pipeline = NULL;
-		}
+		if (data->token_ptr->type & (HERE_DOC | REDIR_IN | APPEND | REDIR_OUT)
+			|| (data->token_ptr->next && data->token_ptr->next->type & PIPE))
+			delete_ast_2(&pipeline);
 		return (pipeline);
 	}
 	return (NULL);

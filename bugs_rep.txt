@@ -1,0 +1,8 @@
+################1####################################
+echo "lol" | 			# then ctrl + D 		#becuase readline returns NULL
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@expected@@@@@@@@@@@@@@@@@
+bash-3.2$ echo "aaa" |
+> bash: syntax error: unexpected end of file
+
+cat <<
+syntaxe error

@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        ::::::::            */
+/*   structs.h                                          :+:    :+:            */
+/*                                                     +:+                    */
+/*   By: alkrusts/dkrecisz <codam.nl>                 +#+                     */
+/*                                                   +#+                      */
+/*   Created: 2021/09/13 15:54:34 by alkrusts/dk   #+#    #+#                 */
+/*   Updated: 2021/09/13 15:58:36 by alkrusts/dk   ########   odam.nl         */
+/*                                                                            */
+/* ************************************************************************** */
+
 #ifndef STRUCTS_H
 # define STRUCTS_H
 
@@ -163,5 +175,13 @@ typedef struct s_data
 	struct termios	new_term;
 	struct termios	old_term;
 }	t_data;
+
+typedef struct s_ptr
+{
+	t_astree	*redirection;
+	t_astree	*redirection_list;
+	t_astree	*word_list;
+	t_token		*token_backup;
+}		t_ptr;
 
 #endif

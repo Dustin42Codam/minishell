@@ -3,10 +3,10 @@
 /*                                                        ::::::::            */
 /*   builtin_echo.c                                     :+:    :+:            */
 /*                                                     +:+                    */
-/*   By: dkrecisz <dkrecisz@student.codam.nl>         +#+                     */
+/*   By: alkrusts/dkrecisz <codam.nl>                 +#+                     */
 /*                                                   +#+                      */
-/*   Created: 2021/10/12 07:29:04 by dkrecisz      #+#    #+#                 */
-/*   Updated: 2021/10/12 07:29:05 by dkrecisz      ########   odam.nl         */
+/*   Created: 2021/09/13 15:54:43 by alkrusts/dk   #+#    #+#                 */
+/*   Updated: 2021/09/13 15:58:25 by alkrusts/dk   ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 

@@ -3,10 +3,10 @@
 /*                                                        ::::::::            */
 /*   environ.h                                          :+:    :+:            */
 /*                                                     +:+                    */
-/*   By: alkrusts <alkrust@student.codam.nl>          +#+                     */
+/*   By: alkrusts/dkrecisz <codam.nl>                 +#+                     */
 /*                                                   +#+                      */
-/*   Created: 2021/10/12 14:03:22 by alkrusts      #+#    #+#                 */
-/*   Updated: 2021/10/12 14:03:24 by alkrusts      ########   odam.nl         */
+/*   Created: 2021/09/13 15:54:22 by alkrusts/dk   #+#    #+#                 */
+/*   Updated: 2021/09/13 15:58:40 by alkrusts/dk   ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ void		environ_unset(t_environ **head, char *key);
 void		environ_free(t_environ *head);
 char		**environ_get_array(t_environ *env);
 int			environ_compare(char *s1, char *s2);
-void		environ_modify(t_environ *head, char *key, char *value);
 char		*environ_get_keyvalue(char *key, char *value);
+void		environ_modify(t_environ *head, char *key, char *value);
 
 #endif

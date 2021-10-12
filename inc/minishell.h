@@ -1,9 +1,20 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        ::::::::            */
+/*   minishell.h                                        :+:    :+:            */
+/*                                                     +:+                    */
+/*   By: alkrusts/dkrecisz <codam.nl>                 +#+                     */
+/*                                                   +#+                      */
+/*   Created: 2021/09/13 15:54:30 by alkrusts/dk   #+#    #+#                 */
+/*   Updated: 2021/09/13 15:58:38 by alkrusts/dk   ########   odam.nl         */
+/*                                                                            */
+/* ************************************************************************** */
+
 #ifndef MINISHELL_H
 # define MINISHELL_H
-
-extern int g_sig;
-
 # include "structs.h"
+
+extern int	g_sig;
 
 /**
  *	Boolean defines - Because we are too cool for stdbool.
@@ -46,9 +57,10 @@ ssize_t	minishell_putendl_fd(const char *s, int fd);
 **	SIGNAL HOOK FUNCTIOMS
 */
 
-void	print_pr(int ig);
-void	sig_quit(int ig);
-void	decrement_global_sig(void);
-void	incrment_global_sig(void);
+void	sig_quit_parent(int ig);
+void	sig_int_parent(int ig);
+void	sig_int_child(int ig);
+void	sig_quit_child(int ig);
+void	sig_herdocs(int ig);
 
 #endif

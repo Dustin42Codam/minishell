@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        ::::::::            */
+/*   expand_variables.c                                 :+:    :+:            */
+/*                                                     +:+                    */
+/*   By: alkrusts/dkrecisz <codam.nl>                 +#+                     */
+/*                                                   +#+                      */
+/*   Created: 2021/09/13 15:56:13 by alkrusts/dk   #+#    #+#                 */
+/*   Updated: 2021/09/13 15:57:56 by alkrusts/dk   ########   odam.nl         */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
 #include "libft.h"
 #include "lexer.h"
@@ -12,7 +24,11 @@ static t_token	*delete_token(t_token *token, t_token *token_to_delete)
 	while (tmp->next != token_to_delete)
 	{
 		if (token_to_delete == tmp)
+		{
+			free(token_to_delete->str);
+			free(token_to_delete);
 			return (tmp);
+		}
 		tmp = tmp->next;
 	}
 	tmp->next = token_to_delete->next;
@@ -28,6 +44,7 @@ static t_token	*delete_token(t_token *token, t_token *token_to_delete)
  *	- iterates through list of tokens
  *	- does variable expansion on tokens marked with EXPAND
 **/
+
 void	expand_variables(t_token *token, t_environ *env)
 {
 	t_token		*tmp;

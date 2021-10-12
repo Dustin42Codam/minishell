@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        ::::::::            */
+/*   minishell.c                                        :+:    :+:            */
+/*                                                     +:+                    */
+/*   By: alkrusts/dkrecisz <codam.nl>                 +#+                     */
+/*                                                   +#+                      */
+/*   Created: 2021/09/13 15:53:37 by alkrusts/dk   #+#    #+#                 */
+/*   Updated: 2021/09/13 15:53:58 by alkrusts/dk   ########   odam.nl         */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "executor.h"
 #include "minishell.h"
 #include "parser.h"
@@ -46,6 +58,9 @@ static int	read_flags(int argc, char *argv[])
 	return (i);
 }
 
+/*
+**	THSE 2 HAVE MOORE THAN 25 LNIES
+*/
 void	minishell_non_interactive(t_data *data, int argc, char *argv[])
 {
 	int					flags;
@@ -73,17 +88,19 @@ void	minishell_non_interactive(t_data *data, int argc, char *argv[])
 	}
 	free(data->line);
 	data->line = NULL;
+//Do we have to free data hear?
 	exit(data->exit_status);
 }
 
 void	minishell_interactive(t_data *data)
 {
-	signal(SIGINT, print_pr);
-	signal(SIGQUIT, sig_quit);
 	data->interactive = TRUE;
 	while (1)
 	{
+		g_sig = 0;
 		data->line = readline("minishell$ ");
+		if (g_sig == 1)
+			data->exit_status = 1;
 		if (data->line == NULL)
 			return ;
 		errno = 0;

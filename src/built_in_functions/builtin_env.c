@@ -3,10 +3,10 @@
 /*                                                        ::::::::            */
 /*   builtin_env.c                                      :+:    :+:            */
 /*                                                     +:+                    */
-/*   By: dkrecisz <dkrecisz@student.codam.nl>         +#+                     */
+/*   By: alkrusts/dkrecisz <codam.nl>                 +#+                     */
 /*                                                   +#+                      */
-/*   Created: 2021/10/12 07:29:08 by dkrecisz      #+#    #+#                 */
-/*   Updated: 2021/10/12 07:29:09 by dkrecisz      ########   odam.nl         */
+/*   Created: 2021/09/13 15:54:45 by alkrusts/dk   #+#    #+#                 */
+/*   Updated: 2021/09/13 15:58:24 by alkrusts/dk   ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 

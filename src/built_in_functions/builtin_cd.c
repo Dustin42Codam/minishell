@@ -3,10 +3,10 @@
 /*                                                        ::::::::            */
 /*   builtin_cd.c                                       :+:    :+:            */
 /*                                                     +:+                    */
-/*   By: dkrecisz <dkrecisz@student.codam.nl>         +#+                     */
+/*   By: alkrusts/dkrecisz <codam.nl>                 +#+                     */
 /*                                                   +#+                      */
-/*   Created: 2021/10/12 07:29:00 by dkrecisz      #+#    #+#                 */
-/*   Updated: 2021/10/12 07:31:34 by dkrecisz      ########   odam.nl         */
+/*   Created: 2021/09/13 15:54:41 by alkrusts/dk   #+#    #+#                 */
+/*   Updated: 2021/09/13 15:58:35 by alkrusts/dk   ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ static int	builtin_cd_error(char *path, int error_id)
 	minishell_putstr_fd(": ", 2);
 	minishell_putendl_fd(strerror(error_id), 2);
 	errno = 0;
-	return (error_id);
+	return (1);
 }
 
 static int	print_usage(void)

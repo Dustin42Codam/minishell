@@ -79,14 +79,14 @@ OBJ = $(addprefix $(ODIR)/$(SDIR)/, $(SRC:.c=.o))
 
 LIBFT = libft
 TERMCAPS = -ltermcap
-#READLINE = -lreadline -L/usr/local/opt/readline/lib
-READLINE = -lreadline -L/usr/local/opt/readline/lib -L/Users/alkrusts/.brew/Cellar/readline/8.0.4/lib
+READLINE = -lreadline -L/usr/local/opt/readline/lib
+#READLINE = -lreadline -L/usr/local/opt/readline/lib -L/Users/alkrusts/.brew/Cellar/readline/8.0.4/lib
 LIBS = -L $(LIBFT) -lft $(READLINE) $(TERMCAPS)
 
 #headers aka dependencys
 
-#HEADER := -I $(IDIR) -I $(LIBFT) -I/usr/local/opt/readline/include
-HEADER := -I $(IDIR) -I $(LIBFT) -I/Users/alkrusts/.brew/opt/readline/include
+HEADER := -I $(IDIR) -I $(LIBFT) -I/usr/local/opt/readline/include
+#HEADER := -I $(IDIR) -I $(LIBFT) -I/Users/alkrusts/.brew/opt/readline/include
 
 # OBJ := $(patsubst %,$(ODIR)/%,$(OBJ))
 DBG := $(patsubst %,$(DDIR)/%,$(OBJ))
@@ -143,7 +143,7 @@ clean:
 	@rm -rf $(ODIR)
 	@echo "${RED}Cleaning libft!${NC}"
 	@make -C $(LIBFT) clean
-	@cd tests && bash test_all.sh --cleanup
+#	@cd tests && bash test_all.sh --cleanup
 
 fclean: clean
 	@echo "${RED}Deleting minishell!${NC}"
@@ -166,7 +166,7 @@ test_echo: all
 	cd $(TDIR)/echo && bash test_echo.sh
 
 test_all: all
-	cd tests && bash test_all.sh
+#	cd tests && bash test_all.sh
 
 valgrind: debug_1
 	valgrind --leak-check=full --show-leak-kinds=all --track-origins=yes \

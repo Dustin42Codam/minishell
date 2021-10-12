@@ -3,10 +3,10 @@
 /*                                                        ::::::::            */
 /*   builtins.h                                         :+:    :+:            */
 /*                                                     +:+                    */
-/*   By: alkrusts <alkrust@student.codam.nl>          +#+                     */
+/*   By: alkrusts/dkrecisz <codam.nl>                 +#+                     */
 /*                                                   +#+                      */
-/*   Created: 2021/10/12 14:03:04 by alkrusts      #+#    #+#                 */
-/*   Updated: 2021/10/12 14:03:06 by alkrusts      ########   odam.nl         */
+/*   Created: 2021/09/13 15:54:17 by alkrusts/dk   #+#    #+#                 */
+/*   Updated: 2021/09/13 15:58:40 by alkrusts/dk   ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
