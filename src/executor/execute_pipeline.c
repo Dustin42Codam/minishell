@@ -29,11 +29,27 @@ static bool	is_empty(char *line)
 	return (true);
 }
 
+
+static void	restore_fd(t_file_io *fd)
+{
+	dup2(fd->save_stdin, STDIN_FILENO);
+	dup2(fd->save_stdout, STDOUT_FILENO);
+	close(fd->save_stdin);
+	close(fd->save_stdout);
+	if (fd->output)
+		close(fd->output);
+	errno = 0;
+	if (errno)
+		exit_minishell(errno);
+}
+
 static void	pipe_to_stdin(t_data *data, t_file_io fd)
 {
+
 	free(data->line);
 	data->line = NULL;
-	while (!data->line || !data->line[0] || is_empty(data->line))
+	// while (!data->line || !data->line[0] || is_empty(data->line))
+	dup2(fd.save_stdin, STDIN_FILENO);
 		data->line = readline("> ");
 	data->line_len = ft_strlen(data->line);
 	free_token_list(data->token);
@@ -42,7 +58,13 @@ static void	pipe_to_stdin(t_data *data, t_file_io fd)
 	delete_ast(data->astree);
 	parser(data);
 	dup2(fd.pipe[0], STDIN_FILENO);
-	execute(data);
+	fd.dup_stdin = 1;
+	// execute(data);
+	if (data->token_mask & PIPE)
+		execute_pipeline(data, fd);
+	else
+		execute_command(data, data->astree, fd);
+	// restore_fd(&fd);
 }
 
 static void	setup_next_pipe(t_file_io *fd)

@@ -44,3 +44,13 @@ TO TEST:
 
 
 KO:
+minishell$ echo "abc df" |
+> << lol
+> abc df
+Error: Inappropriate ioctl for device [25]
+Exiting minishell...
+➜  minishell git:(bugfix_linux) ✗ ./minishell
+minishell$ < ls | 
+minishell: ls: No such file or directory
+> 
+[1]    52599 segmentation fault (core dumped)  ./minishell
