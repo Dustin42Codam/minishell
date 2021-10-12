@@ -1,3 +1,0 @@
-bin
-boot
-dev
