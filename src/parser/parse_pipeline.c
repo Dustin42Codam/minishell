@@ -23,11 +23,27 @@ t_astree	*parse_pipeline(t_data *data)
 	token_backup = data->token_ptr;
 	pipeline = parse_pipe_sequence(data);
 	if (pipeline)
+	{
+		if (data->token_ptr->type & (HERE_DOC | REDIR_IN | APPEND | REDIR_OUT) ||
+			(data->token_ptr && data->token_ptr->type & PIPE))
+		{
+			delete_ast(pipeline);
+			pipeline = NULL;
+		}
 		return (pipeline);
+	}
 	data->token_ptr = token_backup;
 	pipeline = parse_command(data);
 	if (pipeline)
+	{
+		if (data->token_ptr->type & (HERE_DOC | REDIR_IN | APPEND | REDIR_OUT) ||
+			(data->token_ptr->next && data->token_ptr->next->type & PIPE))
+		{
+			delete_ast(pipeline);
+			pipeline = NULL;
+		}
 		return (pipeline);
+	}
 	return (NULL);
 }
 

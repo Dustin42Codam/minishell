@@ -8,6 +8,7 @@ void	execute_pipeline(t_data *data, t_file_io fd);
 void	execute_command(t_data *data, t_astree *node, t_file_io fd);
 void	execute_here_doc(t_data *data, t_astree *node, t_file_io fd);
 void	execute_word_list(t_data *data, t_astree *node, t_file_io fd);
+void	execute_redirection(t_data *data, t_astree *node, t_file_io *fd);
 void	execute_redirection_in(t_data *data, t_astree *node, t_file_io *fd);
 void	execute_redirection_out(t_data *data, t_astree *node, t_file_io *fd);
 void	execute_builtin(t_data *data, t_command *cmd, t_environ *env);

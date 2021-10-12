@@ -3,6 +3,12 @@
 #include "lexer.h"
 #include <stdlib.h>
 
+int	is_redirection(int node_type)
+{
+	// ADD AST_HERE_DOC?
+	return (node_type & (AST_REDIR_IN | AST_APPEND | AST_REDIR_OUT));
+}
+
 void	init_ast_node(t_astree *node, char *arg, int type)
 {
 	node->type = type;

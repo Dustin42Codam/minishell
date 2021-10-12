@@ -1,5 +1,6 @@
 #include "minishell.h"
 #include "parser.h"
+#include "lexer.h"
 
 /**
  * parse_command - creates a AST node for a <command>
@@ -11,7 +12,7 @@
  *  
  *	<command>		::=		<word_list>
  *					|		<redirection>
- *					|		<redirection_list> # Add later
+ *					|		<redirection_list>
 **/
 
 t_astree	*parse_command(t_data *data)
@@ -23,7 +24,12 @@ t_astree	*parse_command(t_data *data)
 
 	token_backup = data->token_ptr;
 	redirection_list = parse_redirection_list(data);
-	if (redirection_list)
+	if (redirection_list && (data->token_ptr->type & (HERE_DOC | REDIR_IN | APPEND | REDIR_OUT)))
+	{
+		delete_ast(redirection_list);
+		return (NULL);
+	}
+	else if (redirection_list)
 		return (redirection_list);
 	data->token_ptr = token_backup;
 	redirection = parse_redirection(data);
@@ -31,6 +37,10 @@ t_astree	*parse_command(t_data *data)
 		return (redirection);
 	data->token_ptr = token_backup;
 	word_list = parse_word_list(data);
+	// if (word_list && data->token_mask > WORD)
+		// delete_ast(word_list);
+	// else if (word_list && data->token_mask == WORD)
+		// return (word_list);
 	if (word_list)
 		return (word_list);
 	return (NULL);

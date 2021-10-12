@@ -5,6 +5,7 @@
 
 #include <stdlib.h>
 #include <errno.h>
+#include <unistd.h>
 
 int	g_sig;
 
@@ -31,10 +32,13 @@ int	main(int argc, char *argv[], char **envp)
 	g_sig = 0;
 	data = init_data(envp);
 	init_terminal(data);
-	if (argc == 1)
+	if (argc == 1 && isatty(STDIN_FILENO))
 		minishell_interactive(data);
 	else
+	{
+		errno = 0;
 		minishell_non_interactive(data, argc, argv);
+	}
 	free_data(data);
 	return (0);
 }

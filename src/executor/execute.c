@@ -34,7 +34,6 @@ void	execute(t_data *data)
 	if (data->astree == NULL)
 		return ;
 	setup_fd(&fd);
-	// if (data->astree->type == AST_PIPE)
 	if (data->token_mask & PIPE)
 		execute_pipeline(data, fd);
 	else

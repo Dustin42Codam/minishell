@@ -1,4 +1,5 @@
 #include "executor.h"
+#include "minishell.h"
 #include "parser.h"
 #include "lexer.h"
 #include "libft.h"
@@ -6,6 +7,7 @@
 #include <stdio.h>
 #include <signal.h>
 #include <stdlib.h>
+#include <unistd.h>
 #include <errno.h>
 
 #include <readline/readline.h>
@@ -49,8 +51,13 @@ void	minishell_non_interactive(t_data *data, int argc, char *argv[])
 	int					flags;
 
 	data->interactive = FALSE;
-	flags = read_flags(argc, argv);
-	data->line = ft_strdup(argv[flags]);
+	if (argc > 1)
+	{
+		flags = read_flags(argc, argv);
+		data->line = ft_strdup(argv[flags]);
+	}
+	else
+		data->line = read_line();
 	if (data->line == NULL)
 		exit_minishell(errno);
 	data->line_len = ft_strlen(data->line);

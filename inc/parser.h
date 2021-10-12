@@ -19,6 +19,7 @@ void		init_ast_node(t_astree *node, char *arg, int type);
 void		insert_ast_node(t_astree *node, t_astree *left, t_astree *right);
 void		delete_ast(t_astree *node);
 int			get_ast_node_type(int type);
+int			is_redirection(int node_type);
 
 t_astree	*parse_pipeline(t_data *data);
 t_astree	*parse_pipe_sequence(t_data *data);

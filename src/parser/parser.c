@@ -28,4 +28,9 @@ void	parser(t_data *data)
 {
 	data->token_ptr = data->token;
 	data->astree = parse_pipeline(data);
+	if (data->astree == NULL)
+	{
+		minishell_putstr_fd("minishell: Syntax error!\n", 2);
+		data->exit_status = 2;
+	}
 }

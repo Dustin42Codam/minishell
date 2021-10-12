@@ -24,6 +24,7 @@ SRC = main.c \
 	minishell.c \
 	exit_shell.c \
 	init_data.c \
+	read_line.c \
 	minishell_calloc.c \
 	minishell_write.c \
 	minishell_putchar_fd.c \
@@ -60,6 +61,7 @@ SRC = main.c \
 	executor/execute_word_list.c \
 	executor/execute_builtin.c \
 	executor/execute_here_doc.c \
+	executor/execute_redirection.c \
 	executor/execute_redirection_in.c \
 	executor/execute_redirection_out.c \
 	executor/execute_utils.c \

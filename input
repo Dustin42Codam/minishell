@@ -1,0 +1,2 @@
+echo abc > out
+ls / | sort | head -3 > out

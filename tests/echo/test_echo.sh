@@ -31,7 +31,7 @@ fi
 # Build minishell and copy the executable into current directory
 make -C $MINISHELL_DIR &>/dev/null
 RET=$?
-if [ $? -ne 0 ]; then
+if [ $RET -ne 0 ]; then
 	echo "Error while building the project."
 	exit 1
 fi
@@ -53,7 +53,7 @@ while read -r LINE
 do
 	MINI_OUTPUT=$(./minishell -c $LINE)
 	MINI_RET=$?
-	while [ $RET -eq 139 ]
+	while [ $MINI_RET -eq 139 ]
 	do
 		MINI_OUTPUT=$(./minishell -c $LINE)
 		MINI_RET=$?

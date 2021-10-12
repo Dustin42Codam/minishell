@@ -6,7 +6,7 @@
 /*   By: dkrecisz <dkrecisz@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/10/08 23:22:42 by dkrecisz      #+#    #+#                 */
-/*   Updated: 2021/10/08 23:26:38 by dkrecisz      ########   odam.nl         */
+/*   Updated: 2021/10/09 00:17:02 by dkrecisz      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,7 @@
 void	execute_redirection_out(t_data *data, t_astree *node, t_file_io *fd)
 {
 	t_astree	*root;
+	t_astree	*parent;
 
 	root = node;
 	while (node && node->type & (AST_REDIR_OUT | AST_APPEND))
@@ -27,12 +28,14 @@ void	execute_redirection_out(t_data *data, t_astree *node, t_file_io *fd)
 		if (fd->output)
 		{
 			close(fd->output);
+			parent = node->parent;
 			node->right = node->parent->right;
 			node->parent = node->parent->parent;
-			free(node->right->parent->str);
-			free(node->right->parent);
+			free(parent->str);
+			free(parent);
 			node->right->parent = node;
 			root = node;
+			data->astree = root;
 		}
 		if (node->type & AST_REDIR_OUT)
 			fd->output = open(node->str, O_CREAT | O_TRUNC | O_WRONLY, 0644);
@@ -42,7 +45,6 @@ void	execute_redirection_out(t_data *data, t_astree *node, t_file_io *fd)
 			return (print_error(data, node->str, errno));
 		node = node->left;
 	}
-	data->astree = root;
 	fd->write = fd->output;
 	if (root->left && root->left->type & AST_REDIR_IN)
 		execute_redirection_in(data, root->left, fd);

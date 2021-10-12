@@ -19,10 +19,12 @@ void	execute_command(t_data *data, t_astree *node, t_file_io fd)
 {
 	if (node == NULL)
 		return ;
-	else if (node->type & AST_REDIR_IN)
-		execute_redirection_in(data, node, &fd);
-	else if (node->type & (AST_REDIR_OUT | AST_APPEND))
-		execute_redirection_out(data, node, &fd);
+	else if (is_redirection(node->type))
+		execute_redirection(data, node, &fd);
+	// else if (node->type & AST_REDIR_IN)
+		// execute_redirection_in(data, node, &fd);
+	// else if (node->type & (AST_REDIR_OUT | AST_APPEND))
+		// execute_redirection_out(data, node, &fd);
 	else if (node->type & AST_HERE_DOC)
 		execute_here_doc(data, node, fd);
 	else if (node->type == AST_WORD)
