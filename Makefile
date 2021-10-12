@@ -79,12 +79,14 @@ OBJ = $(addprefix $(ODIR)/$(SDIR)/, $(SRC:.c=.o))
 
 LIBFT = libft
 TERMCAPS = -ltermcap
-READLINE = -lreadline -L/usr/local/opt/readline/lib
+#READLINE = -lreadline -L/usr/local/opt/readline/lib
+READLINE = -lreadline -L/usr/local/opt/readline/lib -L/Users/alkrusts/.brew/Cellar/readline/8.0.4/lib
 LIBS = -L $(LIBFT) -lft $(READLINE) $(TERMCAPS)
 
 #headers aka dependencys
 
-HEADER := -I $(IDIR) -I $(LIBFT) -I/usr/local/opt/readline/include
+#HEADER := -I $(IDIR) -I $(LIBFT) -I/usr/local/opt/readline/include
+HEADER := -I $(IDIR) -I $(LIBFT) -I/Users/alkrusts/.brew/opt/readline/include
 
 # OBJ := $(patsubst %,$(ODIR)/%,$(OBJ))
 DBG := $(patsubst %,$(DDIR)/%,$(OBJ))
