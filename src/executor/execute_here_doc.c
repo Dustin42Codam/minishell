@@ -6,7 +6,7 @@
 /*   By: alkrusts/dkrecisz <codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/09/13 15:55:27 by alkrusts/dk   #+#    #+#                 */
-/*   Updated: 2021/09/13 15:58:16 by alkrusts/dk   ########   odam.nl         */
+/*   Updated: 2021/10/13 15:40:44 by alkrusts/dk   ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,7 +66,11 @@ static void	read_input(t_data *data, t_astree *node, t_file_io fd)
 		init_signal_handler();
 		input = readline("> ");
 		if (input == NULL)
-			continue ;
+		{
+			if (g_sig == 0)
+				g_sig = 258;
+			break ;
+		}
 		if (errno)
 			exit_minishell(errno);
 		else if (environ_compare(input, delimeter) == 1)

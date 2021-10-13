@@ -88,7 +88,7 @@ void	minishell_non_interactive(t_data *data, int argc, char *argv[])
 	}
 }
 
-static void	minishell_con(t_data *data)
+static void	minishell_con(t_data *data, t_local var)
 {
 	if (g_sig == 1)
 		data->exit_status = 1;
@@ -108,32 +108,34 @@ static void	minishell_con(t_data *data)
 		free_token_list(data->token);
 		data->token_mask = 0;
 	}
+	if (var.flag == 1)
+		exit(1);
 }
 
 void	minishell_interactive(t_data *data)
 {
-	int					ret;
-	int					flag;
+	t_local	var;
 
-	flag = 0;
-	ret = 0;
+	var.flag = 1;
 	while (1)
 	{
 		g_sig = 0;
 		if (isatty(STDIN_FILENO))
+		{
 			data->line = readline("minishell$ ");
+			if (data->line == NULL)
+				exit (data->exit_status);
+		}
 		else
 		{
-			flag = 1;
+			var.flag = 1;
 			errno = 0;
-			ret = get_next_line(0, &data->line);
-			if (errno || data->line == NULL || ret == -1)
+			var.ret = get_next_line(0, &data->line);
+			if (errno || data->line == NULL || var.ret == -1)
 				exit_minishell(errno);
 		}
-		minishell_con(data);
+		minishell_con(data, var);
 		free(data->line);
 		data->line = NULL;
-		if (flag == 1)
-			exit(1);
 	}
 }

@@ -68,8 +68,6 @@ void	sig_herdocs(int ig)
 			exit_minishell_custom("ERROR SIGINT ");
 		if (signal(SIGINT, sig_herdocs) == SIG_ERR)
 			exit_minishell_custom("ERROR SIGQUIT ");
-		rl_replace_line("", 0);
-		ft_putchar('\n');
 		rl_on_new_line();
 		rl_redisplay();
 		return ;

@@ -6,7 +6,7 @@
 /*   By: alkrusts/dkrecisz <codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/09/13 15:55:29 by alkrusts/dk   #+#    #+#                 */
-/*   Updated: 2021/10/12 15:06:19 by alkrusts/dk   ########   odam.nl         */
+/*   Updated: 2021/10/13 14:57:17 by alkrusts/dk   ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,13 +22,23 @@
 #include <stdbool.h>
 #include <stdlib.h>
 
-static void	pipe_to_stdin(t_data *data, t_file_io fd)
+static void	init_signal_handler(void)
 {
+	if (signal(SIGINT, sig_herdocs) == SIG_ERR
+		|| signal(SIGQUIT, sig_herdocs) == SIG_ERR)
+		exit_minishell_custom("ERROR SIGINT ");
+}
+
+static int	pipe_to_stdin(t_data *data, t_file_io fd)
+{
+	init_signal_handler();
 	free(data->line);
 	data->line = NULL;
 	// while (!data->line || !data->line[0] || is_empty(data->line))
 	dup2(fd.save_stdin, STDIN_FILENO);
 	data->line = readline("> ");
+	if (data->line == NULL)
+		return (data->exit_status);
 	data->line_len = ft_strlen(data->line);
 	free_token_list(data->token);
 	data->token_mask = 0;

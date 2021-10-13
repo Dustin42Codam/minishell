@@ -75,7 +75,7 @@ static void	execute_child(t_command *cmd, char **env_array, t_data *data)
 
 static void	execute_parent(pid_t pid, int *stat)
 {
-	stat = 0;
+	*stat = 0;
 	errno = 0;
 	waitpid(pid, stat, 0);
 	signal(SIGQUIT, sig_quit_parent);

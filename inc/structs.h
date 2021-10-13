@@ -189,4 +189,10 @@ typedef struct s_exec
 	t_astree	*parent;
 	t_astree	*root;
 }		t_exec;
+
+typedef struct s_local
+{
+	int	ret;
+	int	flag;
+}		t_local;
 #endif
