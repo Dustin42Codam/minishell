@@ -6,7 +6,7 @@
 /*   By: alkrusts/dkrecisz <codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/09/13 15:53:37 by alkrusts/dk   #+#    #+#                 */
-/*   Updated: 2021/10/13 09:51:39 by alkrusts      ########   odam.nl         */
+/*   Updated: 2021/10/13 12:02:36 by alkrusts      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,6 +88,28 @@ void	minishell_non_interactive(t_data *data, int argc, char *argv[])
 	}
 }
 
+static void	minishell_con(t_data *data)
+{
+	if (g_sig == 1)
+		data->exit_status = 1;
+	if (data->line == NULL)
+		return ;
+	errno = 0;
+	if (ft_strlen(data->line) != 0)
+		add_history(data->line);
+	data->line_len = ft_strlen(data->line);
+	if (lexer(&data, data->line) == EXIT_FAILURE)
+		printf("Syntax error!\n");
+	else
+	{
+		parser(data);
+		execute(data);
+		delete_ast(data->astree);
+		free_token_list(data->token);
+		data->token_mask = 0;
+	}
+}
+
 void	minishell_interactive(t_data *data)
 {
 	int					ret;
@@ -108,24 +130,7 @@ void	minishell_interactive(t_data *data)
 			if (errno || data->line == NULL || ret == -1)
 				exit_minishell(errno);
 		}
-		if (g_sig == 1)
-			data->exit_status = 1;
-		if (data->line == NULL)
-			return ;
-		errno = 0;
-		if (ft_strlen(data->line) != 0)
-			add_history(data->line);
-		data->line_len = ft_strlen(data->line);
-		if (lexer(&data, data->line) == EXIT_FAILURE)
-			printf("Syntax error!\n");
-		else
-		{
-			parser(data);
-			execute(data);
-			delete_ast(data->astree);
-			free_token_list(data->token);
-			data->token_mask = 0;
-		}
+		minishell_con(data);
 		free(data->line);
 		data->line = NULL;
 		if (flag == 1)

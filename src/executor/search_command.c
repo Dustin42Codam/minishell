@@ -6,7 +6,7 @@
 /*   By: alkrusts/dkrecisz <codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/09/13 15:55:43 by alkrusts/dk   #+#    #+#                 */
-/*   Updated: 2021/09/13 15:57:58 by alkrusts/dk   ########   odam.nl         */
+/*   Updated: 2021/10/13 12:14:16 by alkrusts      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,19 +51,20 @@ static int	check_if_builtin(char *s)
 	return (0);
 }
 
-static void	free_path(char **path)
+static int	free_path(char **path)
 {
 	size_t	i;
 
 	i = 0;
 	if (!path)
-		return ;
+		return (0);
 	while (path[i])
 	{
 		free(path[i]);
 		i++;
 	}
 	free(path);
+	return (0);
 }
 
 int	search_command(t_astree *node, t_environ *env)
@@ -87,12 +88,10 @@ int	search_command(t_astree *node, t_environ *env)
 			free(node->str);
 			node->str = try_path;
 			errno = 0;
-			free_path(path);
-			return (0);
+			return (free_path(path));
 		}
 		free(try_path);
 		i++;
 	}
-	free_path(path);
-	return (0);
+	return (free_path(path));
 }

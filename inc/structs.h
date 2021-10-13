@@ -6,7 +6,7 @@
 /*   By: alkrusts/dkrecisz <codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/09/13 15:54:34 by alkrusts/dk   #+#    #+#                 */
-/*   Updated: 2021/09/13 15:58:36 by alkrusts/dk   ########   odam.nl         */
+/*   Updated: 2021/10/13 11:21:12 by alkrusts      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -184,4 +184,9 @@ typedef struct s_ptr
 	t_token		*token_backup;
 }		t_ptr;
 
+typedef struct s_exec
+{
+	t_astree	*parent;
+	t_astree	*root;
+}		t_exec;
 #endif

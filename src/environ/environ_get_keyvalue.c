@@ -1,6 +1,19 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        ::::::::            */
+/*   environ_get_keyvalue.c                             :+:    :+:            */
+/*                                                     +:+                    */
+/*   By: alkrusts <alkrust@student.codam.nl>          +#+                     */
+/*                                                   +#+                      */
+/*   Created: 2021/10/13 10:46:58 by alkrusts      #+#    #+#                 */
+/*   Updated: 2021/10/13 10:47:06 by alkrusts      ########   odam.nl         */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
 #include "environ.h"
 #include "libft.h"
+
 #include <errno.h>
 
 /**

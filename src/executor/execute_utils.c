@@ -6,7 +6,7 @@
 /*   By: alkrusts/dkrecisz <codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/09/13 15:58:09 by alkrusts/dk   #+#    #+#                 */
-/*   Updated: 2021/10/13 09:51:45 by alkrusts      ########   odam.nl         */
+/*   Updated: 2021/10/13 12:10:13 by alkrusts      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,17 +27,11 @@
 #include <readline/readline.h>
 #include <readline/history.h>
 
-void	init_cmd(t_data *data, t_command *cmd, t_file_io fd)
-{
-	cmd->exit_status = data->exit_status;
-	cmd->fd = fd;
-	cmd->env = data->env;
-}
-
 static void	free_command_argv(t_command *cmd, char **env_array)
 {
 	size_t	i;
 
+	errno = 0;
 	i = 0;
 	while (cmd->argv[i])
 	{
@@ -52,33 +46,6 @@ static void	free_command_argv(t_command *cmd, char **env_array)
 		i++;
 	}
 	free(env_array);
-}
-
-void	make_command(t_data *data, t_astree *node, t_command *cmd, t_file_io fd)
-{
-	t_astree	*tmp;
-
-	cmd->argc = 0;
-	tmp = node;
-	while (tmp && tmp->type & (AST_WORD))
-	{
-		cmd->argc++;
-		tmp = tmp->right;
-	}
-	cmd->argv = (char **)minishell_calloc(cmd->argc + 1, sizeof(char *));
-	cmd->argc = 0;
-	tmp = node;
-	while (tmp && tmp->type & (AST_WORD))
-	{
-		if (cmd->argc == 0)
-			cmd->builtin_id = search_command(tmp, data->env);
-		cmd->argv[cmd->argc] = ft_strdup(tmp->str);
-		if (cmd->argv[cmd->argc] == NULL)
-			exit_minishell(errno);
-		cmd->argc++;
-		tmp = tmp->right;
-	}
-	init_cmd(data, cmd, fd);
 }
 
 static void	execute_child(t_command *cmd, char **env_array, t_data *data)
@@ -108,6 +75,7 @@ static void	execute_child(t_command *cmd, char **env_array, t_data *data)
 
 static void	execute_parent(pid_t pid, int *stat)
 {
+	stat = 0;
 	errno = 0;
 	waitpid(pid, stat, 0);
 	signal(SIGQUIT, sig_quit_parent);
@@ -120,7 +88,6 @@ void	execute_command_argv(t_data *data, t_command *cmd, t_environ *env)
 	int		stat;
 	char	**env_array;
 
-	stat = 0;
 	env_array = environ_get_array(env);
 	if (signal(SIGINT, sig_int_child) == SIG_ERR
 		|| signal(SIGQUIT, sig_quit_child) == SIG_ERR)
@@ -133,7 +100,6 @@ void	execute_command_argv(t_data *data, t_command *cmd, t_environ *env)
 	execute_parent(pid, &stat);
 	if (isatty(STDIN_FILENO))
 		tcsetattr(cmd->fd.save_stdin, TCSANOW, &data->new_term);
-	errno = 0;
 	free_command_argv(cmd, env_array);
 	if (WIFEXITED(stat))
 		data->exit_status = WEXITSTATUS(stat);

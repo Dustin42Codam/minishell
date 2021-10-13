@@ -6,7 +6,7 @@
 /*   By: alkrusts/dkrecisz <codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/09/13 15:56:50 by alkrusts/dk   #+#    #+#                 */
-/*   Updated: 2021/09/13 15:57:47 by alkrusts/dk   ########   odam.nl         */
+/*   Updated: 2021/10/13 10:47:41 by alkrusts      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,6 @@
 
 int	is_redirection(int node_type)
 {
-	// ADD AST_HERE_DOC?
 	return (node_type & (AST_REDIR_IN | AST_APPEND | AST_REDIR_OUT));
 }
 

@@ -6,7 +6,7 @@
 /*   By: alkrusts/dkrecisz <codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/09/13 15:56:42 by alkrusts/dk   #+#    #+#                 */
-/*   Updated: 2021/09/13 15:57:50 by alkrusts/dk   ########   odam.nl         */
+/*   Updated: 2021/10/13 10:48:03 by alkrusts      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,10 +50,6 @@ t_astree	*parse_command(t_data *data)
 		return (redirection);
 	data->token_ptr = token_backup;
 	word_list = parse_word_list(data);
-	// if (word_list && data->token_mask > WORD)
-		// delete_ast(word_list);
-	// else if (word_list && data->token_mask == WORD)
-		// return (word_list);
 	if (word_list)
 		return (word_list);
 	return (NULL);
