@@ -70,7 +70,9 @@ SRC = main.c \
 	environ/environ.c \
 	environ/environ_utils.c \
 	environ/environ_get_keyvalue.c \
-	signals/signals.c
+	signals/signals.c \
+	Get-next-line/get_next_line.c \
+	Get-next-line/get_next_line_utils.c
 
 OBJ = $(addprefix $(ODIR)/$(SDIR)/, $(SRC:.c=.o))
 
@@ -128,6 +130,7 @@ $(ODIR)/%.o: %.c
 		$(ODIR)/$(SDIR)/parser \
 		$(ODIR)/$(SDIR)/executor \
 		$(ODIR)/$(SDIR)/environ \
+		$(ODIR)/$(SDIR)/Get-next-line \
 		$(ODIR)/$(SDIR)/signals
 	@$(CC) $(FLAGS) $(HEADER) -c $< -o $@
 

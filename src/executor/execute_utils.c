@@ -6,7 +6,7 @@
 /*   By: alkrusts/dkrecisz <codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/09/13 15:58:09 by alkrusts/dk   #+#    #+#                 */
-/*   Updated: 2021/09/13 15:58:10 by alkrusts/dk   ########   odam.nl         */
+/*   Updated: 2021/10/13 09:51:45 by alkrusts      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -131,7 +131,9 @@ void	execute_command_argv(t_data *data, t_command *cmd, t_environ *env)
 	else if (pid == 0)
 		execute_child(cmd, env_array, data);
 	execute_parent(pid, &stat);
-	tcsetattr(cmd->fd.save_stdin, TCSANOW, &data->new_term);
+	if (isatty(STDIN_FILENO))
+		tcsetattr(cmd->fd.save_stdin, TCSANOW, &data->new_term);
+	errno = 0;
 	free_command_argv(cmd, env_array);
 	if (WIFEXITED(stat))
 		data->exit_status = WEXITSTATUS(stat);

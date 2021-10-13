@@ -6,10 +6,11 @@
 /*   By: alkrusts/dkrecisz <codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/09/13 15:53:37 by alkrusts/dk   #+#    #+#                 */
-/*   Updated: 2021/09/13 15:53:58 by alkrusts/dk   ########   odam.nl         */
+/*   Updated: 2021/10/13 09:51:39 by alkrusts      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
+#include "get_next_line.h"
 #include "executor.h"
 #include "minishell.h"
 #include "parser.h"
@@ -61,7 +62,9 @@ static int	read_flags(int argc, char *argv[])
 void	minishell_non_interactive(t_data *data, int argc, char *argv[])
 {
 	int					flags;
+	int					ret;
 
+	ret = 0;
 	data->interactive = FALSE;
 	if (argc > 1)
 	{
@@ -69,8 +72,8 @@ void	minishell_non_interactive(t_data *data, int argc, char *argv[])
 		data->line = ft_strdup(argv[flags]);
 	}
 	else
-		data->line = read_line();
-	if (data->line == NULL)
+		ret = get_next_line(0, &data->line);
+	if (errno || data->line == NULL || ret == -1)
 		exit_minishell(errno);
 	data->line_len = ft_strlen(data->line);
 	if (lexer(&data, data->line) == EXIT_FAILURE)
@@ -87,10 +90,24 @@ void	minishell_non_interactive(t_data *data, int argc, char *argv[])
 
 void	minishell_interactive(t_data *data)
 {
+	int					ret;
+	int					flag;
+
+	flag = 0;
+	ret = 0;
 	while (1)
 	{
 		g_sig = 0;
-		data->line = readline("minishell$ ");
+		if (isatty(STDIN_FILENO))
+			data->line = readline("minishell$ ");
+		else
+		{
+			flag = 1;
+			errno = 0;
+			ret = get_next_line(0, &data->line);
+			if (errno || data->line == NULL || ret == -1)
+				exit_minishell(errno);
+		}
 		if (g_sig == 1)
 			data->exit_status = 1;
 		if (data->line == NULL)
@@ -111,5 +128,7 @@ void	minishell_interactive(t_data *data)
 		}
 		free(data->line);
 		data->line = NULL;
+		if (flag == 1)
+			exit(1);
 	}
 }
