@@ -25,7 +25,7 @@ char	*read_line(void)
 	char	buf;
 	ssize_t	ret;
 
-	line = ft_calloc(1, 1);
+	line = minishell_calloc(1, 1);
 	buf = 0;
 	ret = 1;
 	while (line && ret > 0)
@@ -37,7 +37,7 @@ char	*read_line(void)
 		if (buf == '\n')
 			break ;
 	}
-	// if (errno)
+	// if (errno)	// add GNL
 		// exit_minishell(errno);
 	return (line);
 }

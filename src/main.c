@@ -51,7 +51,10 @@ int	main(int argc, char *argv[], char **envp)
 	data = init_data(envp);
 	init_terminal(data);
 	if (argc == 1)
+	{
+		data->interactive = TRUE;
 		minishell_interactive(data);
+	}
 	else
 	{
 		errno = 0;

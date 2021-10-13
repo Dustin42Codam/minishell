@@ -107,9 +107,7 @@ char	**environ_get_array(t_environ *env)
 	{
 		if (tmp->key_value == NULL)
 			exit_minishell_custom(". environ_utils:97\n");
-		array[i] = ft_strdup(tmp->key_value);
-		if (array[i] == NULL)
-			exit_minishell(errno);
+		array[i] = minishell_strdup(tmp->key_value);
 		tmp = tmp->next;
 		i++;
 	}

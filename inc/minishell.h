@@ -52,6 +52,7 @@ ssize_t	minishell_write(int fd, const void *buf, size_t count);
 ssize_t	minishell_putchar_fd(const char c, int fd);
 ssize_t	minishell_putstr_fd(const char *s, int fd);
 ssize_t	minishell_putendl_fd(const char *s, int fd);
+char	*minishell_strdup(const char *s);
 
 /*
 **	SIGNAL HOOK FUNCTIOMS

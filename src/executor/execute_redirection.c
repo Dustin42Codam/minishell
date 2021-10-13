@@ -47,10 +47,6 @@ void	execute_redirection(t_data *data, t_astree *node, t_file_io *fd)
 				if (node->right)
 					node->right->parent = node;
 				root = node;
-				// if (root->parent)
-					// data->astree = root->parent;
-				// else
-					// data->astree = root;
 			}
 			if (node->type & AST_REDIR_IN)
 				fd->input = open(node->str, O_RDONLY);

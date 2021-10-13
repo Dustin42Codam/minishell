@@ -44,7 +44,13 @@ static void	setup_pipe(t_file_io *fd)
 	fd->read = fd->pipe[0];
 	if (fd->output == 0)
 		fd->write = STDOUT_FILENO;
-	//what is fd->write set to if fd->output != 0
+}
+
+static void	init_signal_handler(void)
+{
+	if (signal(SIGINT, sig_herdocs) == SIG_ERR
+		|| signal(SIGQUIT, sig_herdocs) == SIG_ERR)
+		exit_minishell_custom("ERROR SIGINT ");
 }
 
 static void	read_input(t_data *data, t_astree *node, t_file_io fd)
@@ -57,9 +63,7 @@ static void	read_input(t_data *data, t_astree *node, t_file_io fd)
 	g_sig = 0;
 	while (1)
 	{
-		if (signal(SIGINT, sig_herdocs) == SIG_ERR
-			|| signal(SIGQUIT, sig_herdocs) == SIG_ERR)
-			exit_minishell_custom("ERROR SIGINT ");
+		init_signal_handler();
 		input = readline("> ");
 		if (input == NULL)
 			continue ;

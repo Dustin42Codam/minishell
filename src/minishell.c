@@ -58,9 +58,6 @@ static int	read_flags(int argc, char *argv[])
 	return (i);
 }
 
-/*
-**	THSE 2 HAVE MOORE THAN 25 LNIES
-*/
 void	minishell_non_interactive(t_data *data, int argc, char *argv[])
 {
 	int					flags;
@@ -86,15 +83,10 @@ void	minishell_non_interactive(t_data *data, int argc, char *argv[])
 		free_token_list(data->token);
 		data->token_mask = 0;
 	}
-	free(data->line);
-	data->line = NULL;
-//Do we have to free data hear?
-	exit(data->exit_status);
 }
 
 void	minishell_interactive(t_data *data)
 {
-	data->interactive = TRUE;
 	while (1)
 	{
 		g_sig = 0;

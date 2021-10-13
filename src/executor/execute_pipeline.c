@@ -22,40 +22,6 @@
 #include <stdbool.h>
 #include <stdlib.h>
 
-/*
-static bool	is_empty(char *line)
-{
-	size_t	i;
-	char	c;
-
-	i = 0;
-	if (line == NULL)
-		return (true);
-	while (line[i])
-	{
-		c = line[i];
-		if (c != '\t' && c != '\n' && c != '\v' && \
-			c != '\f' && c != '\r' && c != ' ')
-			return (false);
-		i++;
-	}
-	return (true);
-}
-
-
-static void	restore_fd(t_file_io *fd)
-{
-	dup2(fd->save_stdin, STDIN_FILENO);
-	dup2(fd->save_stdout, STDOUT_FILENO);
-	close(fd->save_stdin);
-	close(fd->save_stdout);
-	if (fd->output)
-		close(fd->output);
-	errno = 0;
-	if (errno)
-		exit_minishell(errno);
-}
-*/
 static void	pipe_to_stdin(t_data *data, t_file_io fd)
 {
 	free(data->line);
@@ -71,12 +37,10 @@ static void	pipe_to_stdin(t_data *data, t_file_io fd)
 	parser(data);
 	dup2(fd.pipe[0], STDIN_FILENO);
 	fd.dup_stdin = 1;
-	// execute(data);
 	if (data->token_mask & PIPE)
 		execute_pipeline(data, fd);
 	else
 		execute_command(data, data->astree, fd);
-	// restore_fd(&fd);
 }
 
 static void	setup_next_pipe(t_file_io *fd)
