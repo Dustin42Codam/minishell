@@ -13,7 +13,7 @@
 #include "libft.h"
 #include "minishell.h"
 
-char	*ft_strdup(const char *s)
+char	*minishell_strdup(const char *s)
 {
 	char	*ptr;
 	size_t	x;
