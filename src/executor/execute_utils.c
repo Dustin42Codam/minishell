@@ -6,7 +6,7 @@
 /*   By: alkrusts/dkrecisz <codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/09/13 15:58:09 by alkrusts/dk   #+#    #+#                 */
-/*   Updated: 2021/10/13 12:10:13 by alkrusts      ########   odam.nl         */
+/*   Updated: 2021/10/14 11:28:31 by dkrecisz      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,7 +61,11 @@ static void	execute_child(t_command *cmd, char **env_array, t_data *data)
 		dup2(cmd->fd.output, STDOUT_FILENO);
 	if (errno == 0 && cmd->fd.input)
 		dup2(cmd->fd.input, STDIN_FILENO);
-	if (errno || execve(cmd->argv[0], cmd->argv, env_array) == -1)
+	if (cmd->builtin_id)
+		execute_builtin(data, cmd, data->env);
+	else if (cmd->builtin_id == 0)
+		execve(cmd->argv[0], cmd->argv, env_array);
+	if (errno)
 	{
 		dup2(cmd->fd.save_stdout, STDOUT_FILENO);
 		printf("minishell: %s - Error: %s [%d]\n",

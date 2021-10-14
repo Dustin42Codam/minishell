@@ -6,7 +6,7 @@
 /*   By: alkrusts/dkrecisz <codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/09/13 15:56:52 by alkrusts/dk   #+#    #+#                 */
-/*   Updated: 2021/10/14 10:37:23 by dkrecisz      ########   odam.nl         */
+/*   Updated: 2021/10/14 10:59:24 by dkrecisz      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,7 +58,10 @@ static int	check_syntax(t_data *data)
 void	parser(t_data *data)
 {
 	if (data->token->next == NULL)
+	{
+		data->astree = NULL;
 		return ;
+	}
 	else if (check_syntax(data))
 		return (syntax_error(data));
 	data->token_ptr = data->token;

@@ -6,12 +6,13 @@
 /*   By: alkrusts/dkrecisz <codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/09/13 15:53:20 by alkrusts/dk   #+#    #+#                 */
-/*   Updated: 2021/09/13 15:53:28 by alkrusts/dk   ########   odam.nl         */
+/*   Updated: 2021/10/14 11:13:54 by dkrecisz      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 #include "executor.h"
+#include "lexer.h"
 
 #include <stdlib.h>
 
@@ -35,7 +36,7 @@ void	execute_word_list(t_data *data, t_astree *node, t_file_io fd)
 	if (node == NULL)
 		return ;
 	make_command(data, node, &command, fd);
-	if (command.builtin_id)
+	if (command.builtin_id && (data->token_mask & PIPE) == 0)
 	{
 		execute_builtin(data, &command, data->env);
 		free_command(&command);

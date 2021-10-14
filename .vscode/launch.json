@@ -7,7 +7,7 @@
 		"request": "launch",
 		"program": "/home/dustin/minishell_b/minishell",
 		// "program": "${workspaceFolder}/tests/environ/test_environ.out",
-		"args": [ "-c", "echo abc |"],
+		"args": [ "-c", "exit 42 | exit 21"],
 		// "args": [ "-c", "export | sort > file.out"],
 		// "args": [ "-c", "< files cat | echo 123"],
 		// "args": [ "-c", "printf \"abc\" | wc -c"],
