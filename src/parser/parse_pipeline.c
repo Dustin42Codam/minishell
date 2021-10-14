@@ -6,7 +6,7 @@
 /*   By: alkrusts/dkrecisz <codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/09/13 15:56:45 by alkrusts/dk   #+#    #+#                 */
-/*   Updated: 2021/09/13 15:57:49 by alkrusts/dk   ########   odam.nl         */
+/*   Updated: 2021/10/14 10:16:53 by dkrecisz      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,13 +20,11 @@
  *
  *	A <pipeline> can either consist of a sequence of pipes 
  *	-> 'echo 1 | grep "1" | wc -l'
- *	or an open pipe ->	'echo abc | '.
  *	or just a single command -> 'echo -n "abc"'
  *
  *  Grammar:
- * 	<pipeline>	::=		<command> '|' <pipeline>
- *				|		<pipeline> '|'
- *				|		<command>
+ * 	<pipeline>	::=		<command>
+ *				|		<command> '|' <pipeline>
 **/
 
 static void	delete_ast_2(t_astree	**pipeline)
@@ -69,7 +67,6 @@ t_astree	*parse_pipeline(t_data *data)
 
 /**
  *	<pipeline>	::=		<command> '|' <pipeline>
- *				|		<pipeline> '|'
 **/
 t_astree	*parse_pipe_sequence(t_data *data)
 {

@@ -6,7 +6,7 @@
 /*   By: alkrusts/dkrecisz <codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/09/13 15:56:52 by alkrusts/dk   #+#    #+#                 */
-/*   Updated: 2021/09/13 15:57:46 by alkrusts/dk   ########   odam.nl         */
+/*   Updated: 2021/10/14 10:37:23 by dkrecisz      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,13 +36,33 @@ int	get_next_token(t_data *data, char **token_str, int token_type)
 	return (EXIT_FAILURE);
 }
 
+static void	syntax_error(t_data *data)
+{
+	minishell_putstr_fd("minishell: Syntax error!\n", 2);
+	data->exit_status = 258;
+	data->astree = NULL;	
+}
+
+static int	check_syntax(t_data *data)
+{
+	t_token	*tmp;
+
+	tmp = data->token;
+	while (tmp->next->type)
+		tmp = tmp->next;
+	if (tmp->type & (HERE_DOC | REDIR_IN | APPEND | REDIR_OUT | PIPE))
+		return (1);
+	return (0);
+}
+
 void	parser(t_data *data)
 {
+	if (data->token->next == NULL)
+		return ;
+	else if (check_syntax(data))
+		return (syntax_error(data));
 	data->token_ptr = data->token;
 	data->astree = parse_pipeline(data);
 	if (data->astree == NULL)
-	{
-		minishell_putstr_fd("minishell: Syntax error!\n", 2);
-		data->exit_status = 2;
-	}
+		return (syntax_error(data));
 }

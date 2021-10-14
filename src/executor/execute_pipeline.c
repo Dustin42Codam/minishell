@@ -6,7 +6,7 @@
 /*   By: alkrusts/dkrecisz <codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/09/13 15:55:29 by alkrusts/dk   #+#    #+#                 */
-/*   Updated: 2021/10/14 07:55:17 by alkrusts      ########   odam.nl         */
+/*   Updated: 2021/10/14 09:30:35 by dkrecisz      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,7 @@
 #include "lexer.h"
 #include <errno.h>
 #include <stdlib.h>
+#include <signal.h>
 #include <stdio.h>
 #include <readline/readline.h>
 #include <stdbool.h>

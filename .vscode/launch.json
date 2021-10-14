@@ -1,0 +1,35 @@
+{
+	"configurations": [
+		
+	{
+		"name": "(gdb) Launch",
+		"type": "cppdbg",
+		"request": "launch",
+		"program": "/home/dustin/minishell_b/minishell",
+		// "program": "${workspaceFolder}/tests/environ/test_environ.out",
+		"args": [ "-c", "echo abc |"],
+		// "args": [ "-c", "export | sort > file.out"],
+		// "args": [ "-c", "< files cat | echo 123"],
+		// "args": [ "-c", "printf \"abc\" | wc -c"],
+		// "args": [ "-c", "ls -lahs / | grep 4.0 | wc -c"],
+		// "args": [ "-c", "cat colors.txt | sort | uniq -c | sort -r | head -3"],
+		"stopAtEntry": false,
+		"cwd": "/home/dustin/minishell_b",
+		"environment": [],
+		"externalConsole": false,
+		"MIMode": "gdb",
+		"setupCommands": [
+			{
+				"description": "Enable pretty-printing for gdb",
+				"text": "-enable-pretty-printing",
+				"ignoreFailures": true
+			}/* ,
+			{
+				"description": "Enable child fork debugging for gdb",
+				"text": "set follow-fork-mode child",
+				"ignoreFailures": true
+			} */
+		]
+	}
+	]
+}
