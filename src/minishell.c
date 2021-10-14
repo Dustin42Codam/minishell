@@ -6,7 +6,7 @@
 /*   By: alkrusts/dkrecisz <codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/09/13 15:53:37 by alkrusts/dk   #+#    #+#                 */
-/*   Updated: 2021/10/13 12:02:36 by alkrusts      ########   odam.nl         */
+/*   Updated: 2021/10/14 08:13:05 by alkrusts      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -116,7 +116,7 @@ void	minishell_interactive(t_data *data)
 {
 	t_local	var;
 
-	var.flag = 1;
+	var.flag = 0;
 	while (1)
 	{
 		g_sig = 0;

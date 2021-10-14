@@ -6,7 +6,7 @@
 /*   By: alkrusts/dkrecisz <codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/09/13 15:56:55 by alkrusts/dk   #+#    #+#                 */
-/*   Updated: 2021/09/13 15:57:45 by alkrusts/dk   ########   odam.nl         */
+/*   Updated: 2021/10/14 08:11:02 by alkrusts      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,8 +48,6 @@ void	sig_int_parent(int ig)
 void	sig_quit_parent(int ig)
 {
 	(void)ig;
-	signal(SIGINT, sig_int_parent);
-	signal(SIGQUIT, sig_quit_parent);
 	if (signal(SIGINT, sig_int_parent) == SIG_ERR)
 		exit_minishell_custom("ERROR SIGINT ");
 	if (signal(SIGQUIT, sig_quit_parent) == SIG_ERR)
@@ -68,6 +66,8 @@ void	sig_herdocs(int ig)
 			exit_minishell_custom("ERROR SIGINT ");
 		if (signal(SIGINT, sig_herdocs) == SIG_ERR)
 			exit_minishell_custom("ERROR SIGQUIT ");
+		rl_replace_line("", 0);
+		ft_putchar('\n');
 		rl_on_new_line();
 		rl_redisplay();
 		return ;

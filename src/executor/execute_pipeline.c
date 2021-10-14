@@ -6,7 +6,7 @@
 /*   By: alkrusts/dkrecisz <codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/09/13 15:55:29 by alkrusts/dk   #+#    #+#                 */
-/*   Updated: 2021/10/13 14:57:17 by alkrusts/dk   ########   odam.nl         */
+/*   Updated: 2021/10/14 07:55:17 by alkrusts      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,6 +51,7 @@ static int	pipe_to_stdin(t_data *data, t_file_io fd)
 		execute_pipeline(data, fd);
 	else
 		execute_command(data, data->astree, fd);
+	return (1);
 }
 
 static void	setup_next_pipe(t_file_io *fd)
