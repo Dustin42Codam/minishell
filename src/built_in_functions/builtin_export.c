@@ -6,7 +6,7 @@
 /*   By: alkrusts/dkrecisz <codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/09/13 15:54:51 by alkrusts/dk   #+#    #+#                 */
-/*   Updated: 2021/09/13 15:58:23 by alkrusts/dk   ########   odam.nl         */
+/*   Updated: 2021/10/14 12:06:47 by alkrusts      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,7 +68,7 @@ static void	add_new_variable(t_environ *env, t_environ *new)
 
 int	builtin_export(t_command *cmd, t_environ *env)
 {
-	t_environ	*new;
+	t_environ	*my_var;
 	size_t		i;
 	int			exit_status;
 
@@ -82,11 +82,11 @@ int	builtin_export(t_command *cmd, t_environ *env)
 			exit_status = export_error(cmd->argv[i]);
 		else
 		{
-			new = environ_new(cmd->argv[i]);
-			if (environ_get(env, new->key))
-				add_new_variable(env, new);
+			my_var = environ_new(cmd->argv[i]);
+			if (environ_get(env, my_var->key))
+				add_new_variable(env, my_var);
 			else
-				environ_add_back(&env, new);
+				environ_add_back(&env, my_var);
 		}
 		i++;
 	}

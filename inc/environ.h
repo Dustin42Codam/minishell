@@ -6,7 +6,7 @@
 /*   By: alkrusts/dkrecisz <codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/09/13 15:54:22 by alkrusts/dk   #+#    #+#                 */
-/*   Updated: 2021/09/13 15:58:40 by alkrusts/dk   ########   odam.nl         */
+/*   Updated: 2021/10/14 12:43:12 by alkrusts      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,5 +26,6 @@ char		**environ_get_array(t_environ *env);
 int			environ_compare(char *s1, char *s2);
 char		*environ_get_keyvalue(char *key, char *value);
 void		environ_modify(t_environ *head, char *key, char *value);
+t_environ	*environ_new_empty(const char *key_value);
 
 #endif

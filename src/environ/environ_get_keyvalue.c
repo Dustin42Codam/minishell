@@ -6,7 +6,7 @@
 /*   By: alkrusts <alkrust@student.codam.nl>          +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/10/13 10:46:58 by alkrusts      #+#    #+#                 */
-/*   Updated: 2021/10/13 10:47:06 by alkrusts      ########   odam.nl         */
+/*   Updated: 2021/10/14 12:59:43 by alkrusts      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,4 +46,21 @@ char	*environ_get_keyvalue(char *key, char *value)
 	ft_strlcat(keyvalue, "=", len + 1);
 	ft_strlcat(keyvalue, value, len + 1);
 	return (keyvalue);
+}
+
+t_environ	*environ_new_empty(const char *key_value)
+{
+	t_environ	*new;
+	size_t		key_len;
+	size_t		key_value_len;
+
+	key_len = 0;
+	key_value_len = ft_strlen(key_value);
+	new = (t_environ *)minishell_calloc(1, sizeof(t_environ));
+	new->key = ft_strdup(key_value);
+	new->value = ft_strdup("");
+	new->key_value = ft_strdup(key_value);
+	if (new->key_value == NULL || new->value == NULL || new->key == NULL)
+		exit_minishell(errno);
+	return (new);
 }
