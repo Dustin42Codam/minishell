@@ -6,7 +6,7 @@
 /*   By: alkrusts/dkrecisz <codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/09/13 15:58:09 by alkrusts/dk   #+#    #+#                 */
-/*   Updated: 2021/10/14 11:28:31 by dkrecisz      ########   odam.nl         */
+/*   Updated: 2021/10/15 12:30:12 by dkrecisz      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,7 @@
 #include "parser.h"
 #include "environ.h"
 #include "libft.h"
+#include "job_control.h"
 #include <errno.h>
 #include <stdlib.h>
 #include <sys/types.h>
@@ -101,12 +102,15 @@ void	execute_command_argv(t_data *data, t_command *cmd, t_environ *env)
 		exit_minishell(errno);
 	else if (pid == 0)
 		execute_child(cmd, env_array, data);
+	// job_add(data, pid);
 	execute_parent(pid, &stat);
 	if (isatty(STDIN_FILENO))
 		tcsetattr(cmd->fd.save_stdin, TCSANOW, &data->new_term);
 	free_command_argv(cmd, env_array);
 	if (WIFEXITED(stat))
 		data->exit_status = WEXITSTATUS(stat);
+	if (WTERMSIG(stat) == 2)
+		data->exit_status = 130;
 	if (WTERMSIG(stat) == 2)
 		data->exit_status = 130;
 	if (WTERMSIG(stat) == 3)

@@ -6,7 +6,7 @@
 /*   By: alkrusts/dkrecisz <codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/09/13 15:54:51 by alkrusts/dk   #+#    #+#                 */
-/*   Updated: 2021/10/14 12:06:47 by alkrusts      ########   odam.nl         */
+/*   Updated: 2021/10/15 12:35:00 by dkrecisz      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ static int	check_variable_name(char *name)
 	{
 		if (ft_isalpha(*name))
 			letter = TRUE;
-		else if (ft_isalnum(*name) == 0 && *name != '_')
+		else if (ft_isalnum(*name) == 0 && *name != '_' && *name != '+')
 			return (EXIT_FAILURE);
 		else if (ft_isdigit(*name) && letter == 0)
 			return (EXIT_FAILURE);
@@ -79,15 +79,17 @@ int	builtin_export(t_command *cmd, t_environ *env)
 	while (cmd->argv[i])
 	{
 		if (check_variable_name(cmd->argv[i]))
-			exit_status = export_error(cmd->argv[i]);
+			return (export_error(cmd->argv[i]));
+		i++;
+	}
+	i = 1;
+	while (cmd->argv[i])
+	{
+		my_var = environ_new(cmd->argv[i]);
+		if (environ_get(env, my_var->key))
+			add_new_variable(env, my_var);
 		else
-		{
-			my_var = environ_new(cmd->argv[i]);
-			if (environ_get(env, my_var->key))
-				add_new_variable(env, my_var);
-			else
-				environ_add_back(&env, my_var);
-		}
+			environ_add_back(&env, my_var);
 		i++;
 	}
 	return (exit_status);

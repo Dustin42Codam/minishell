@@ -6,7 +6,7 @@
 /*   By: alkrusts/dkrecisz <codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/09/13 15:55:29 by alkrusts/dk   #+#    #+#                 */
-/*   Updated: 2021/10/14 09:30:35 by dkrecisz      ########   odam.nl         */
+/*   Updated: 2021/10/14 17:43:39 by dkrecisz      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,38 +22,6 @@
 #include <readline/readline.h>
 #include <stdbool.h>
 #include <stdlib.h>
-
-static void	init_signal_handler(void)
-{
-	if (signal(SIGINT, sig_herdocs) == SIG_ERR
-		|| signal(SIGQUIT, sig_herdocs) == SIG_ERR)
-		exit_minishell_custom("ERROR SIGINT ");
-}
-
-static int	pipe_to_stdin(t_data *data, t_file_io fd)
-{
-	init_signal_handler();
-	free(data->line);
-	data->line = NULL;
-	// while (!data->line || !data->line[0] || is_empty(data->line))
-	dup2(fd.save_stdin, STDIN_FILENO);
-	data->line = readline("> ");
-	if (data->line == NULL)
-		return (data->exit_status);
-	data->line_len = ft_strlen(data->line);
-	free_token_list(data->token);
-	data->token_mask = 0;
-	lexer(&data, data->line);
-	delete_ast(data->astree);
-	parser(data);
-	dup2(fd.pipe[0], STDIN_FILENO);
-	fd.dup_stdin = 1;
-	if (data->token_mask & PIPE)
-		execute_pipeline(data, fd);
-	else
-		execute_command(data, data->astree, fd);
-	return (1);
-}
 
 static void	setup_next_pipe(t_file_io *fd)
 {
@@ -95,9 +63,6 @@ void	execute_pipeline(t_data *data, t_file_io fd)
 		node = node->right;
 	}
 	setup_pipe_end(&fd);
-	if (node == NULL)
-		pipe_to_stdin(data, fd);
-	else
-		execute_command(data, node, fd);
+	execute_command(data, node, fd);
 	close(fd.pipe[0]);
 }

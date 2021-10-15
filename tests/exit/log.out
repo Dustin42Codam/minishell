@@ -1,5 +1,1 @@
-
-Command:	exit 0 0 | echo hello
-bash:		[hello]
-minishell:	[]
-
+Passed all the test cases!

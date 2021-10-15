@@ -1,21 +1,3 @@
-################1####################################
-echo "lol" | 			# then ctrl + D 		#becuase readline returns NULL
-@@@@@@@@@@@@@@@@@@@@@@@@@@@@expected@@@@@@@@@@@@@@@@@
-bash-3.2$ echo "aaa" |
-> bash: syntax error: unexpected end of file
-
-cat <<
-syntaxe error
-
-
-diffrent exit codes for bash and minishell
-exit 20 | exit 400
-
-differnt behaviur for bash and minishell
-exit 20 | echo "lol 
-
-exit 0 0 | echo lol
-
-exit 0 0 > 123l
 
 cat /dev/random | head -c 100 | wc -c
+pwd | - | << lol

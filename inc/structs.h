@@ -6,7 +6,7 @@
 /*   By: alkrusts/dkrecisz <codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/09/13 15:54:34 by alkrusts/dk   #+#    #+#                 */
-/*   Updated: 2021/10/13 11:21:12 by alkrusts      ########   odam.nl         */
+/*   Updated: 2021/10/15 11:20:13 by dkrecisz      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,7 @@
 # include "libft.h"
 # include <curses.h>
 # include <term.h>
+# include <sys/types.h>
 
 /**
  * s_expansion - Struct for expanding environment variables
@@ -133,13 +134,27 @@ typedef struct s_file_io
  * */
 typedef struct s_command
 {
-	char		**argv;
-	int			argc;
-	int			builtin_id;
-	int			exit_status;
-	t_file_io	fd;
-	t_environ	*env;
+	char				**argv;
+	int					argc;
+	int					builtin_id;
+	int					exit_status;
+	t_file_io			fd;
+	t_environ			*env;
 }	t_command;
+
+/**
+ * s_job - Struct for managing jobs / child processes
+ * Member description:
+ * @pid:			Process ID.
+ * @cmd:			Pointer to command struct.
+ * @next:			Pointer to next child process node.
+ * */
+typedef struct s_job
+{
+	pid_t			pid;
+	t_command		*cmd;
+	struct s_job	*next;
+}	t_job;
 
 /**
  * s_data - Main struct for storing all sort of data.
@@ -155,8 +170,8 @@ typedef struct s_command
  * @interactive:	Value is set to TRUE=1 if shell is in interactive mode
  * 					and FALSE=0 if the shell is non-interactive.
  * @exit_status:	exit code of last executed command in the pipeline.
- * @sig_NO:			signal number read by ft_readline
  * @prompt:			prompt settings
+ * @child:			linked list of child process id's
  * @new_term:		new termios settings - minishell exclusive
  * @old_term:		old default termios settings
  * */
@@ -172,6 +187,7 @@ typedef struct s_data
 	int				token_mask;
 	int				interactive;
 	int				exit_status;
+	t_job			*job;
 	struct termios	new_term;
 	struct termios	old_term;
 }	t_data;
