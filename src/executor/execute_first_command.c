@@ -1,39 +1,34 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        ::::::::            */
-/*   init_data.c                                        :+:    :+:            */
+/*   execute_first_command.c                            :+:    :+:            */
 /*                                                     +:+                    */
 /*   By: alkrusts/dkrecisz <codam.nl>                 +#+                     */
 /*                                                   +#+                      */
-/*   Created: 2021/09/13 15:57:03 by alkrusts/dk   #+#    #+#                 */
-/*   Updated: 2021/10/16 01:27:19 by dkrecisz      ########   odam.nl         */
+/*   Created: 2021/09/13 15:55:24 by alkrusts/dk   #+#    #+#                 */
+/*   Updated: 2021/10/16 19:24:32 by dkrecisz      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-#include "libft.h"
-#include "environ.h"
+#include "executor.h"
+#include "parser.h"
+#include <string.h>
 #include <errno.h>
+#include <fcntl.h>
+#include <stdio.h>
 #include <stdlib.h>
 
-void	free_data(t_data *data)
+int	execute_first_command(t_data *data, t_astree *node, t_file_io fd)
 {
-	environ_free(data->env);
-	if (data->line)
-	{
-		free(data->line);
-		data->line = NULL;
-	}
-	free(data);
-	data = NULL;
-}
-
-t_data	*init_data(char **envp)
-{
-	t_data	*data;
-
-	data = (t_data *)minishell_calloc(1, sizeof(t_data));
-	data->env = environ_deep_copy(envp);
-	increment_shlvl(data->env);
-	return (data);
+	if (node == NULL)
+		return 1;
+	else if (is_redirection(node->type))
+		execute_redirection(data, node, &fd);
+	else if (node->type & AST_HERE_DOC)
+		execute_here_doc(data, node, fd);
+	else if (node->type == AST_WORD)
+		execute_word_list(data, node, fd);
+	data->error = 0;
+	return (1);
 }

@@ -6,7 +6,7 @@
 /*   By: alkrusts/dkrecisz <codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/09/13 15:56:52 by alkrusts/dk   #+#    #+#                 */
-/*   Updated: 2021/10/14 10:59:24 by dkrecisz      ########   odam.nl         */
+/*   Updated: 2021/10/16 01:27:43 by dkrecisz      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,7 @@ static void	syntax_error(t_data *data)
 {
 	minishell_putstr_fd("minishell: Syntax error!\n", 2);
 	data->exit_status = 258;
-	data->astree = NULL;	
+	data->astree = NULL;
 }
 
 static int	check_syntax(t_data *data)

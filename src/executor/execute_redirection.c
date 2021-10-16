@@ -6,7 +6,7 @@
 /*   By: dkrecisz <dkrecisz@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/10/09 04:16:44 by dkrecisz      #+#    #+#                 */
-/*   Updated: 2021/10/13 12:00:02 by alkrusts      ########   odam.nl         */
+/*   Updated: 2021/10/16 16:54:01 by dkrecisz      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,7 @@ static int	execute_2(t_file_io *fd, t_data *data, t_astree *node)
 	return (0);
 }
 
-static int	execute_1(t_exec *stru, t_file_io *fd, t_data *data, t_astree *node)
+static int	redirect_input(t_exec *stru, t_file_io *fd, t_data *data, t_astree *node)
 {
 	if (fd->input)
 	{
@@ -54,12 +54,11 @@ static int	execute_1(t_exec *stru, t_file_io *fd, t_data *data, t_astree *node)
 		if (node->right)
 			node->right->parent = node;
 		stru->root = node;
-		return (0);
 	}
 	return (execute_2(fd, data, node));
 }
 
-static int	execute_3(t_exec *stru, t_file_io *fd, t_astree *node)
+static int	redirect_output(t_exec *stru, t_file_io *fd, t_astree *node)
 {
 	if (fd->output)
 	{
@@ -113,19 +112,19 @@ static void	execute_4(t_exec *stru, t_data *data, t_astree *node, t_file_io *fd)
 
 void	execute_redirection(t_data *data, t_astree *node, t_file_io *fd)
 {
-	t_exec	stru;
+	t_exec		stru;
 
 	stru.root = node;
 	while (node && is_redirection(node->type))
 	{
 		if (node->type & AST_REDIR_IN)
 		{
-			if (execute_1(&stru, fd, data, node) == 1)
+			if (redirect_input(&stru, fd, data, node) == 1)
 				return ;
 		}
 		else if (node->type & (AST_REDIR_OUT | AST_APPEND))
 		{
-			if (execute_3(&stru, fd, node) == 1)
+			if (redirect_output(&stru, fd, node) == 1)
 				return (print_error(data, node->str, errno));
 		}
 		if (node->left)

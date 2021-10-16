@@ -6,7 +6,7 @@
 /*   By: alkrusts/dkrecisz <codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/09/13 15:55:27 by alkrusts/dk   #+#    #+#                 */
-/*   Updated: 2021/10/15 10:41:48 by dkrecisz      ########   odam.nl         */
+/*   Updated: 2021/10/16 01:27:59 by dkrecisz      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -98,5 +98,4 @@ void	execute_here_doc(t_data *data, t_astree *node, t_file_io fd)
 	}
 	execute_command(data, node->right, fd);
 	close(fd.pipe[0]);
-
 }

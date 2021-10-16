@@ -57,6 +57,7 @@ SRC = main.c \
 	parser/parse_redirection.c \
 	executor/execute.c \
 	executor/execute_pipeline.c \
+	executor/execute_first_command.c \
 	executor/execute_command.c \
 	executor/execute_word_list.c \
 	executor/execute_builtin.c \
@@ -70,6 +71,7 @@ SRC = main.c \
 	environ/environ_utils.c \
 	environ/environ_get_keyvalue.c \
 	signals/signals.c \
+	job_control/job_add.c \
 	Get-next-line/get_next_line.c \
 	Get-next-line/get_next_line_utils.c
 
@@ -129,6 +131,7 @@ $(ODIR)/%.o: %.c
 		$(ODIR)/$(SDIR)/parser \
 		$(ODIR)/$(SDIR)/executor \
 		$(ODIR)/$(SDIR)/environ \
+		$(ODIR)/$(SDIR)/job_control \
 		$(ODIR)/$(SDIR)/Get-next-line \
 		$(ODIR)/$(SDIR)/signals
 	@$(CC) $(FLAGS) $(HEADER) -c $< -o $@

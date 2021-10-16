@@ -6,7 +6,7 @@
 /*   By: alkrusts/dkrecisz <codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/09/13 15:54:34 by alkrusts/dk   #+#    #+#                 */
-/*   Updated: 2021/10/15 11:20:13 by dkrecisz      ########   odam.nl         */
+/*   Updated: 2021/10/16 17:03:08 by dkrecisz      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -187,7 +187,9 @@ typedef struct s_data
 	int				token_mask;
 	int				interactive;
 	int				exit_status;
+	pid_t			pid;
 	t_job			*job;
+	struct s_list	*jobs;
 	struct termios	new_term;
 	struct termios	old_term;
 }	t_data;
@@ -211,4 +213,5 @@ typedef struct s_local
 	int	ret;
 	int	flag;
 }		t_local;
+
 #endif

@@ -6,7 +6,7 @@
 /*   By: alkrusts/dkrecisz <codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/09/13 15:55:01 by alkrusts/dk   #+#    #+#                 */
-/*   Updated: 2021/10/14 09:13:56 by alkrusts      ########   odam.nl         */
+/*   Updated: 2021/10/16 19:40:36 by dkrecisz      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,6 +49,8 @@ void	environ_unset(t_environ **head, char *key)
 	{
 		if (environ_compare(tmp->key, key))
 		{
+			// if (*head == tmp)
+				// return (free_head(head));
 			free(tmp->key);
 			free(tmp->value);
 			free(tmp->key_value);

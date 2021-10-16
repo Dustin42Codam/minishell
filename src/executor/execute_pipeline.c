@@ -5,23 +5,29 @@
 /*                                                     +:+                    */
 /*   By: alkrusts/dkrecisz <codam.nl>                 +#+                     */
 /*                                                   +#+                      */
-/*   Created: 2021/09/13 15:55:29 by alkrusts/dk   #+#    #+#                 */
-/*   Updated: 2021/10/14 17:43:39 by dkrecisz      ########   odam.nl         */
+/*   Created: 2021/09/13 15:58:09 by alkrusts/dk   #+#    #+#                 */
+/*   Updated: 2021/10/16 19:25:02 by dkrecisz      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-#include "parser.h"
 #include "executor.h"
-#include "libft.h"
 #include "lexer.h"
+#include "parser.h"
+#include "environ.h"
+#include "job_control.h"
+#include "libft.h"
 #include <errno.h>
 #include <stdlib.h>
-#include <signal.h>
+#include <sys/types.h>
+#include <sys/wait.h>
+#include <fcntl.h>
 #include <stdio.h>
+#include <string.h>
+#include <signal.h>
+
 #include <readline/readline.h>
-#include <stdbool.h>
-#include <stdlib.h>
+#include <readline/history.h>
 
 static void	setup_next_pipe(t_file_io *fd)
 {
@@ -53,16 +59,25 @@ void	execute_pipeline(t_data *data, t_file_io fd)
 	fd.read = fd.pipe[0];
 	fd.write = fd.pipe[1];
 	fd.output = 0;
-	execute_command(data, data->astree->left, fd);
+	// execute_command(data, data->astree->left, fd);
+	execute_first_command(data, data->astree->left, fd);
 	node = data->astree->right;
 	while (node && node->type == AST_PIPE)
 	{
 		setup_next_pipe(&fd);
 		execute_command(data, node->left, fd);
 		close(fd.read);
+		// wait(NULL, 0);
 		node = node->right;
 	}
 	setup_pipe_end(&fd);
 	execute_command(data, node, fd);
 	close(fd.pipe[0]);
+	// waitpid(data->pid, NULL, 0);
+	wait(0);
+	// while (data->jobs)
+	// {
+		// waitpid((int)data->jobs->content, NULL, 0);
+		// data->jobs = data->jobs->next;
+	// }
 }

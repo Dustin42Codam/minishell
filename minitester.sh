@@ -752,3 +752,332 @@ if [ $? -ne 0 ]; then
 else
 	printf "${GREEN}[OK]\t${WHITE}${TEST_CMD}${RESET}\n"
 fi
+
+# +++++++++++++++++ TEST 022 +++++++++++++++++
+
+TEST_CMD="echo abc ||"
+
+MINI_STDOUT=$(./minishell -c "${TEST_CMD} ${MINI_TMP}")
+MINI_EXIT_CODE=$?
+echo -e "command:\t${TEST_CMD} out" >> $MINI_LOG
+echo -e "stdout:\t\t\"${MINI_STDOUT}\"" >> $MINI_LOG
+echo -e "exit code:\t$MINI_EXIT_CODE" >> $MINI_LOG
+printf "file content:\n" >> $MINI_LOG
+cat "$MINI_TMP" >> $MINI_LOG
+echo > $MINI_LOG
+
+BASH_STDOUT=$(bash -c "${TEST_CMD} ${BASH_TMP}")
+BASH_EXIT_CODE=$?
+echo -e "command:\t${TEST_CMD} out" >> $BASH_LOG
+echo -e "stdout:\t\t\"${BASH_STDOUT}\"" >> $BASH_LOG
+echo -e "exit code:\t$BASH_EXIT_CODE" >> $BASH_LOG
+printf "file content:\n" >> $BASH_LOG
+cat "$BASH_TMP" >> $BASH_LOG
+echo > $BASH_LOG
+
+diff $BASH_LOG $MINI_LOG &>/dev/null
+if [ $? -ne 0 ]; then
+	printf "${RED}[KO]\t${WHITE}${TEST_CMD} out${RESET}\n"
+else
+	printf "${GREEN}[OK]\t${WHITE}${TEST_CMD} out${RESET}\n"
+fi
+
+
+# +++++++++++++++++ TEST 023 +++++++++++++++++
+
+TEST_CMD="< echo abc |"
+
+MINI_STDOUT=$(./minishell -c "${TEST_CMD} ${MINI_TMP}")
+MINI_EXIT_CODE=$?
+echo -e "command:\t${TEST_CMD} out" >> $MINI_LOG
+echo -e "stdout:\t\t\"${MINI_STDOUT}\"" >> $MINI_LOG
+echo -e "exit code:\t$MINI_EXIT_CODE" >> $MINI_LOG
+printf "file content:\n" >> $MINI_LOG
+cat "$MINI_TMP" >> $MINI_LOG
+echo > $MINI_LOG
+
+BASH_STDOUT=$(bash -c "${TEST_CMD} ${BASH_TMP}")
+BASH_EXIT_CODE=$?
+echo -e "command:\t${TEST_CMD} out" >> $BASH_LOG
+echo -e "stdout:\t\t\"${BASH_STDOUT}\"" >> $BASH_LOG
+echo -e "exit code:\t$BASH_EXIT_CODE" >> $BASH_LOG
+printf "file content:\n" >> $BASH_LOG
+cat "$BASH_TMP" >> $BASH_LOG
+echo > $BASH_LOG
+
+diff $BASH_LOG $MINI_LOG &>/dev/null
+if [ $? -ne 0 ]; then
+	printf "${RED}[KO]\t${WHITE}${TEST_CMD} out${RESET}\n"
+else
+	printf "${GREEN}[OK]\t${WHITE}${TEST_CMD} out${RESET}\n"
+fi
+
+
+# +++++++++++++++++ TEST 024 +++++++++++++++++
+
+TEST_CMD=">|< echo abc |"
+
+MINI_STDOUT=$(./minishell -c "${TEST_CMD} ${MINI_TMP}")
+MINI_EXIT_CODE=$?
+echo -e "command:\t${TEST_CMD} out" >> $MINI_LOG
+echo -e "stdout:\t\t\"${MINI_STDOUT}\"" >> $MINI_LOG
+echo -e "exit code:\t$MINI_EXIT_CODE" >> $MINI_LOG
+printf "file content:\n" >> $MINI_LOG
+cat "$MINI_TMP" >> $MINI_LOG
+echo > $MINI_LOG
+
+BASH_STDOUT=$(bash -c "${TEST_CMD} ${BASH_TMP}")
+BASH_EXIT_CODE=$?
+echo -e "command:\t${TEST_CMD} out" >> $BASH_LOG
+echo -e "stdout:\t\t\"${BASH_STDOUT}\"" >> $BASH_LOG
+echo -e "exit code:\t$BASH_EXIT_CODE" >> $BASH_LOG
+printf "file content:\n" >> $BASH_LOG
+cat "$BASH_TMP" >> $BASH_LOG
+echo > $BASH_LOG
+
+diff $BASH_LOG $MINI_LOG &>/dev/null
+if [ $? -ne 0 ]; then
+	printf "${RED}[KO]\t${WHITE}${TEST_CMD} out${RESET}\n"
+else
+	printf "${GREEN}[OK]\t${WHITE}${TEST_CMD} out${RESET}\n"
+fi
+
+
+# +++++++++++++++++ TEST 025 +++++++++++++++++
+
+TEST_CMD="              echo          | abc                             |                       <"
+
+MINI_STDOUT=$(./minishell -c "${TEST_CMD} ${MINI_TMP}")
+MINI_EXIT_CODE=$?
+echo -e "command:\t${TEST_CMD} out" >> $MINI_LOG
+echo -e "stdout:\t\t\"${MINI_STDOUT}\"" >> $MINI_LOG
+echo -e "exit code:\t$MINI_EXIT_CODE" >> $MINI_LOG
+printf "file content:\n" >> $MINI_LOG
+cat "$MINI_TMP" >> $MINI_LOG
+echo > $MINI_LOG
+
+BASH_STDOUT=$(bash -c "${TEST_CMD} ${BASH_TMP}")
+BASH_EXIT_CODE=$?
+echo -e "command:\t${TEST_CMD} out" >> $BASH_LOG
+echo -e "stdout:\t\t\"${BASH_STDOUT}\"" >> $BASH_LOG
+echo -e "exit code:\t$BASH_EXIT_CODE" >> $BASH_LOG
+printf "file content:\n" >> $BASH_LOG
+cat "$BASH_TMP" >> $BASH_LOG
+echo > $BASH_LOG
+
+diff $BASH_LOG $MINI_LOG &>/dev/null
+if [ $? -ne 0 ]; then
+	printf "${RED}[KO]\t${WHITE}${TEST_CMD} out${RESET}\n"
+else
+	printf "${GREEN}[OK]\t${WHITE}${TEST_CMD} out${RESET}\n"
+fi
+
+
+# +++++++++++++++++ TEST 026 +++++++++++++++++
+
+TEST_CMD="||||||||||||||echo||||||||||||abc|||||||||||||||||||||||||||||||||||||||||||||||||||||<"
+
+MINI_STDOUT=$(./minishell -c "${TEST_CMD} ${MINI_TMP}")
+MINI_EXIT_CODE=$?
+echo -e "command:\t${TEST_CMD} out" >> $MINI_LOG
+echo -e "stdout:\t\t\"${MINI_STDOUT}\"" >> $MINI_LOG
+echo -e "exit code:\t$MINI_EXIT_CODE" >> $MINI_LOG
+printf "file content:\n" >> $MINI_LOG
+cat "$MINI_TMP" >> $MINI_LOG
+echo > $MINI_LOG
+
+BASH_STDOUT=$(bash -c "${TEST_CMD} ${BASH_TMP}")
+BASH_EXIT_CODE=$?
+echo -e "command:\t${TEST_CMD} out" >> $BASH_LOG
+echo -e "stdout:\t\t\"${BASH_STDOUT}\"" >> $BASH_LOG
+echo -e "exit code:\t$BASH_EXIT_CODE" >> $BASH_LOG
+printf "file content:\n" >> $BASH_LOG
+cat "$BASH_TMP" >> $BASH_LOG
+echo > $BASH_LOG
+
+diff $BASH_LOG $MINI_LOG &>/dev/null
+if [ $? -ne 0 ]; then
+	printf "${RED}[KO]\t${WHITE}${TEST_CMD} out${RESET}\n"
+else
+	printf "${GREEN}[OK]\t${WHITE}${TEST_CMD} out${RESET}\n"
+fi
+
+
+# +++++++++++++++++ TEST 027 +++++++++++++++++
+
+TEST_CMD=">>>>>>>>>>>>>>echo>>>>>>>>>>>>abc>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>"
+
+MINI_STDOUT=$(./minishell -c "${TEST_CMD} ${MINI_TMP}")
+MINI_EXIT_CODE=$?
+echo -e "command:\t${TEST_CMD} out" >> $MINI_LOG
+echo -e "stdout:\t\t\"${MINI_STDOUT}\"" >> $MINI_LOG
+echo -e "exit code:\t$MINI_EXIT_CODE" >> $MINI_LOG
+printf "file content:\n" >> $MINI_LOG
+cat "$MINI_TMP" >> $MINI_LOG
+echo > $MINI_LOG
+
+BASH_STDOUT=$(bash -c "${TEST_CMD} ${BASH_TMP}")
+BASH_EXIT_CODE=$?
+echo -e "command:\t${TEST_CMD} out" >> $BASH_LOG
+echo -e "stdout:\t\t\"${BASH_STDOUT}\"" >> $BASH_LOG
+echo -e "exit code:\t$BASH_EXIT_CODE" >> $BASH_LOG
+printf "file content:\n" >> $BASH_LOG
+cat "$BASH_TMP" >> $BASH_LOG
+echo > $BASH_LOG
+
+diff $BASH_LOG $MINI_LOG &>/dev/null
+if [ $? -ne 0 ]; then
+	printf "${RED}[KO]\t${WHITE}${TEST_CMD} out${RESET}\n"
+else
+	printf "${GREEN}[OK]\t${WHITE}${TEST_CMD} out${RESET}\n"
+fi
+
+
+# +++++++++++++++++ TEST 028 +++++++++++++++++
+
+TEST_CMD="<<<<<<<<<<<<<<echo<<<<<<<<<<<<abc<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<"
+
+MINI_STDOUT=$(./minishell -c "${TEST_CMD} ${MINI_TMP}")
+MINI_EXIT_CODE=$?
+echo -e "command:\t${TEST_CMD} out" >> $MINI_LOG
+echo -e "stdout:\t\t\"${MINI_STDOUT}\"" >> $MINI_LOG
+echo -e "exit code:\t$MINI_EXIT_CODE" >> $MINI_LOG
+printf "file content:\n" >> $MINI_LOG
+cat "$MINI_TMP" >> $MINI_LOG
+echo > $MINI_LOG
+
+BASH_STDOUT=$(bash -c "${TEST_CMD} ${BASH_TMP}")
+BASH_EXIT_CODE=$?
+echo -e "command:\t${TEST_CMD} out" >> $BASH_LOG
+echo -e "stdout:\t\t\"${BASH_STDOUT}\"" >> $BASH_LOG
+echo -e "exit code:\t$BASH_EXIT_CODE" >> $BASH_LOG
+printf "file content:\n" >> $BASH_LOG
+cat "$BASH_TMP" >> $BASH_LOG
+echo > $BASH_LOG
+
+diff $BASH_LOG $MINI_LOG &>/dev/null
+if [ $? -ne 0 ]; then
+	printf "${RED}[KO]\t${WHITE}${TEST_CMD} out${RESET}\n"
+else
+	printf "${GREEN}[OK]\t${WHITE}${TEST_CMD} out${RESET}\n"
+fi
+
+
+# +++++++++++++++++ TEST 29 +++++++++++++++++
+
+TEST_CMD="out <||   <echo  <|   abc                           "
+
+MINI_STDOUT=$(./minishell -c "${TEST_CMD} ${MINI_TMP}")
+MINI_EXIT_CODE=$?
+echo -e "command:\t${TEST_CMD} out" >> $MINI_LOG
+echo -e "stdout:\t\t\"${MINI_STDOUT}\"" >> $MINI_LOG
+echo -e "exit code:\t$MINI_EXIT_CODE" >> $MINI_LOG
+printf "file content:\n" >> $MINI_LOG
+cat "$MINI_TMP" >> $MINI_LOG
+echo > $MINI_LOG
+
+BASH_STDOUT=$(bash -c "${TEST_CMD} ${BASH_TMP}")
+BASH_EXIT_CODE=$?
+echo -e "command:\t${TEST_CMD} out" >> $BASH_LOG
+echo -e "stdout:\t\t\"${BASH_STDOUT}\"" >> $BASH_LOG
+echo -e "exit code:\t$BASH_EXIT_CODE" >> $BASH_LOG
+printf "file content:\n" >> $BASH_LOG
+cat "$BASH_TMP" >> $BASH_LOG
+echo > $BASH_LOG
+
+diff $BASH_LOG $MINI_LOG &>/dev/null
+if [ $? -ne 0 ]; then
+	printf "${RED}[KO]\t${WHITE}${TEST_CMD} out${RESET}\n"
+else
+	printf "${GREEN}[OK]\t${WHITE}${TEST_CMD} out${RESET}\n"
+fi
+
+
+# +++++++++++++++++ TEST 30 +++++++++++++++++
+
+TEST_CMD="echo -n | $ |         "
+
+MINI_STDOUT=$(./minishell -c "${TEST_CMD} ${MINI_TMP}")
+MINI_EXIT_CODE=$?
+echo -e "command:\t${TEST_CMD} out" >> $MINI_LOG
+echo -e "stdout:\t\t\"${MINI_STDOUT}\"" >> $MINI_LOG
+echo -e "exit code:\t$MINI_EXIT_CODE" >> $MINI_LOG
+printf "file content:\n" >> $MINI_LOG
+cat "$MINI_TMP" >> $MINI_LOG
+echo > $MINI_LOG
+
+BASH_STDOUT=$(bash -c "${TEST_CMD} ${BASH_TMP}")
+BASH_EXIT_CODE=$?
+echo -e "command:\t${TEST_CMD} out" >> $BASH_LOG
+echo -e "stdout:\t\t\"${BASH_STDOUT}\"" >> $BASH_LOG
+echo -e "exit code:\t$BASH_EXIT_CODE" >> $BASH_LOG
+printf "file content:\n" >> $BASH_LOG
+cat "$BASH_TMP" >> $BASH_LOG
+echo > $BASH_LOG
+
+diff $BASH_LOG $MINI_LOG &>/dev/null
+if [ $? -ne 0 ]; then
+	printf "${RED}[KO]\t${WHITE}${TEST_CMD} out${RESET}\n"
+else
+	printf "${GREEN}[OK]\t${WHITE}${TEST_CMD} out${RESET}\n"
+fi
+
+
+# +++++++++++++++++ TEST 31 +++++++++++++++++
+
+TEST_CMD="echo -n |  echo $PWD |     cat -n | head -20 | wc  | cat -n  "
+
+MINI_STDOUT=$(./minishell -c "${TEST_CMD} ${MINI_TMP}")
+MINI_EXIT_CODE=$?
+echo -e "command:\t${TEST_CMD} out" >> $MINI_LOG
+echo -e "stdout:\t\t\"${MINI_STDOUT}\"" >> $MINI_LOG
+echo -e "exit code:\t$MINI_EXIT_CODE" >> $MINI_LOG
+printf "file content:\n" >> $MINI_LOG
+cat "$MINI_TMP" >> $MINI_LOG
+echo > $MINI_LOG
+
+BASH_STDOUT=$(bash -c "${TEST_CMD} ${BASH_TMP}")
+BASH_EXIT_CODE=$?
+echo -e "command:\t${TEST_CMD} out" >> $BASH_LOG
+echo -e "stdout:\t\t\"${BASH_STDOUT}\"" >> $BASH_LOG
+echo -e "exit code:\t$BASH_EXIT_CODE" >> $BASH_LOG
+printf "file content:\n" >> $BASH_LOG
+cat "$BASH_TMP" >> $BASH_LOG
+echo > $BASH_LOG
+
+diff $BASH_LOG $MINI_LOG &>/dev/null
+if [ $? -ne 0 ]; then
+	printf "${RED}[KO]\t${WHITE}${TEST_CMD} out${RESET}\n"
+else
+	printf "${GREEN}[OK]\t${WHITE}${TEST_CMD} out${RESET}\n"
+fi
+
+
+# +++++++++++++++++ TEST 31 +++++++++++++++++
+
+TEST_CMD="echo -n |  echo $PWD |     cat -n | head -20 | wc  | cat -n  "
+
+MINI_STDOUT=$(./minishell -c "${TEST_CMD} ${MINI_TMP}")
+MINI_EXIT_CODE=$?
+echo -e "command:\t${TEST_CMD} out" >> $MINI_LOG
+echo -e "stdout:\t\t\"${MINI_STDOUT}\"" >> $MINI_LOG
+echo -e "exit code:\t$MINI_EXIT_CODE" >> $MINI_LOG
+printf "file content:\n" >> $MINI_LOG
+cat "$MINI_TMP" >> $MINI_LOG
+echo > $MINI_LOG
+
+BASH_STDOUT=$(bash -c "${TEST_CMD} ${BASH_TMP}")
+BASH_EXIT_CODE=$?
+echo -e "command:\t${TEST_CMD} out" >> $BASH_LOG
+echo -e "stdout:\t\t\"${BASH_STDOUT}\"" >> $BASH_LOG
+echo -e "exit code:\t$BASH_EXIT_CODE" >> $BASH_LOG
+printf "file content:\n" >> $BASH_LOG
+cat "$BASH_TMP" >> $BASH_LOG
+echo > $BASH_LOG
+
+diff $BASH_LOG $MINI_LOG &>/dev/null
+if [ $? -ne 0 ]; then
+	printf "${RED}[KO]\t${WHITE}${TEST_CMD} out${RESET}\n"
+else
+	printf "${GREEN}[OK]\t${WHITE}${TEST_CMD} out${RESET}\n"
+fi

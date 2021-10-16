@@ -6,16 +6,17 @@
 /*   By: alkrusts/dkrecisz <codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/09/13 15:58:09 by alkrusts/dk   #+#    #+#                 */
-/*   Updated: 2021/10/15 12:30:12 by dkrecisz      ########   odam.nl         */
+/*   Updated: 2021/10/16 14:27:20 by dkrecisz      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 #include "executor.h"
+#include "lexer.h"
 #include "parser.h"
 #include "environ.h"
-#include "libft.h"
 #include "job_control.h"
+#include "libft.h"
 #include <errno.h>
 #include <stdlib.h>
 #include <sys/types.h>
@@ -63,7 +64,10 @@ static void	execute_child(t_command *cmd, char **env_array, t_data *data)
 	if (errno == 0 && cmd->fd.input)
 		dup2(cmd->fd.input, STDIN_FILENO);
 	if (cmd->builtin_id)
+	{
 		execute_builtin(data, cmd, data->env);
+		exit(data->exit_status);
+	}
 	else if (cmd->builtin_id == 0)
 		execve(cmd->argv[0], cmd->argv, env_array);
 	if (errno)
@@ -78,11 +82,11 @@ static void	execute_child(t_command *cmd, char **env_array, t_data *data)
 	}
 }
 
-static void	execute_parent(pid_t pid, int *stat)
+static void	wait_for_child(pid_t pid, int *stat)
 {
 	*stat = 0;
 	errno = 0;
-	waitpid(pid, stat, 0);
+	// waitpid(pid, stat, 0);
 	signal(SIGQUIT, sig_quit_parent);
 	signal(SIGINT, sig_int_parent);
 }
@@ -102,15 +106,18 @@ void	execute_command_argv(t_data *data, t_command *cmd, t_environ *env)
 		exit_minishell(errno);
 	else if (pid == 0)
 		execute_child(cmd, env_array, data);
-	// job_add(data, pid);
-	execute_parent(pid, &stat);
+	// if (data->token_mask & PIPE)
+	// {
+		// data->pid = pid;
+		// ft_lstadd_front(&data->jobs, ft_lstnew(pid));
+		// return ;
+	// }
+	wait_for_child(pid, &stat);
 	if (isatty(STDIN_FILENO))
 		tcsetattr(cmd->fd.save_stdin, TCSANOW, &data->new_term);
 	free_command_argv(cmd, env_array);
 	if (WIFEXITED(stat))
 		data->exit_status = WEXITSTATUS(stat);
-	if (WTERMSIG(stat) == 2)
-		data->exit_status = 130;
 	if (WTERMSIG(stat) == 2)
 		data->exit_status = 130;
 	if (WTERMSIG(stat) == 3)
