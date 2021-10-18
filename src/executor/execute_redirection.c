@@ -6,7 +6,7 @@
 /*   By: dkrecisz <dkrecisz@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/10/09 04:16:44 by dkrecisz      #+#    #+#                 */
-/*   Updated: 2021/10/18 07:23:02 by dkrecisz      ########   odam.nl         */
+/*   Updated: 2021/10/18 08:33:50 by dkrecisz      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,8 +42,10 @@ static int	redirect_input(t_exec *stru, t_file_io *fd, t_data *data,
 	{
 		close(fd->input);
 		stru->parent = node->parent;
-		node->right = node->parent->right;
-		node->parent = node->parent->parent;
+		if (node->parent)
+			node->right = node->parent->right;
+		if (node->parent)
+			node->parent = node->parent->parent;
 		if (node->parent)
 			node->parent->left = node;
 		if (stru->parent)
@@ -86,6 +88,33 @@ static int	redirect_output(t_exec *stru, t_file_io *fd, t_astree *node)
 	fd->write = fd->output;
 	return (0);
 }
+/* static int	redirect_output(t_exec *stru, t_file_io *fd, t_astree *node)
+{
+	if (fd->output)
+	{
+		close(fd->output);
+		stru->parent = node->parent;
+		if (node->parent)
+			node->right = node->parent->right;
+		if (node->parent)
+			node->parent = node->parent->parent;
+		if (node->parent)
+		{
+			node->parent->left = node;
+			free(stru->parent->str);
+			free(stru->parent);
+			stru->parent = NULL;
+		}
+		if (node->right)
+			node->right->parent = node;
+		stru->root = node;
+	}
+	create_file(node, fd);
+	if (fd->output == -1)
+		return (1);
+	fd->write = fd->output;
+	return (0);
+} */
 
 static void	execute_4(t_exec *stru, t_data *data, t_astree *node, t_file_io *fd)
 {

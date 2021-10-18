@@ -6,7 +6,7 @@
 /*   By: alkrusts/dkrecisz <codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/09/13 15:58:09 by alkrusts/dk   #+#    #+#                 */
-/*   Updated: 2021/10/18 06:32:27 by dkrecisz      ########   odam.nl         */
+/*   Updated: 2021/10/18 08:20:01 by dkrecisz      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,6 +59,7 @@ void	execute_pipeline(t_data *data)
 	data->fd->write = data->fd->pipe[1];
 	data->fd->output = 0;
 	execute_command(data, data->astree->left);
+	// if (data->fd)
 	node = data->astree->right;
 	while (node && node->type == AST_PIPE)
 	{

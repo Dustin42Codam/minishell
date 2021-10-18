@@ -1,13 +1,15 @@
 
-cat /dev/random | head -c 100 | wc -c
 
-exit 42 | echo $
+BUGS:
+echo abc > grep | echo abc	# doesn't execute "echo abc"
+< in cat | cat
+< in cat | < in cat
+
+Fixed:
+sleep 100 | exit 42
+cat /dev/random | head -c 100 | wc -c
 echo abc | cat /dev/random | head
 echo abc | echo def | cat /dev/random | head
 pwd | - | << lol
 pwd | cat
-sleep 100 | exit 42 	# ctrl + c on sleep; check if exit code is 42
-
-
-BUGS:
-echo abc > grep | echo abc	# doesn't execute "echo abc"
+< in cat; < in cat; < in cat 	# ; means multiline

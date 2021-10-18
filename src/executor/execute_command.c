@@ -6,7 +6,7 @@
 /*   By: alkrusts/dkrecisz <codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/09/13 15:55:24 by alkrusts/dk   #+#    #+#                 */
-/*   Updated: 2021/10/18 05:50:26 by dkrecisz      ########   odam.nl         */
+/*   Updated: 2021/10/18 09:39:33 by dkrecisz      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,4 +38,6 @@ void	execute_command(t_data *data, t_astree *node)
 	else if (node->type == AST_WORD)
 		execute_word_list(data, node);
 	data->error = 0;
+	data->fd->input = 0;
+	data->fd->output = 0;
 }

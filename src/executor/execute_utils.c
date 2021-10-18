@@ -6,7 +6,7 @@
 /*   By: alkrusts/dkrecisz <codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/09/13 15:58:09 by alkrusts/dk   #+#    #+#                 */
-/*   Updated: 2021/10/18 07:22:28 by dkrecisz      ########   odam.nl         */
+/*   Updated: 2021/10/18 09:35:20 by dkrecisz      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,6 +79,11 @@ static void	set_fds(t_command *cmd)
 	{
 		close(cmd->fd->pipe[0]);
 		dup2(cmd->fd->write, STDOUT_FILENO);
+	}
+	else if (errno == 0 && cmd->fd->dup_stdout == 0)
+	{
+		close(cmd->fd->pipe[0]);
+		dup2(cmd->fd->save_stdout, STDOUT_FILENO);
 	}
 	if (errno == 0 && cmd->fd->output)
 		dup2(cmd->fd->output, STDOUT_FILENO);
