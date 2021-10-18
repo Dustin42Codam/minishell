@@ -1,11 +1,11 @@
 
 
 BUGS:
-echo abc > grep | echo abc	# doesn't execute "echo abc"
-< in cat | cat
-< in cat | < in cat
 
 Fixed:
+echo abc > grep | echo abc	# doesn't execute "echo abc"
+< in cat | < in cat
+< in cat | cat
 sleep 100 | exit 42
 cat /dev/random | head -c 100 | wc -c
 echo abc | cat /dev/random | head
