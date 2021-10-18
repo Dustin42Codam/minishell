@@ -6,7 +6,7 @@
 /*   By: alkrusts <alkrust@student.codam.nl>          +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/10/13 12:09:08 by alkrusts      #+#    #+#                 */
-/*   Updated: 2021/10/13 12:11:53 by alkrusts      ########   odam.nl         */
+/*   Updated: 2021/10/18 05:53:14 by dkrecisz      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,14 +19,14 @@
 #include <readline/readline.h>
 #include <readline/history.h>
 
-static void	init_cmd(t_data *data, t_command *cmd, t_file_io fd)
+static void	init_cmd(t_data *data, t_command *cmd)
 {
 	cmd->exit_status = data->exit_status;
-	cmd->fd = fd;
+	cmd->fd = data->fd;
 	cmd->env = data->env;
 }
 
-void	make_command(t_data *data, t_astree *node, t_command *cmd, t_file_io fd)
+void	make_command(t_data *data, t_astree *node, t_command *cmd)
 {
 	t_astree	*tmp;
 
@@ -50,5 +50,5 @@ void	make_command(t_data *data, t_astree *node, t_command *cmd, t_file_io fd)
 		cmd->argc++;
 		tmp = tmp->right;
 	}
-	init_cmd(data, cmd, fd);
+	init_cmd(data, cmd);
 }

@@ -6,7 +6,7 @@
 /*   By: alkrusts/dkrecisz <codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/09/13 15:53:20 by alkrusts/dk   #+#    #+#                 */
-/*   Updated: 2021/10/16 19:54:55 by dkrecisz      ########   odam.nl         */
+/*   Updated: 2021/10/18 05:53:59 by dkrecisz      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,13 +29,13 @@ static void	free_command(t_command *command)
 	free(command->argv);
 }
 
-void	execute_word_list(t_data *data, t_astree *node, t_file_io fd)
+void	execute_word_list(t_data *data, t_astree *node)
 {
 	t_command	command;
 
 	if (node == NULL)
 		return ;
-	make_command(data, node, &command, fd);
+	make_command(data, node, &command);
 	if (command.builtin_id && (data->token_mask & PIPE) == 0)
 	{
 		execute_builtin(data, &command, data->env);

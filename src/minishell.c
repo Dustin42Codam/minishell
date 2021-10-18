@@ -6,7 +6,7 @@
 /*   By: alkrusts/dkrecisz <codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/09/13 15:53:37 by alkrusts/dk   #+#    #+#                 */
-/*   Updated: 2021/10/14 08:13:05 by alkrusts      ########   odam.nl         */
+/*   Updated: 2021/10/18 07:18:26 by dkrecisz      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,8 @@
 
 #include <readline/readline.h>
 #include <readline/history.h>
+
+#include <sys/wait.h> //del later???
 
 static int	check_option_flag(char *arg)
 {

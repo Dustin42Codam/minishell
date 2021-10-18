@@ -6,7 +6,7 @@
 /*   By: dkrecisz <dkrecisz@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/10/09 04:16:44 by dkrecisz      #+#    #+#                 */
-/*   Updated: 2021/10/16 16:54:01 by dkrecisz      ########   odam.nl         */
+/*   Updated: 2021/10/18 07:23:02 by dkrecisz      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,8 @@ static int	execute_2(t_file_io *fd, t_data *data, t_astree *node)
 	return (0);
 }
 
-static int	redirect_input(t_exec *stru, t_file_io *fd, t_data *data, t_astree *node)
+static int	redirect_input(t_exec *stru, t_file_io *fd, t_data *data,
+		t_astree *node)
 {
 	if (fd->input)
 	{
@@ -91,7 +92,7 @@ static void	execute_4(t_exec *stru, t_data *data, t_astree *node, t_file_io *fd)
 	if (node && node->type & AST_HERE_DOC)
 	{
 		node->right = stru->root->right;
-		execute_here_doc(data, node, *fd);
+		execute_here_doc(data, node, fd);
 		node->right = NULL;
 		return ;
 	}
@@ -104,9 +105,9 @@ static void	execute_4(t_exec *stru, t_data *data, t_astree *node, t_file_io *fd)
 		data->astree = node;
 	if (data->astree->right && data->astree->right->type
 		& AST_WORD && (data->token_mask & PIPE) == 0)
-		execute_word_list(data, data->astree->right, *fd);
+		execute_word_list(data, data->astree->right);
 	else if (node && node->type == AST_WORD)
-		execute_word_list(data, node, *fd);
+		execute_word_list(data, node);
 	return ;
 }
 

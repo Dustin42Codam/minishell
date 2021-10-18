@@ -6,7 +6,7 @@
 /*   By: alkrusts/dkrecisz <codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/09/13 15:54:45 by alkrusts/dk   #+#    #+#                 */
-/*   Updated: 2021/09/13 15:58:24 by alkrusts/dk   ########   odam.nl         */
+/*   Updated: 2021/10/18 06:11:53 by dkrecisz      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ int	builtin_env(t_command *cmd, t_environ *env)
 	}
 	while (env && errno == 0)
 	{
-		minishell_putendl_fd(env->key_value, cmd->fd.write);
+		minishell_putendl_fd(env->key_value, cmd->fd->write);
 		env = env->next;
 	}
 	return (errno);

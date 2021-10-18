@@ -6,7 +6,7 @@
 /*   By: alkrusts/dkrecisz <codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/09/13 15:54:17 by alkrusts/dk   #+#    #+#                 */
-/*   Updated: 2021/10/16 19:55:53 by dkrecisz      ########   odam.nl         */
+/*   Updated: 2021/10/18 05:16:35 by dkrecisz      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ int	builtin_echo(t_command *cmd);
 int	builtin_cd(t_command *cmd, t_environ *env);
 int	builtin_pwd(t_command *cmd);
 int	builtin_export(t_command *cmd, t_environ *env);
-int	builtin_unset(t_data *data, t_command *cmd, t_environ *env);
+int	builtin_unset(t_data *data, t_command *cmd);
 int	builtin_env(t_command *cmd, t_environ *env);
 int	builtin_exit(t_command *cmd);
 

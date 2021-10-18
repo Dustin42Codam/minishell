@@ -6,7 +6,7 @@
 /*   By: alkrusts/dkrecisz <codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/09/13 15:55:40 by alkrusts/dk   #+#    #+#                 */
-/*   Updated: 2021/09/13 15:57:59 by alkrusts/dk   ########   odam.nl         */
+/*   Updated: 2021/10/18 07:19:47 by dkrecisz      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,40 +15,66 @@
 #include "lexer.h"
 #include "executor.h"
 #include <errno.h>
+#include <stdlib.h>
+#include <sys/wait.h>
 
-static void	setup_fd(t_file_io *fd)
+static void	setup_fd(t_data *data)
 {
-	ft_memset(fd, 0, sizeof(t_file_io));
-	fd->read = STDIN_FILENO;
-	fd->write = STDOUT_FILENO;
-	fd->save_stdin = dup(STDIN_FILENO);
-	fd->save_stdout = dup(STDOUT_FILENO);
+	data->fd->read = STDIN_FILENO;
+	data->fd->write = STDOUT_FILENO;
+	data->fd->save_stdin = dup(STDIN_FILENO);
+	data->fd->save_stdout = dup(STDOUT_FILENO);
 	if (errno)
 		exit_minishell(errno);
 }
 
-static void	restore_fd(t_file_io *fd)
+void	restore_fd(t_file_io *fd)
 {
 	dup2(fd->save_stdin, STDIN_FILENO);
 	dup2(fd->save_stdout, STDOUT_FILENO);
 	close(fd->save_stdin);
 	close(fd->save_stdout);
+	if (fd->pipe[0])
+		close(fd->pipe[0]);
+	if (fd->pipe[1])
+		close(fd->pipe[1]);
 	if (fd->output)
 		close(fd->output);
-	if (errno)
-		exit_minishell(errno);
+	if (fd->input)
+		close(fd->input);
+}
+
+static void	terminate(t_data *data)
+{
+	t_child	*tmp;
+	int		stat;
+
+	while (data->child)
+	{
+		waitpid(data->child->pid, &stat, 0);
+		if (WIFEXITED(stat))
+			data->exit_status = WEXITSTATUS(stat);
+		if (WTERMSIG(stat) == 2)
+			data->exit_status = 130;
+		if (WTERMSIG(stat) == 3)
+			data->exit_status = 131;
+		if (g_sig == 130 || g_sig == 131 || g_sig == 1)
+			data->exit_status = g_sig;
+		tmp = data->child->next;
+		free(data->child);
+		data->child = tmp;
+	}	
 }
 
 void	execute(t_data *data)
 {
-	t_file_io	fd;
-
 	if (data->astree == NULL)
 		return ;
-	setup_fd(&fd);
+	setup_fd(data);
 	if (data->token_mask & PIPE)
-		execute_pipeline(data, fd);
+		execute_pipeline(data);
 	else
-		execute_command(data, data->astree, fd);
-	restore_fd(&fd);
+		execute_command(data, data->astree);
+	restore_fd(data->fd);
+	terminate(data);
 }

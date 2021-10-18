@@ -6,7 +6,7 @@
 /*   By: alkrusts/dkrecisz <codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/09/13 15:55:27 by alkrusts/dk   #+#    #+#                 */
-/*   Updated: 2021/10/16 01:27:59 by dkrecisz      ########   odam.nl         */
+/*   Updated: 2021/10/18 07:05:35 by dkrecisz      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,7 +54,7 @@ static void	init_signal_handler(void)
 		exit_minishell_custom("ERROR SIGINT ");
 }
 
-static void	read_input(t_data *data, t_astree *node, t_file_io fd)
+static void	read_input(t_data *data, t_astree *node, t_file_io *fd)
 {
 	char	*input;
 	char	*delimeter;
@@ -68,7 +68,7 @@ static void	read_input(t_data *data, t_astree *node, t_file_io fd)
 		input = readline("> ");
 		if (input == NULL)
 		{
-			if (g_sig == 0)
+			if (g_sig == 0)		// why??
 				g_sig = 258;
 			break ;
 		}
@@ -77,25 +77,25 @@ static void	read_input(t_data *data, t_astree *node, t_file_io fd)
 		else if (environ_compare(input, delimeter) == 1)
 			break ;
 		if (!(node->type & RMQUOTE) && ft_strchr(input, '$'))
-			expand_input(data, input, fd.pipe[1]);
+			expand_input(data, input, fd->pipe[1]);
 		else
 		{
-			minishell_write(fd.pipe[1], input, ft_strlen(input));
-			minishell_write(fd.pipe[1], "\n", 1);
+			minishell_write(fd->pipe[1], input, ft_strlen(input));
+			minishell_write(fd->pipe[1], "\n", 1);
 		}
 	}
 }
 
-void	execute_here_doc(t_data *data, t_astree *node, t_file_io fd)
+void	execute_here_doc(t_data *data, t_astree *node, t_file_io *fd)
 {
-	setup_pipe(&fd);
+	setup_pipe(fd);
 	read_input(data, node, fd);
-	close(fd.pipe[1]);
-	if (fd.input)
+	close(fd->pipe[1]);
+	if (fd->input)
 	{
-		close(fd.input);
-		fd.input = 0;
+		close(fd->input);
+		fd->input = 0;
 	}
-	execute_command(data, node->right, fd);
-	close(fd.pipe[0]);
+	execute_command(data, node->right);
+	close(fd->pipe[0]);
 }

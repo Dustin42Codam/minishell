@@ -20,7 +20,6 @@ cd $PWD/../
 cd $OLDPWD/
 cd $HOME
 cd ../Desktop
-cd
 cd "
 cd '"
 cd "'"

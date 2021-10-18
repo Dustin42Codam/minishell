@@ -22,10 +22,15 @@ RESULTS="results.txt"
 LOG="log.out"
 
 if [ "$1" == "--cleanup" ]; then
+	rm -f 1 2 3 4 5 6
+	rm -f $BASH_TMP
+	rm -f $MINI_TMP
 	rm -f $BASH_LOG
 	rm -f $MINI_LOG
 	rm -f $RESULTS
 	rm -f $LOG
+	rm -f "in"
+	rm -f "out"
 	rm -f ./minishell
 	exit
 fi

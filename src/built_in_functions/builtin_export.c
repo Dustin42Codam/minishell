@@ -6,7 +6,7 @@
 /*   By: alkrusts/dkrecisz <codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/09/13 15:54:51 by alkrusts/dk   #+#    #+#                 */
-/*   Updated: 2021/10/15 12:35:00 by dkrecisz      ########   odam.nl         */
+/*   Updated: 2021/10/18 06:11:44 by dkrecisz      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,11 +39,11 @@ static int	print_exported_variables(t_command *cmd, t_environ	*env)
 {
 	while (env)
 	{
-		minishell_putstr_fd("declare -x ", cmd->fd.write);
-		minishell_putstr_fd(env->key, cmd->fd.write);
-		minishell_putstr_fd("=\"", cmd->fd.write);
-		minishell_putstr_fd(env->value, cmd->fd.write);
-		minishell_putendl_fd("\"", cmd->fd.write);
+		minishell_putstr_fd("declare -x ", cmd->fd->write);
+		minishell_putstr_fd(env->key, cmd->fd->write);
+		minishell_putstr_fd("=\"", cmd->fd->write);
+		minishell_putstr_fd(env->value, cmd->fd->write);
+		minishell_putendl_fd("\"", cmd->fd->write);
 		env = env->next;
 	}
 	return (0);

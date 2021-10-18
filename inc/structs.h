@@ -6,7 +6,7 @@
 /*   By: alkrusts/dkrecisz <codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/09/13 15:54:34 by alkrusts/dk   #+#    #+#                 */
-/*   Updated: 2021/10/16 17:03:08 by dkrecisz      ########   odam.nl         */
+/*   Updated: 2021/10/18 06:31:46 by dkrecisz      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -138,23 +138,21 @@ typedef struct s_command
 	int					argc;
 	int					builtin_id;
 	int					exit_status;
-	t_file_io			fd;
+	t_file_io			*fd;
 	t_environ			*env;
 }	t_command;
 
 /**
- * s_job - Struct for managing jobs / child processes
+ * s_child - Struct for managing child processes
  * Member description:
  * @pid:			Process ID.
- * @cmd:			Pointer to command struct.
  * @next:			Pointer to next child process node.
  * */
-typedef struct s_job
+typedef struct s_child
 {
 	pid_t			pid;
-	t_command		*cmd;
-	struct s_job	*next;
-}	t_job;
+	struct s_child	*next;
+}	t_child;
 
 /**
  * s_data - Main struct for storing all sort of data.
@@ -170,7 +168,6 @@ typedef struct s_job
  * @interactive:	Value is set to TRUE=1 if shell is in interactive mode
  * 					and FALSE=0 if the shell is non-interactive.
  * @exit_status:	exit code of last executed command in the pipeline.
- * @prompt:			prompt settings
  * @child:			linked list of child process id's
  * @new_term:		new termios settings - minishell exclusive
  * @old_term:		old default termios settings
@@ -187,9 +184,8 @@ typedef struct s_data
 	int				token_mask;
 	int				interactive;
 	int				exit_status;
-	pid_t			pid;
-	t_job			*job;
-	struct s_list	*jobs;
+	t_file_io		*fd;
+	t_child			*child;
 	struct termios	new_term;
 	struct termios	old_term;
 }	t_data;
