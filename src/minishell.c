@@ -26,8 +26,6 @@
 #include <readline/readline.h>
 #include <readline/history.h>
 
-#include <sys/wait.h> //del later???
-
 static int	check_option_flag(char *arg)
 {
 	size_t	i;

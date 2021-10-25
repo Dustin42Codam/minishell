@@ -77,12 +77,14 @@ static void	set_fds(t_command *cmd)
 		dup2(cmd->fd->read, STDIN_FILENO);
 	if (errno == 0 && cmd->fd->dup_stdout)
 	{
-		close(cmd->fd->pipe[0]);
+		if (cmd->fd->pipe[0])
+			close(cmd->fd->pipe[0]);
 		dup2(cmd->fd->write, STDOUT_FILENO);
 	}
 	else if (errno == 0 && cmd->fd->dup_stdout == 0 && cmd->fd->output == 0)
 	{
-		close(cmd->fd->pipe[0]);
+		if (cmd->fd->pipe[0])
+			close(cmd->fd->pipe[0]);
 		dup2(cmd->fd->save_stdout, STDOUT_FILENO);
 	}
 	if (errno == 0 && cmd->fd->output)

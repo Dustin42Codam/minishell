@@ -2,6 +2,33 @@
 #include <stdlib.h>
 #include <signal.h>
 
+static void	free_first_node(t_child **head, t_child **tmp_fast)
+{
+	free(*head);
+	*head = *tmp_fast;
+}
+
+static void	free_last_node(t_child **head, t_child **tmp)
+{
+	if ((*tmp)->next == NULL)
+	{
+		free(*head);
+		*head = NULL;
+	}
+	else
+	{
+		free(*head);
+		*head = *tmp;
+	}
+}
+
+static void	free_mid_node(t_child **head, t_child **tmp_fast, t_child **tmp_slow, t_child **tmp)
+{
+	free(*head);
+	(*tmp_slow)->next = *tmp_fast;
+	*head = *tmp;
+}
+
 void	free_child_pid(t_child **head, pid_t pid)
 {
 	t_child	*tmp_slow;
@@ -16,23 +43,11 @@ void	free_child_pid(t_child **head, pid_t pid)
 		{
 			tmp_fast = (*head)->next;
 			if ((*head)->next == NULL)
-			{
-				free(*head);
-				*head = NULL;
-				return ;
-			}
+				return (free_last_node(head, &tmp));
 			else if (tmp_slow == NULL)
-			{
-				free(*head);
-				*head = tmp_fast;
-			}
+				return (free_first_node(head, &tmp_fast));
 			else
-			{
-				free(*head);
-				tmp_slow->next = tmp_fast;
-			}
-			break ;
-			*head = tmp;
+				return (free_mid_node(head, &tmp_fast, &tmp_slow, &tmp));
 		}
 		else
 		{
