@@ -6,7 +6,7 @@
 /*   By: dkrecisz <dkrecisz@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/10/09 04:16:44 by dkrecisz      #+#    #+#                 */
-/*   Updated: 2021/10/18 08:33:50 by dkrecisz      ########   odam.nl         */
+/*   Updated: 2021/10/18 14:56:11 by dkrecisz      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,13 +71,13 @@ static int	redirect_output(t_exec *stru, t_file_io *fd, t_astree *node)
 			node->right = node->parent->right;
 		if (node->parent)
 			node->parent = node->parent->parent;
-		if (node->parent)
-		{
-			node->parent->left = node;
-			free(stru->parent->str);
-			free(stru->parent);
-			stru->parent = NULL;
-		}
+		// if (node->parent)
+		// {
+			// node->parent->left = node;
+			// free(stru->parent->str);
+			// free(stru->parent);
+			// stru->parent = NULL;
+		// }
 		if (node->right)
 			node->right->parent = node;
 		stru->root = node;

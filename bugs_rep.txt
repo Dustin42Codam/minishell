@@ -1,8 +1,19 @@
 
 
 BUGS:
+export TE+S=T=""
+ls <> abc
+./minishell
+bash
+ctrl + c
+echo abc > 1 > 2 | cat
+cat /dev/random | head > ewrgegt
+
+TO TEST:
+ctrl + \
 
 Fixed:
+cat > out
 echo abc > grep | echo abc	# doesn't execute "echo abc"
 < in cat | < in cat
 < in cat | cat
@@ -13,3 +24,5 @@ echo abc | echo def | cat /dev/random | head
 pwd | - | << lol
 pwd | cat
 < in cat; < in cat; < in cat 	# ; means multiline
+pwd > out | cat < out
+pwd > out | cat < out < in

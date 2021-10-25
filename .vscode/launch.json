@@ -12,7 +12,7 @@
 		// "args": [ "-c", "cat /dev/random | head -c 1000 | wc -c"],
 		// "args": [ "-c", "cat /dev/random | head -c 1000"],
 		// "args": [ "-c", "echo abc > grep | echo abc"],
-		"args": [ "-c", "< in cat | cat"],
+		// "args": [ "-c", "cat /dev/random | head > ewrgegt > rfr > t > ugzv"],
 		// "args": [ "-c", "echo abc | grep a | wc -c"],
 		// "args": [ "-c", "exit 42 | exit 21"],
 		// "args": [ "-c", "export | sort > file.out"],
