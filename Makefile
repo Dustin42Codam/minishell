@@ -65,6 +65,7 @@ SRC = main.c \
 	executor/execute_utils.c \
 	executor/search_command.c \
 	executor/execute_redurection_utils.c \
+	executor/execute_free_child.c \
 	executor/make_comand.c \
 	environ/environ.c \
 	environ/environ_utils.c \

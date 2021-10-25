@@ -46,12 +46,12 @@ void	restore_fd(t_file_io *fd)
 
 static void	terminate(t_data *data)
 {
-	t_child	*tmp;
 	int		stat;
+	pid_t	pid;
 
 	while (data->child)
 	{
-		waitpid(data->child->pid, &stat, 0);
+		pid = wait(&stat);
 		if (WIFEXITED(stat))
 			data->exit_status = WEXITSTATUS(stat);
 		if (WTERMSIG(stat) == 2)
@@ -60,10 +60,12 @@ static void	terminate(t_data *data)
 			data->exit_status = 131;
 		if (g_sig == 130 || g_sig == 131 || g_sig == 1)
 			data->exit_status = g_sig;
-		tmp = data->child->next;
-		free(data->child);
-		data->child = tmp;
-	}	
+		free_child_pid(&data->child, pid);
+	}
+	if (signal(SIGINT, sig_int_parent) == SIG_ERR)
+		exit_minishell_custom("Error SIGINT ");
+	if (signal(SIGQUIT, sig_quit_parent) == SIG_ERR)
+		exit_minishell_custom("Error SIGQUIT ");
 }
 
 void	execute(t_data *data)

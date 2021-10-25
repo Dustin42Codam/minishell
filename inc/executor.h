@@ -29,5 +29,6 @@ int		search_command(t_astree *node, t_environ *env);
 void	print_error(t_data *data, char *str, int error_id);
 void	create_file(t_astree *node, t_file_io *fd);
 void	restore_fd(t_file_io *fd);
+void	free_child_pid(t_child **head, pid_t pid);
 
 #endif
