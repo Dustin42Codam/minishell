@@ -6,7 +6,7 @@
 /*   By: alkrusts/dkrecisz <codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/09/13 15:54:51 by alkrusts/dk   #+#    #+#                 */
-/*   Updated: 2021/10/26 12:21:44 by alkrusts/dk   ########   odam.nl         */
+/*   Updated: 2021/10/26 14:25:03 by dkrecisz      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,10 +17,14 @@
 
 static int	check_variable_name(char *name)
 {
-	int	letter;
+	int		letter;
+	char	*s;
 
 	letter = 0;
 	if (name == NULL || name[0] == 0 || name[0] == '=')
+		return (EXIT_FAILURE);
+	s = ft_strchr(name, '+');
+	if (s && s + 1 && *(s + 1) != '=')
 		return (EXIT_FAILURE);
 	while (*name && *name != '=')
 	{

@@ -6,7 +6,7 @@
 /*   By: alkrusts/dkrecisz <codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/09/13 15:55:04 by alkrusts/dk   #+#    #+#                 */
-/*   Updated: 2021/10/26 13:28:25 by alkrusts/dk   ########   odam.nl         */
+/*   Updated: 2021/10/26 14:25:41 by dkrecisz      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -107,7 +107,7 @@ void	environ_modify(t_environ *head, t_environ *new)
 					tmp->value = ft_strdup(new->value);
 				if (tmp->value == NULL)
 					exit_minishell(errno);
-					tmp->key_value = environ_get_keyvalue(new->key, new->value);
+				tmp->key_value = environ_get_keyvalue(new->key, new->value);
 			}
 			return ;
 		}
