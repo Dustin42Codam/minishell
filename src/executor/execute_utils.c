@@ -6,7 +6,7 @@
 /*   By: alkrusts/dkrecisz <codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/09/13 15:58:09 by alkrusts/dk   #+#    #+#                 */
-/*   Updated: 2021/10/25 08:47:57 by dkrecisz      ########   odam.nl         */
+/*   Updated: 2021/10/25 15:26:48 by dkrecisz      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,6 +48,13 @@ static void	save_child_pid(t_data *data, pid_t pid)
 		data->child = new;
 	else
 		tmp->next = new;
+	tmp = data->child;
+	while (tmp->next)
+	{
+		tmp->last = 0;
+		tmp = tmp->next;
+	}
+	new->last = 1;
 }
 
 static void	free_command_argv(t_command *cmd, char **env_array)

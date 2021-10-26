@@ -6,7 +6,7 @@
 /*   By: alkrusts/dkrecisz <codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/09/13 15:55:40 by alkrusts/dk   #+#    #+#                 */
-/*   Updated: 2021/10/18 07:19:47 by dkrecisz      ########   odam.nl         */
+/*   Updated: 2021/10/26 10:44:02 by dkrecisz      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,20 +48,36 @@ static void	terminate(t_data *data)
 {
 	int		stat;
 	pid_t	pid;
+	t_child	*tmp;
+	pid_t	last;
 
-	while (data->child)
+	tmp = data->child;
+	last = 0;
+	while (tmp)
+	{
+		if (tmp->last)
+			last = tmp->pid;
+		tmp = tmp->next;
+	}
+	tmp = data->child;
+	while (tmp)
 	{
 		pid = wait(&stat);
-		if (WIFEXITED(stat))
-			data->exit_status = WEXITSTATUS(stat);
-		if (WTERMSIG(stat) == 2)
-			data->exit_status = 130;
-		if (WTERMSIG(stat) == 3)
-			data->exit_status = 131;
-		if (g_sig == 130 || g_sig == 131 || g_sig == 1)
-			data->exit_status = g_sig;
-		free_child_pid(&data->child, pid);
+		if (pid == last)
+		{
+			if (WIFEXITED(stat))
+				data->exit_status = WEXITSTATUS(stat);
+			if (WTERMSIG(stat) == 2)
+				data->exit_status = 130;
+			if (WTERMSIG(stat) == 3)
+				data->exit_status = 131;
+			if (g_sig == 130 || g_sig == 131 || g_sig == 1)
+				data->exit_status = g_sig;
+		}
+		tmp = tmp->next;
 	}
+	free_child_pid(data->child);
+	data->child = NULL;
 	if (signal(SIGINT, sig_int_parent) == SIG_ERR)
 		exit_minishell_custom("Error SIGINT ");
 	if (signal(SIGQUIT, sig_quit_parent) == SIG_ERR)

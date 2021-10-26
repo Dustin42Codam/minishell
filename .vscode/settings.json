@@ -9,6 +9,7 @@
 		"string.h": "c",
 		"minishell.h": "c",
 		"time.h": "c",
-		"history.h": "c"
+		"history.h": "c",
+		"fcntl.h": "c"
 	}
 }

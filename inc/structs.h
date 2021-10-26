@@ -6,7 +6,7 @@
 /*   By: alkrusts/dkrecisz <codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/09/13 15:54:34 by alkrusts/dk   #+#    #+#                 */
-/*   Updated: 2021/10/18 06:31:46 by dkrecisz      ########   odam.nl         */
+/*   Updated: 2021/10/25 15:26:37 by dkrecisz      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -150,6 +150,7 @@ typedef struct s_command
  * */
 typedef struct s_child
 {
+	int				last;
 	pid_t			pid;
 	struct s_child	*next;
 }	t_child;
