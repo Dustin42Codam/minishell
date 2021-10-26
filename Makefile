@@ -95,6 +95,7 @@ DBG := $(patsubst %,$(DDIR)/%,$(OBJ))
 #flags
 
 C_DEBUG := -g -Wall -Werror -Wextra -fsanitize=address $(HEADER)
+#C_DEBUG := -fsanitize=thread -g -O1 $(HEADER)
 # C_REGULAR := -Wall -Wextra -Werror -g $(HEADER)
 C_REGULAR := -Wall -Wextra -g $(HEADER)
 
@@ -130,7 +131,6 @@ $(ODIR)/%.o: %.c
 		$(ODIR)/$(SDIR)/parser \
 		$(ODIR)/$(SDIR)/executor \
 		$(ODIR)/$(SDIR)/environ \
-		$(ODIR)/$(SDIR)/job_control \
 		$(ODIR)/$(SDIR)/Get-next-line \
 		$(ODIR)/$(SDIR)/signals
 	@$(CC) $(FLAGS) $(HEADER) -c $< -o $@

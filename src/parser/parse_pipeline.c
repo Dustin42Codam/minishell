@@ -67,6 +67,7 @@ t_astree	*parse_pipeline(t_data *data)
 
 /**
  *	<pipeline>	::=		<command> '|' <pipeline>
+ *				|		<pipeline> '|'
 **/
 t_astree	*parse_pipe_sequence(t_data *data)
 {

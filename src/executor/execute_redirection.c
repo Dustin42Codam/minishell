@@ -88,33 +88,6 @@ static int	redirect_output(t_exec *stru, t_file_io *fd, t_astree *node)
 	fd->write = fd->output;
 	return (0);
 }
-/* static int	redirect_output(t_exec *stru, t_file_io *fd, t_astree *node)
-{
-	if (fd->output)
-	{
-		close(fd->output);
-		stru->parent = node->parent;
-		if (node->parent)
-			node->right = node->parent->right;
-		if (node->parent)
-			node->parent = node->parent->parent;
-		if (node->parent)
-		{
-			node->parent->left = node;
-			free(stru->parent->str);
-			free(stru->parent);
-			stru->parent = NULL;
-		}
-		if (node->right)
-			node->right->parent = node;
-		stru->root = node;
-	}
-	create_file(node, fd);
-	if (fd->output == -1)
-		return (1);
-	fd->write = fd->output;
-	return (0);
-} */
 
 static void	execute_4(t_exec *stru, t_data *data, t_astree *node, t_file_io *fd)
 {

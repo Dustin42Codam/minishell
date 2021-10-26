@@ -6,7 +6,7 @@
 /*   By: alkrusts/dkrecisz <codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/09/13 15:55:01 by alkrusts/dk   #+#    #+#                 */
-/*   Updated: 2021/10/18 07:18:49 by dkrecisz      ########   odam.nl         */
+/*   Updated: 2021/10/16 09:49:46 by alkrusts      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -106,7 +106,7 @@ char	**environ_get_array(t_environ *env)
 	while (tmp)
 	{
 		if (tmp->key_value == NULL)
-			exit_minishell_custom(". environ_utils:97\n");
+			exit_minishell_custom(". environ_utils:107\n");
 		array[i] = minishell_strdup(tmp->key_value);
 		tmp = tmp->next;
 		i++;

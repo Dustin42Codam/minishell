@@ -68,7 +68,7 @@ static void	read_input(t_data *data, t_astree *node, t_file_io *fd)
 		input = readline("> ");
 		if (input == NULL)
 		{
-			if (g_sig == 0)		// why??
+			if (g_sig == 0)
 				g_sig = 258;
 			break ;
 		}

@@ -41,7 +41,6 @@ void	free_data(t_data *data);
 void	increment_shlvl(t_environ *env);
 void	quote_removal(t_data **data);
 void	minishell_putstr(const char *str);
-char	*read_line(void);
 
 /**
  * Libft and glibc wrapper functions 

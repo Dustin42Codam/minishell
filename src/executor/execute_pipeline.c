@@ -16,6 +16,7 @@
 #include "parser.h"
 #include "environ.h"
 #include "libft.h"
+#include "lexer.h"
 #include <errno.h>
 #include <stdlib.h>
 #include <sys/types.h>
