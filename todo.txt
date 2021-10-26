@@ -1,0 +1,8 @@
+1.	Fix all bugs_report
+2.	Fix export - env
+3.	Memleak check with different inputs
+4.	Norm
+5.	Check each file for unused inclusions
+6.	Check/Cleanup Makefile
+7.	Run all tests
+8.	Check other test repos

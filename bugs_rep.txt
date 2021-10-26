@@ -1,28 +1,28 @@
 
 
 BUGS:
-export TE+S=T=""
 ls <> abc
-./minishell
-bash
-ctrl + c
+export TE+S=T=""
+pwd > out | cat < out < in
 echo abc > 1 > 2 | cat
-cat /dev/random | head > ewrgegt
 
 TO TEST:
-ctrl + \
 
 Fixed:
+ctrl + c
+cat /dev/random | head > ewrgegt
 cat > out
 echo abc > grep | echo abc	# doesn't execute "echo abc"
 < in cat | < in cat
 < in cat | cat
-sleep 100 | exit 42
+sleep 3 | exit 42
 cat /dev/random | head -c 100 | wc -c
 echo abc | cat /dev/random | head
 echo abc | echo def | cat /dev/random | head
 pwd | - | << lol
+pwd | - | <<
 pwd | cat
 < in cat; < in cat; < in cat 	# ; means multiline
 pwd > out | cat < out
-pwd > out | cat < out < in
+bash
+./minishell

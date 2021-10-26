@@ -6,7 +6,7 @@
 /*   By: alkrusts/dkrecisz <codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/09/13 15:55:40 by alkrusts/dk   #+#    #+#                 */
-/*   Updated: 2021/10/26 10:44:02 by dkrecisz      ########   odam.nl         */
+/*   Updated: 2021/10/26 11:14:40 by dkrecisz      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,7 +71,7 @@ static void	terminate(t_data *data)
 				data->exit_status = 130;
 			if (WTERMSIG(stat) == 3)
 				data->exit_status = 131;
-			if (g_sig == 130 || g_sig == 131 || g_sig == 1)
+			if (g_sig == 130 || g_sig == 131 || g_sig == 1 || g_sig == 258)
 				data->exit_status = g_sig;
 		}
 		tmp = tmp->next;
