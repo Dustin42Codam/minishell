@@ -6,7 +6,7 @@
 /*   By: alkrusts/dkrecisz <codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/09/13 15:54:51 by alkrusts/dk   #+#    #+#                 */
-/*   Updated: 2021/10/18 06:11:44 by dkrecisz      ########   odam.nl         */
+/*   Updated: 2021/10/26 12:21:44 by alkrusts/dk   ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,7 +59,7 @@ static int	export_error(char *arg)
 
 static void	add_new_variable(t_environ *env, t_environ *new)
 {
-	environ_modify(env, new->key, new->value);
+	environ_modify(env, new);
 	free(new->key);
 	free(new->value);
 	free(new->key_value);

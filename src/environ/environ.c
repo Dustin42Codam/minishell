@@ -6,7 +6,7 @@
 /*   By: alkrusts/dkrecisz <codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/09/13 15:55:04 by alkrusts/dk   #+#    #+#                 */
-/*   Updated: 2021/10/14 12:34:02 by alkrusts      ########   odam.nl         */
+/*   Updated: 2021/10/26 13:28:25 by alkrusts/dk   ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,33 +86,44 @@ t_environ	*environ_deep_copy(char **env)
 	return (head);
 }
 
-void	environ_modify(t_environ *head, char *key, char *value)
+void	environ_modify(t_environ *head, t_environ *new)
 {
 	t_environ	*tmp;
 
 	tmp = head;
-	while (head && tmp && key)
+	while (head && tmp && new->key)
 	{
-		if (environ_compare(tmp->key, key))
+		if (environ_compare(tmp->key, new->key))
 		{
-			if (ft_strnstr(tmp->key_value, "+=", ft_strlen(tmp->key_value)))
-				environ_add_to_environ_value(&tmp, key, value);
+			if (ft_strnstr(new->key_value, "+=", ft_strlen(new->key_value)))
+				environ_add_to_environ_value(&tmp, new->key, new->value);
 			else
 			{
 				free(tmp->value);
 				free(tmp->key_value);
-				if (value == NULL)
+				if (new->value == NULL)
 					tmp->value = ft_strdup("");
 				else
-					tmp->value = ft_strdup(value);
+					tmp->value = ft_strdup(new->value);
 				if (tmp->value == NULL)
 					exit_minishell(errno);
-					tmp->key_value = environ_get_keyvalue(key, value);
+					tmp->key_value = environ_get_keyvalue(new->key, new->value);
 			}
 			return ;
 		}
 		tmp = tmp->next;
 	}
+}
+
+void	environ_modify_prep(t_environ *head, char *key, char *value)
+{
+	t_environ	*new;
+
+	new = (t_environ *)minishell_calloc(1, sizeof(t_environ));
+	new->key = key;
+	new->value = value;
+	new->key_value = NULL;
+	environ_modify(head, new);
 }
 
 void	environ_set(t_environ *head, char *key, char *value)
@@ -123,7 +134,7 @@ void	environ_set(t_environ *head, char *key, char *value)
 		return ;
 	if (environ_get(head, key))
 	{
-		environ_modify(head, key, value);
+		environ_modify_prep(head, key, value);
 		return ;
 	}
 	new = (t_environ *)minishell_calloc(1, sizeof(t_environ));
