@@ -6,7 +6,7 @@
 /*   By: alkrusts/dkrecisz <codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/09/13 15:55:40 by alkrusts/dk   #+#    #+#                 */
-/*   Updated: 2021/10/26 10:44:02 by dkrecisz      ########   odam.nl         */
+/*   Updated: 2021/10/27 12:16:03 by alkrusts      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,6 +44,18 @@ void	restore_fd(t_file_io *fd)
 		close(fd->input);
 }
 
+static void	get_the_last_exit_staus(t_data *data, int stat)
+{
+	if (WIFEXITED(stat))
+		data->exit_status = WEXITSTATUS(stat);
+	if (WTERMSIG(stat) == 2)
+		data->exit_status = 130;
+	if (WTERMSIG(stat) == 3)
+		data->exit_status = 131;
+	if (g_sig == 130 || g_sig == 131 || g_sig == 1)
+		data->exit_status = g_sig;
+}
+
 static void	terminate(t_data *data)
 {
 	int		stat;
@@ -64,24 +76,11 @@ static void	terminate(t_data *data)
 	{
 		pid = wait(&stat);
 		if (pid == last)
-		{
-			if (WIFEXITED(stat))
-				data->exit_status = WEXITSTATUS(stat);
-			if (WTERMSIG(stat) == 2)
-				data->exit_status = 130;
-			if (WTERMSIG(stat) == 3)
-				data->exit_status = 131;
-			if (g_sig == 130 || g_sig == 131 || g_sig == 1)
-				data->exit_status = g_sig;
-		}
+			get_the_last_exit_staus(data, stat);
 		tmp = tmp->next;
 	}
 	free_child_pid(data->child);
 	data->child = NULL;
-	if (signal(SIGINT, sig_int_parent) == SIG_ERR)
-		exit_minishell_custom("Error SIGINT ");
-	if (signal(SIGQUIT, sig_quit_parent) == SIG_ERR)
-		exit_minishell_custom("Error SIGQUIT ");
 }
 
 void	execute(t_data *data)
@@ -95,4 +94,8 @@ void	execute(t_data *data)
 		execute_command(data, data->astree);
 	restore_fd(data->fd);
 	terminate(data);
+	if (signal(SIGINT, sig_int_parent) == SIG_ERR)
+		exit_minishell_custom("Error SIGINT ");
+	if (signal(SIGQUIT, sig_quit_parent) == SIG_ERR)
+		exit_minishell_custom("Error SIGQUIT ");
 }

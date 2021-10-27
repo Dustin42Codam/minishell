@@ -6,7 +6,7 @@
 /*   By: alkrusts <alkrust@student.codam.nl>          +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2020/11/07 11:41:34 by alkrusts      #+#    #+#                 */
-/*   Updated: 2021/10/13 09:29:40 by alkrusts      ########   odam.nl         */
+/*   Updated: 2021/10/27 12:58:41 by alkrusts      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,17 +23,17 @@
 typedef struct s_list123
 {
 	struct s_list123	*next;
-	char			*rem;
-	char			*tmp;
-	char			buf[BUFFER_SIZE + 1];
-	size_t			index;
-	size_t			prev;
-	size_t			x;
-	size_t			y;
-	size_t			len;
-	int				ret;
-	int				fd;
-}				t_list123;
+	char				*rem;
+	char				*tmp;
+	char				buf[BUFFER_SIZE + 1];
+	size_t				index;
+	size_t				prev;
+	size_t				x;
+	size_t				y;
+	size_t				len;
+	int					ret;
+	int					fd;
+}		t_list123;
 
 int				get_next_line(int fd, char **line);
 int				len_to_c(char *line, char hit, int ret, t_list123 **info);

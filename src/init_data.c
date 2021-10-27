@@ -6,14 +6,12 @@
 /*   By: alkrusts/dkrecisz <codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/09/13 15:57:03 by alkrusts/dk   #+#    #+#                 */
-/*   Updated: 2021/10/18 06:18:32 by dkrecisz      ########   odam.nl         */
+/*   Updated: 2021/10/27 13:09:28 by alkrusts      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-#include "libft.h"
 #include "environ.h"
-#include <errno.h>
 #include <stdlib.h>
 
 void	free_data(t_data *data)

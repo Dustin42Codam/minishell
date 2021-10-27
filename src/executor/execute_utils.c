@@ -6,7 +6,7 @@
 /*   By: alkrusts/dkrecisz <codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/09/13 15:58:09 by alkrusts/dk   #+#    #+#                 */
-/*   Updated: 2021/10/25 15:26:48 by dkrecisz      ########   odam.nl         */
+/*   Updated: 2021/10/27 13:07:29 by alkrusts      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,17 +17,11 @@
 #include "environ.h"
 #include "libft.h"
 #include <errno.h>
-#include <stdlib.h>
-#include <sys/types.h>
-#include <sys/wait.h>
-#include <sys/time.h>
 #include <fcntl.h>
 #include <stdio.h>
 #include <string.h>
 #include <signal.h>
-
-#include <readline/readline.h>
-#include <readline/history.h>
+#include <stdlib.h>
 
 static void	save_child_pid(t_data *data, pid_t pid)
 {

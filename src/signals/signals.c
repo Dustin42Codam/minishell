@@ -6,13 +6,12 @@
 /*   By: alkrusts/dkrecisz <codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/09/13 15:56:55 by alkrusts/dk   #+#    #+#                 */
-/*   Updated: 2021/10/27 11:47:07 by alkrusts      ########   odam.nl         */
+/*   Updated: 2021/10/27 13:13:55 by alkrusts      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-#include <unistd.h>
 #include <signal.h>
 
 #include <stdio.h>

@@ -6,21 +6,17 @@
 /*   By: alkrusts/dkrecisz <codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/09/13 15:57:07 by alkrusts/dk   #+#    #+#                 */
-/*   Updated: 2021/10/18 07:18:00 by dkrecisz      ########   odam.nl         */
+/*   Updated: 2021/10/27 13:10:33 by alkrusts      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "executor.h"
 #include "parser.h"
 #include "lexer.h"
-#include "libft.h"
 
 #include <stdlib.h>
 #include <errno.h>
-#include <unistd.h>
 #include <signal.h>
-#include <sys/wait.h>
-#include <sys/types.h>
 
 int	g_sig;
 

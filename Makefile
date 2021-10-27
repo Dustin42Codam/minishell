@@ -70,6 +70,7 @@ SRC = main.c \
 	environ/environ.c \
 	environ/environ_utils.c \
 	environ/environ_get_keyvalue.c \
+	environ/environ_utils_2.c \
 	signals/signals.c \
 	Get-next-line/get_next_line.c \
 	Get-next-line/get_next_line_utils.c

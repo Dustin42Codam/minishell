@@ -6,7 +6,7 @@
 /*   By: alkrusts/dkrecisz <codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/09/13 15:53:37 by alkrusts/dk   #+#    #+#                 */
-/*   Updated: 2021/10/27 11:44:25 by alkrusts      ########   odam.nl         */
+/*   Updated: 2021/10/27 12:01:06 by alkrusts      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -104,7 +104,7 @@ static void	minishell_con(t_data *data, t_local var)
 	{
 		parser(data);
 		execute(data);
-		// delete_ast(data->astree);
+		delete_ast(data->astree);
 		data->astree = NULL;
 		free_token_list(data->token);
 		free(data->fd);

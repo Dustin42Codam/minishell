@@ -6,7 +6,7 @@
 /*   By: alkrusts <alkrust@student.codam.nl>          +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/10/13 12:09:08 by alkrusts      #+#    #+#                 */
-/*   Updated: 2021/10/18 05:53:14 by dkrecisz      ########   odam.nl         */
+/*   Updated: 2021/10/27 13:03:32 by alkrusts      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,8 +16,6 @@
 #include "libft.h"
 
 #include <errno.h>
-#include <readline/readline.h>
-#include <readline/history.h>
 
 static void	init_cmd(t_data *data, t_command *cmd)
 {

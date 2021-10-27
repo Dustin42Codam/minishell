@@ -6,7 +6,7 @@
 /*   By: alkrusts <alkrust@student.codam.nl>          +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/10/15 11:03:35 by alkrusts      #+#    #+#                 */
-/*   Updated: 2021/10/15 11:18:06 by alkrusts      ########   odam.nl         */
+/*   Updated: 2021/10/27 12:02:06 by alkrusts      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,7 @@ void	add_back_lst_export(t_export **lst, t_export *node)
 	if (node == NULL)
 		return ;
 	if (*lst == NULL)
-			*lst == node;
+		*lst == node;
 	tmp = last_lst_export(*lst);
 	tmp->next = node;
 }

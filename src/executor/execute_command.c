@@ -6,18 +6,16 @@
 /*   By: alkrusts/dkrecisz <codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/09/13 15:55:24 by alkrusts/dk   #+#    #+#                 */
-/*   Updated: 2021/10/18 09:39:33 by dkrecisz      ########   odam.nl         */
+/*   Updated: 2021/10/27 13:04:59 by alkrusts      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 #include "executor.h"
 #include "parser.h"
-#include <string.h>
 #include <errno.h>
-#include <fcntl.h>
 #include <stdio.h>
-#include <stdlib.h>
+#include <string.h>
 
 void	print_error(t_data *data, char *str, int error_id)
 {
