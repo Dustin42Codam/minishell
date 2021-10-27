@@ -6,7 +6,7 @@
 /*   By: alkrusts/dkrecisz <codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/09/13 15:56:55 by alkrusts/dk   #+#    #+#                 */
-/*   Updated: 2021/10/25 08:44:58 by dkrecisz      ########   odam.nl         */
+/*   Updated: 2021/10/27 11:47:07 by alkrusts      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,9 +52,6 @@ void	sig_quit_parent(int ig)
 		exit_minishell_custom("ERROR SIGINT ");
 	if (signal(SIGQUIT, sig_quit_parent) == SIG_ERR)
 		exit_minishell_custom("ERROR SIGQUIT ");
-	rl_replace_line("", 0);
-	ft_putchar('\n');
-	rl_on_new_line();
 	rl_redisplay();
 }
 
@@ -66,9 +63,6 @@ void	sig_herdocs(int ig)
 			exit_minishell_custom("ERROR SIGINT ");
 		if (signal(SIGINT, sig_herdocs) == SIG_ERR)
 			exit_minishell_custom("ERROR SIGQUIT ");
-		rl_replace_line("", 0);
-		ft_putchar('\n');
-		rl_on_new_line();
 		rl_redisplay();
 		return ;
 	}

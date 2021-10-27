@@ -96,8 +96,7 @@ DBG := $(patsubst %,$(DDIR)/%,$(OBJ))
 
 C_DEBUG := -g -Wall -Werror -Wextra -fsanitize=address $(HEADER)
 #C_DEBUG := -fsanitize=thread -g -O1 $(HEADER)
-# C_REGULAR := -Wall -Wextra -Werror -g $(HEADER)
-C_REGULAR := -Wall -Wextra -g $(HEADER)
+ C_REGULAR := -Wall -Wextra -Werror $(HEADER)
 
 #nasm compiler
 
