@@ -3,7 +3,7 @@
 3.	Memleak check with different inputs
 4.	Norm										done
 5.	Check each file for unused inclusions		done
-6.	Check/Cleanup Makefile
+6.	Check/Cleanup Makefile						done
 	-	Add -Werror								done
 7.	Run all tests
 8.	Check other test repos

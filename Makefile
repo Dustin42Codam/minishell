@@ -77,10 +77,6 @@ SRC = main.c \
 
 OBJ = $(addprefix $(ODIR)/$(SDIR)/, $(SRC:.c=.o))
 
-#SRCS = $(addprefix $(SDIR)/, $(SRC))
-#OBJS = $(addprefix $(ODIR)/, $(OBJ))
-#TESTS = $(addprefix $(TDIR)/, $(TEST))
-
 LIBFT = libft
 TERMCAPS = -ltermcap
 READLINE = -lreadline -L/usr/local/opt/readline/lib -L/Users/alkrusts/.brew/Cellar/readline/8.0.4/lib -L/Users/dkrecisz/.brew/Cellar/readline/8.1.1/lib
@@ -90,20 +86,12 @@ LIBS = -L $(LIBFT) -lft $(READLINE) $(TERMCAPS)
 
 HEADER := -I $(IDIR) -I $(LIBFT) -I/Users/alkrusts/.brew/opt/readline/include -I/usr/local/opt/readline/include -I/Users/dkrecisz/.brew/Cellar/readline/8.1.1/include
 
-# OBJ := $(patsubst %,$(ODIR)/%,$(OBJ))
 DBG := $(patsubst %,$(DDIR)/%,$(OBJ))
 
-#flags
-
 C_DEBUG := -g -Wall -Werror -Wextra -fsanitize=address $(HEADER)
-#C_DEBUG := -fsanitize=thread -g -O1 $(HEADER)
  C_REGULAR := -Wall -Wextra -Werror $(HEADER)
 
-#nasm compiler
-
 CC := clang 
-
-#if bonus
 
 ifdef BONUS
 	OBJ = 
