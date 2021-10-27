@@ -1,9 +1,9 @@
-1.	Fix all bugs_report
-2.	Fix export - env
+1.	Fix all bugs_report							done
+2.	Fix export - env							done
 3.	Memleak check with different inputs
-4.	Norm
-5.	Check each file for unused inclusions
+4.	Norm										done
+5.	Check each file for unused inclusions		done
 6.	Check/Cleanup Makefile
-	-	Add -Werror
+	-	Add -Werror								done
 7.	Run all tests
 8.	Check other test repos
