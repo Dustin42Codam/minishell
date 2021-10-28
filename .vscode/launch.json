@@ -7,7 +7,7 @@
 		"request": "launch",
 		"program": "/home/dustin/minishell_merged/minishell",
 		// "program": "${workspaceFolder}/tests/environ/test_environ.out",
-		// "args": [ "-c", "pwd | - | << lol"],
+		"args": [ "-c", "pwd > out | cat < out < in"],
 		// "args": [ "-c", "cat /dev/random | head -c 1000000000 | wc -c"],
 		// "args": [ "-c", "cat /dev/random | head -c 1000 | wc -c"],
 		// "args": [ "-c", "echo abc > 1 > 2 | cat"],

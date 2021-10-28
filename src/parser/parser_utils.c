@@ -6,7 +6,7 @@
 /*   By: alkrusts/dkrecisz <codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/09/13 15:56:50 by alkrusts/dk   #+#    #+#                 */
-/*   Updated: 2021/10/18 15:10:21 by dkrecisz      ########   odam.nl         */
+/*   Updated: 2021/10/28 10:32:33 by dkrecisz      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,10 @@ void	delete_ast(t_astree *node)
 	if (node == NULL)
 		return ;
 	if (node->str)
+	{
 		free(node->str);
+		node->str = NULL;
+	}
 	if (node->right)
 		delete_ast(node->right);
 	if (node->left)

@@ -4,6 +4,8 @@ BUGS:
 export TE+S=T=""
 export TES=T+=""
 echo abc > 1 > 2 | cat; <enter>
+sleep 100 | sleep 10 | exit 21 | sleep 32 | exit 42 | sleep 10 # ctrl + c check exit code
+
 
 TO TEST:
 

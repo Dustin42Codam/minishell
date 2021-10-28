@@ -6,7 +6,7 @@
 /*   By: dkrecisz <dkrecisz@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/10/09 04:16:44 by dkrecisz      #+#    #+#                 */
-/*   Updated: 2021/10/18 14:56:11 by dkrecisz      ########   odam.nl         */
+/*   Updated: 2021/10/28 12:47:29 by dkrecisz      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,14 +43,21 @@ static int	redirect_input(t_exec *stru, t_file_io *fd, t_data *data,
 		close(fd->input);
 		stru->parent = node->parent;
 		if (node->parent)
+		{
 			node->right = node->parent->right;
-		if (node->parent)
 			node->parent = node->parent->parent;
+		}
 		if (node->parent)
-			node->parent->left = node;
+		{
+			if (node->parent->right == stru->parent)
+				node->parent->right = node;
+			else
+				node->parent->left = node;
+		}
 		if (stru->parent)
 		{
 			free(stru->parent->str);
+			stru->parent->str = NULL;
 			free(stru->parent);
 			stru->parent = NULL;
 		}
@@ -68,16 +75,24 @@ static int	redirect_output(t_exec *stru, t_file_io *fd, t_astree *node)
 		close(fd->output);
 		stru->parent = node->parent;
 		if (node->parent)
+		{
 			node->right = node->parent->right;
-		if (node->parent)
 			node->parent = node->parent->parent;
-		// if (node->parent)
-		// {
-			// node->parent->left = node;
-			// free(stru->parent->str);
-			// free(stru->parent);
-			// stru->parent = NULL;
-		// }
+		}
+		if (node->parent)
+		{
+			if (node->parent->right == stru->parent)
+				node->parent->right = node;
+			else
+				node->parent->left = node;
+		}
+		if (stru->parent)
+		{
+			free(stru->parent->str);
+			stru->parent->str = NULL;
+			free(stru->parent);
+			stru->parent = NULL;
+		}
 		if (node->right)
 			node->right->parent = node;
 		stru->root = node;
@@ -109,7 +124,16 @@ static void	execute_4(t_exec *stru, t_data *data, t_astree *node, t_file_io *fd)
 		& AST_WORD && (data->token_mask & PIPE) == 0)
 		execute_word_list(data, data->astree->right);
 	else if (node && node->type == AST_WORD)
+	{
+		t_astree	*tmp = node;
+		while (tmp->parent)
+		{
+			tmp = tmp->parent;
+		}
+		data->astree = tmp;
 		execute_word_list(data, node);
+		
+	}
 	return ;
 }
 
