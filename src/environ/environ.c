@@ -6,7 +6,7 @@
 /*   By: alkrusts/dkrecisz <codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/09/13 15:55:04 by alkrusts/dk   #+#    #+#                 */
-/*   Updated: 2021/10/27 12:56:17 by alkrusts      ########   odam.nl         */
+/*   Updated: 2021/10/28 10:44:10 by alkrusts      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -95,21 +95,19 @@ void	environ_modify(t_environ *head, t_environ *new)
 	{
 		if (environ_compare(tmp->key, new->key))
 		{
-			if (ft_strnstr(new->key_value, "+=", ft_strlen(new->key_value)))
-				environ_add_to_env(&tmp, new->key, new->value);
-			else
+			if (new->key_value != NULL)
 			{
-				free(tmp->value);
-				free(tmp->key_value);
-				if (new->value == NULL)
-					tmp->value = ft_strdup("");
+				if (ft_strnstr(new->key_value, "+=", ft_strlen(new->key_value)))
+					environ_add_to_env(&tmp, new->key, new->value);
 				else
-					tmp->value = ft_strdup(new->value);
-				if (tmp->value == NULL)
-					exit_minishell(errno);
-				tmp->key_value = environ_get_keyvalue(new->key, new->value);
+				{
+					free(tmp->value);
+					free(tmp->key_value);
+					tmp->value = minishell_strdup(new->value);
+					tmp->key_value = environ_get_keyvalue(new->key, new->value);
+				}
+				return ;
 			}
-			return ;
 		}
 		tmp = tmp->next;
 	}

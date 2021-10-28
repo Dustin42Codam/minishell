@@ -6,7 +6,7 @@
 /*   By: dkrecisz <marvin@codam.nl>                   +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/10/13 08:49:55 by dkrecisz      #+#    #+#                 */
-/*   Updated: 2021/10/13 08:50:00 by dkrecisz      ########   odam.nl         */
+/*   Updated: 2021/10/28 10:44:36 by alkrusts      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,8 @@ char	*minishell_strdup(const char *s)
 	size_t	x;
 	size_t	y;
 
+	if (s == NULL)
+		return (minishell_calloc(1, sizeof(char)));
 	y = 0;
 	x = ft_strlen(s);
 	ptr = minishell_calloc(x + 1, sizeof(char));
