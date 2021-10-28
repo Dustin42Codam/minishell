@@ -6,14 +6,13 @@
 /*   By: alkrusts/dkrecisz <codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/09/13 15:54:30 by alkrusts/dk   #+#    #+#                 */
-/*   Updated: 2021/10/28 13:54:46 by dkrecisz      ########   odam.nl         */
+/*   Updated: 2021/10/28 14:43:47 by alkrusts      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef MINISHELL_H
 # define MINISHELL_H
 # include "structs.h"
-
 
 extern int	g_sig;
 

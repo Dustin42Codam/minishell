@@ -6,7 +6,7 @@
 /*   By: alkrusts/dkrecisz <codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/09/13 15:57:07 by alkrusts/dk   #+#    #+#                 */
-/*   Updated: 2021/10/27 13:10:33 by alkrusts      ########   odam.nl         */
+/*   Updated: 2021/10/28 14:42:54 by alkrusts      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,7 @@ int	main(int argc, char *argv[], char **envp)
 	if (signal(SIGINT, sig_int_parent) == SIG_ERR)
 		exit_minishell_custom("Error SIGINT ");
 	if (signal(SIGQUIT, sig_quit_parent) == SIG_ERR)
-	 	exit_minishell_custom("Error SIGQUIT ");
+		exit_minishell_custom("Error SIGQUIT ");
 	data = init_data(envp);
 	init_terminal(data);
 	if (argc == 1)

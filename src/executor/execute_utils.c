@@ -6,7 +6,7 @@
 /*   By: alkrusts/dkrecisz <codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/09/13 15:58:09 by alkrusts/dk   #+#    #+#                 */
-/*   Updated: 2021/10/25 15:26:48 by dkrecisz      ########   odam.nl         */
+/*   Updated: 2021/10/28 14:43:27 by alkrusts      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,6 @@
 #include <stdio.h>
 #include <string.h>
 #include <signal.h>
-
 
 static void	save_child_pid(t_data *data, pid_t pid)
 {
