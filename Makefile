@@ -56,6 +56,7 @@ SRC = main.c \
 	parser/parse_word_list.c \
 	parser/parse_command.c \
 	parser/parse_redirection.c \
+	executor/execute_redirection_util.c \
 	executor/execute.c \
 	executor/execute_pipeline.c \
 	executor/execute_command.c \
@@ -79,9 +80,8 @@ SRC = main.c \
 OBJ = $(addprefix $(ODIR)/$(SDIR)/, $(SRC:.c=.o))
 
 LIBFT = libft
-TERMCAPS = -ltermcap
 READLINE = -lreadline -L/usr/local/opt/readline/lib -L/Users/alkrusts/.brew/Cellar/readline/8.0.4/lib -L/Users/dkrecisz/.brew/Cellar/readline/8.1.1/lib
-LIBS = -L $(LIBFT) -lft $(READLINE) $(TERMCAPS)
+LIBS = -L $(LIBFT) -lft $(READLINE)
 
 #headers aka dependencys
 

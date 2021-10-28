@@ -6,7 +6,7 @@
 /*   By: dkrecisz <dkrecisz@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/10/09 04:16:44 by dkrecisz      #+#    #+#                 */
-/*   Updated: 2021/10/27 12:07:42 by alkrusts      ########   odam.nl         */
+/*   Updated: 2021/10/28 15:30:47 by alkrusts      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,29 +41,7 @@ static int	redirect_input(t_exec *stru, t_file_io *fd, t_data *data,
 	if (fd->input)
 	{
 		close(fd->input);
-		stru->parent = node->parent;
-		if (node->parent)
-		{
-			node->right = node->parent->right;
-			node->parent = node->parent->parent;
-		}
-		if (node->parent)
-		{
-			if (node->parent->right == stru->parent)
-				node->parent->right = node;
-			else
-				node->parent->left = node;
-		}
-		if (stru->parent)
-		{
-			free(stru->parent->str);
-			stru->parent->str = NULL;
-			free(stru->parent);
-			stru->parent = NULL;
-		}
-		if (node->right)
-			node->right->parent = node;
-		stru->root = node;
+		del_parent(stru, node);
 	}
 	return (execute_2(fd, data, node));
 }
@@ -73,29 +51,7 @@ static int	redirect_output(t_exec *stru, t_file_io *fd, t_astree *node)
 	if (fd->output)
 	{
 		close(fd->output);
-		stru->parent = node->parent;
-		if (node->parent)
-		{
-			node->right = node->parent->right;
-			node->parent = node->parent->parent;
-		}
-		if (node->parent)
-		{
-			if (node->parent->right == stru->parent)
-				node->parent->right = node;
-			else
-				node->parent->left = node;
-		}
-		if (stru->parent)
-		{
-			free(stru->parent->str);
-			stru->parent->str = NULL;
-			free(stru->parent);
-			stru->parent = NULL;
-		}
-		if (node->right)
-			node->right->parent = node;
-		stru->root = node;
+		del_parent(stru, node);
 	}
 	create_file(node, fd);
 	if (fd->output == -1)

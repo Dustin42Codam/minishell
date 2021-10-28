@@ -6,7 +6,7 @@
 /*   By: alkrusts/dkrecisz <codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/09/13 15:54:24 by alkrusts/dk   #+#    #+#                 */
-/*   Updated: 2021/10/25 15:32:06 by dkrecisz      ########   odam.nl         */
+/*   Updated: 2021/10/28 15:31:21 by alkrusts      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,5 +30,6 @@ void	print_error(t_data *data, char *str, int error_id);
 void	create_file(t_astree *node, t_file_io *fd);
 void	restore_fd(t_file_io *fd);
 void	free_child_pid(t_child *head);
+void	del_parent(t_exec *stru, t_astree *node);
 
 #endif

@@ -6,7 +6,7 @@
 /*   By: alkrusts/dkrecisz <codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/09/13 15:58:09 by alkrusts/dk   #+#    #+#                 */
-/*   Updated: 2021/10/28 14:43:27 by alkrusts      ########   odam.nl         */
+/*   Updated: 2021/10/28 15:43:08 by alkrusts      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -96,8 +96,6 @@ static void	set_fds(t_command *cmd)
 
 static void	execute_child(t_command *cmd, char **env_array, t_data *data)
 {
-	if (isatty(STDIN_FILENO))
-		tcsetattr(cmd->fd->save_stdin, TCSANOW, &data->old_term);
 	errno = 0;
 	set_fds(cmd);
 	if (cmd->builtin_id)
@@ -134,7 +132,5 @@ void	execute_command_argv(t_data *data, t_command *cmd, t_environ *env)
 	else if (pid == 0)
 		execute_child(cmd, env_array, data);
 	save_child_pid(data, pid);
-	if (isatty(STDIN_FILENO))
-		tcsetattr(cmd->fd->save_stdin, TCSANOW, &data->new_term);
 	free_command_argv(cmd, env_array);
 }
