@@ -41,6 +41,7 @@ SRC = main.c \
 	lexer/lexer.c \
 	lexer/lexer_utils_1.c \
 	lexer/lexer_utils_2.c \
+	lexer/lexer_count_tokens.c \
 	lexer/make_token_meta.c \
 	lexer/make_token_quote.c \
 	lexer/expand_variables.c \

@@ -6,13 +6,14 @@
 /*   By: alkrusts/dkrecisz <codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/09/13 15:54:30 by alkrusts/dk   #+#    #+#                 */
-/*   Updated: 2021/09/13 15:58:38 by alkrusts/dk   ########   odam.nl         */
+/*   Updated: 2021/10/28 13:54:46 by dkrecisz      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef MINISHELL_H
 # define MINISHELL_H
 # include "structs.h"
+
 
 extern int	g_sig;
 
@@ -22,6 +23,11 @@ extern int	g_sig;
 
 # define FALSE	0
 # define TRUE	1
+
+/**
+ * Maximal amount of tokens to protect stack overvlows.
+**/
+# define TOKEN_MAX 254
 
 /*
 **	COLORS THAT YOU SEE ON THE PROOMPT
