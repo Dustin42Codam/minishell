@@ -6,7 +6,7 @@
 /*   By: alkrusts/dkrecisz <codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/09/13 15:55:27 by alkrusts/dk   #+#    #+#                 */
-/*   Updated: 2021/10/18 07:05:35 by dkrecisz      ########   odam.nl         */
+/*   Updated: 2021/10/27 13:05:40 by alkrusts      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,6 @@
 #include <signal.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <stdbool.h>
 #include <readline/readline.h>
 
 static void	expand_input(t_data *data, char *line, int pipe_write)
@@ -67,11 +66,7 @@ static void	read_input(t_data *data, t_astree *node, t_file_io *fd)
 		init_signal_handler();
 		input = readline("> ");
 		if (input == NULL)
-		{
-			if (g_sig == 0)
-				g_sig = 258;
 			break ;
-		}
 		if (errno)
 			exit_minishell(errno);
 		else if (environ_compare(input, delimeter) == 1)

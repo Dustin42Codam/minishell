@@ -6,7 +6,7 @@
 /*   By: dkrecisz <dkrecisz@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/10/09 04:16:44 by dkrecisz      #+#    #+#                 */
-/*   Updated: 2021/10/28 12:47:29 by dkrecisz      ########   odam.nl         */
+/*   Updated: 2021/10/27 12:07:42 by alkrusts      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -124,16 +124,7 @@ static void	execute_4(t_exec *stru, t_data *data, t_astree *node, t_file_io *fd)
 		& AST_WORD && (data->token_mask & PIPE) == 0)
 		execute_word_list(data, data->astree->right);
 	else if (node && node->type == AST_WORD)
-	{
-		t_astree	*tmp = node;
-		while (tmp->parent)
-		{
-			tmp = tmp->parent;
-		}
-		data->astree = tmp;
 		execute_word_list(data, node);
-		
-	}
 	return ;
 }
 

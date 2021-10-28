@@ -1,18 +1,25 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        ::::::::            */
-/*   minishell_putchar_fd.c                             :+:    :+:            */
+/*   environ.c                                          :+:    :+:            */
 /*                                                     +:+                    */
 /*   By: alkrusts/dkrecisz <codam.nl>                 +#+                     */
 /*                                                   +#+                      */
-/*   Created: 2021/09/13 15:57:13 by alkrusts/dk   #+#    #+#                 */
-/*   Updated: 2021/10/27 13:11:48 by alkrusts      ########   odam.nl         */
+/*   Created: 2021/09/13 15:55:04 by alkrusts/dk   #+#    #+#                 */
+/*   Updated: 2021/10/27 12:04:58 by alkrusts      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+#include "environ.h"
 
-ssize_t	minishell_putchar_fd(const char c, int fd)
+void	environ_modify_prep(t_environ *head, char *key, char *value)
 {
-	return (minishell_write(fd, &c, 1));
+	t_environ	*new;
+
+	new = (t_environ *)minishell_calloc(1, sizeof(t_environ));
+	new->key = key;
+	new->value = value;
+	new->key_value = NULL;
+	environ_modify(head, new);
 }

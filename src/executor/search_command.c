@@ -6,7 +6,7 @@
 /*   By: alkrusts/dkrecisz <codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/09/13 15:55:43 by alkrusts/dk   #+#    #+#                 */
-/*   Updated: 2021/10/13 12:14:16 by alkrusts      ########   odam.nl         */
+/*   Updated: 2021/10/27 13:08:18 by alkrusts      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,6 @@
 #include "environ.h"
 #include "builtins.h"
 #include <sys/stat.h>
-#include <unistd.h>
 #include <errno.h>
 #include <stdlib.h>
 

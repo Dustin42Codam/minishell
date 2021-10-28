@@ -1,4 +1,0 @@
-Tested pwd from
-
-/minishell
-/

@@ -18,16 +18,11 @@
 #include "libft.h"
 #include <errno.h>
 #include <stdlib.h>
-#include <sys/types.h>
-#include <sys/wait.h>
-#include <sys/time.h>
 #include <fcntl.h>
 #include <stdio.h>
 #include <string.h>
 #include <signal.h>
 
-#include <readline/readline.h>
-#include <readline/history.h>
 
 static void	save_child_pid(t_data *data, pid_t pid)
 {

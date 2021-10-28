@@ -16,8 +16,6 @@
 #include "libft.h"
 
 #include <errno.h>
-#include <readline/readline.h>
-#include <readline/history.h>
 
 static void	init_cmd(t_data *data, t_command *cmd)
 {

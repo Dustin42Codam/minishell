@@ -1,7 +1,0 @@
-+	Fix all bugs_report
--	Memleak check with different inputs
--	Norm
--	Check each file for unused inclusions
--	Check/Cleanup Makefile	-	Add -Werror
--	Run all tests
--	Check other test repos

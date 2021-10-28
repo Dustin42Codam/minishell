@@ -6,7 +6,7 @@
 /*   By: alkrusts <alkrust@student.codam.nl>          +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/10/13 10:46:58 by alkrusts      #+#    #+#                 */
-/*   Updated: 2021/10/16 11:43:37 by alkrusts      ########   odam.nl         */
+/*   Updated: 2021/10/27 12:57:25 by alkrusts      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,7 +67,7 @@ t_environ	*environ_new_empty(const char *key_value)
 	return (new);
 }
 
-t_environ *environ_addition(const char *key_value)
+t_environ	*environ_addition(const char *key_value)
 {
 	t_environ	*n3w;
 	size_t		key_len;
@@ -86,7 +86,7 @@ t_environ *environ_addition(const char *key_value)
 	return (n3w);
 }
 
-int	environ_add_to_environ_value(t_environ **varible, char *key, char *value)
+int	environ_add_to_env(t_environ **varible, char *key, char *value)
 {
 	char	*tmp;
 

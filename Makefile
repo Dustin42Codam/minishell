@@ -71,15 +71,12 @@ SRC = main.c \
 	environ/environ.c \
 	environ/environ_utils.c \
 	environ/environ_get_keyvalue.c \
+	environ/environ_utils_2.c \
 	signals/signals.c \
 	Get-next-line/get_next_line.c \
 	Get-next-line/get_next_line_utils.c
 
 OBJ = $(addprefix $(ODIR)/$(SDIR)/, $(SRC:.c=.o))
-
-#SRCS = $(addprefix $(SDIR)/, $(SRC))
-#OBJS = $(addprefix $(ODIR)/, $(OBJ))
-#TESTS = $(addprefix $(TDIR)/, $(TEST))
 
 LIBFT = libft
 TERMCAPS = -ltermcap
@@ -90,17 +87,12 @@ LIBS = -L $(LIBFT) -lft $(READLINE) $(TERMCAPS)
 
 HEADER := -I $(IDIR) -I $(LIBFT) -I/Users/alkrusts/.brew/opt/readline/include -I/usr/local/opt/readline/include -I/Users/dkrecisz/.brew/Cellar/readline/8.1.1/include
 
-# OBJ := $(patsubst %,$(ODIR)/%,$(OBJ))
 DBG := $(patsubst %,$(DDIR)/%,$(OBJ))
 
 #flags
 
 C_DEBUG := -g -Wall -Werror -Wextra -fsanitize=address $(HEADER)
-#C_DEBUG := -fsanitize=thread -g -O1 $(HEADER)
-# C_REGULAR := -Wall -Wextra -Werror -g $(HEADER)
-C_REGULAR := -Wall -Wextra -g $(HEADER)
-
-#nasm compiler
+C_REGULAR := -Wall -Wextra -Werror $(HEADER)
 
 CC := clang 
 
