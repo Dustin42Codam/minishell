@@ -6,7 +6,7 @@
 /*   By: alkrusts/dkrecisz <codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/09/13 15:55:04 by alkrusts/dk   #+#    #+#                 */
-/*   Updated: 2021/09/13 15:58:19 by alkrusts/dk   ########   odam.nl         */
+/*   Updated: 2021/10/28 14:41:36 by alkrusts      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,23 +46,27 @@ void	environ_add_back(t_environ **env, t_environ *new)
 
 t_environ	*environ_new(const char *key_value)
 {
-	t_environ	*new;
+	t_environ	*n3w;
 	size_t		key_len;
 	size_t		key_value_len;
 
-	if (!key_value || key_value[0] == 0 || ft_strchr(key_value, '=') == NULL)
+	if (!key_value || key_value[0] == 0)
 		return (NULL);
+	if (ft_strnstr(key_value, "+=", ft_strlen(key_value)) != NULL)
+		return (environ_addition(key_value));
+	if (ft_strchr(key_value, '=') == NULL)
+		return (environ_new_empty(key_value));
 	key_value_len = ft_strlen(key_value);
-	new = (t_environ *)minishell_calloc(1, sizeof(t_environ));
-	new->key = (char *)minishell_calloc(key_value_len + 1, sizeof(char));
-	new->value = (char *)minishell_calloc(key_value_len + 1, sizeof(char));
-	new->key_value = ft_strdup(key_value);
-	if (new->key_value == NULL)
+	n3w = (t_environ *)minishell_calloc(1, sizeof(t_environ));
+	n3w->key = (char *)minishell_calloc(key_value_len + 1, sizeof(char));
+	n3w->value = (char *)minishell_calloc(key_value_len + 1, sizeof(char));
+	n3w->key_value = ft_strdup(key_value);
+	if (n3w->key_value == NULL)
 		exit_minishell(errno);
 	key_len = ft_strchr(key_value, '=') - key_value;
-	ft_strlcpy(new->key, key_value, key_len + 1);
-	ft_strlcpy(new->value, key_value + key_len + 1, key_value_len);
-	return (new);
+	ft_strlcpy(n3w->key, key_value, key_len + 1);
+	ft_strlcpy(n3w->value, key_value + key_len + 1, key_value_len);
+	return (n3w);
 }
 
 t_environ	*environ_deep_copy(char **env)
@@ -82,23 +86,28 @@ t_environ	*environ_deep_copy(char **env)
 	return (head);
 }
 
-static void	environ_modify(t_environ *head, char *key, char *value)
+void	environ_modify(t_environ *head, t_environ *new)
 {
 	t_environ	*tmp;
 
 	tmp = head;
-	while (head && tmp && key)
+	while (head && tmp && new->key)
 	{
-		if (environ_compare(tmp->key, key))
+		if (environ_compare(tmp->key, new->key))
 		{
-			free(tmp->value);
-			if (value == NULL)
-				tmp->value = ft_strdup("");
-			else
-				tmp->value = ft_strdup(value);
-			if (tmp->value == NULL)
-				exit_minishell(errno);
-			return ;
+			if (new->key_value != NULL)
+			{
+				if (ft_strnstr(new->key_value, "+=", ft_strlen(new->key_value)))
+					environ_add_to_env(&tmp, new->key, new->value);
+				else
+				{
+					free(tmp->value);
+					free(tmp->key_value);
+					tmp->value = minishell_strdup(new->value);
+					tmp->key_value = environ_get_keyvalue(new->key, new->value);
+				}
+				return ;
+			}
 		}
 		tmp = tmp->next;
 	}
@@ -112,7 +121,7 @@ void	environ_set(t_environ *head, char *key, char *value)
 		return ;
 	if (environ_get(head, key))
 	{
-		environ_modify(head, key, value);
+		environ_modify_prep(head, key, value);
 		return ;
 	}
 	new = (t_environ *)minishell_calloc(1, sizeof(t_environ));

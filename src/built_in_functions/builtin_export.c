@@ -6,7 +6,7 @@
 /*   By: alkrusts/dkrecisz <codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/09/13 15:54:51 by alkrusts/dk   #+#    #+#                 */
-/*   Updated: 2021/09/13 15:58:23 by alkrusts/dk   ########   odam.nl         */
+/*   Updated: 2021/10/28 14:30:20 by alkrusts      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,16 +17,20 @@
 
 static int	check_variable_name(char *name)
 {
-	int	letter;
+	int		letter;
+	char	*s;
 
 	letter = 0;
 	if (name == NULL || name[0] == 0 || name[0] == '=')
+		return (EXIT_FAILURE);
+	s = ft_strchr(name, '+');
+	if (s && s + 1 && *(s + 1) != '=')
 		return (EXIT_FAILURE);
 	while (*name && *name != '=')
 	{
 		if (ft_isalpha(*name))
 			letter = TRUE;
-		else if (ft_isalnum(*name) == 0 && *name != '_')
+		else if (ft_isalnum(*name) == 0 && *name != '_' && *name != '+')
 			return (EXIT_FAILURE);
 		else if (ft_isdigit(*name) && letter == 0)
 			return (EXIT_FAILURE);
@@ -39,11 +43,11 @@ static int	print_exported_variables(t_command *cmd, t_environ	*env)
 {
 	while (env)
 	{
-		minishell_putstr_fd("declare -x ", cmd->fd.write);
-		minishell_putstr_fd(env->key, cmd->fd.write);
-		minishell_putstr_fd("=\"", cmd->fd.write);
-		minishell_putstr_fd(env->value, cmd->fd.write);
-		minishell_putendl_fd("\"", cmd->fd.write);
+		minishell_putstr_fd("declare -x ", cmd->fd->write);
+		minishell_putstr_fd(env->key, cmd->fd->write);
+		minishell_putstr_fd("=\"", cmd->fd->write);
+		minishell_putstr_fd(env->value, cmd->fd->write);
+		minishell_putendl_fd("\"", cmd->fd->write);
 		env = env->next;
 	}
 	return (0);
@@ -57,22 +61,40 @@ static int	export_error(char *arg)
 	return (1);
 }
 
+static void	add_new_variable(t_environ *env, t_environ *new)
+{
+	environ_modify_prep(env, new->key, new->value);
+	free(new->key);
+	free(new->value);
+	free(new->key_value);
+	free(new);
+}
+
 int	builtin_export(t_command *cmd, t_environ *env)
 {
-	size_t	i;
-	int		error;
+	t_environ	*my_var;
+	size_t		i;
+	int			exit_status;
 
 	if (cmd->argc == 1)
 		return (print_exported_variables(cmd, env));
 	i = 1;
-	error = 0;
+	exit_status = 0;
 	while (cmd->argv[i])
 	{
 		if (check_variable_name(cmd->argv[i]))
-			error = export_error(cmd->argv[i]);
-		else
-			environ_add_back(&env, environ_new(cmd->argv[i]));
+			return (export_error(cmd->argv[i]));
 		i++;
 	}
-	return (error);
+	i = 1;
+	while (cmd->argv[i])
+	{
+		my_var = environ_new(cmd->argv[i]);
+		if (environ_get(env, my_var->key))
+			add_new_variable(env, my_var);
+		else
+			environ_add_back(&env, my_var);
+		i++;
+	}
+	return (exit_status);
 }

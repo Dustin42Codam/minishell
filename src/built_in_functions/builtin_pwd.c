@@ -6,7 +6,7 @@
 /*   By: alkrusts/dkrecisz <codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/09/13 15:54:54 by alkrusts/dk   #+#    #+#                 */
-/*   Updated: 2021/09/13 15:58:22 by alkrusts/dk   ########   odam.nl         */
+/*   Updated: 2021/10/18 06:11:27 by dkrecisz      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ int	builtin_pwd(t_command *cmd)
 		return (2);
 	}
 	if (getcwd(cwd, PATH_MAX) == NULL)
-		return (errno);
-	minishell_putendl_fd(cwd, cmd->fd.write);
+		errno = 0;
+	minishell_putendl_fd(cwd, cmd->fd->write);
 	return (0);
 }

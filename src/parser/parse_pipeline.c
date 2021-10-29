@@ -6,7 +6,7 @@
 /*   By: alkrusts/dkrecisz <codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/09/13 15:56:45 by alkrusts/dk   #+#    #+#                 */
-/*   Updated: 2021/09/13 15:57:49 by alkrusts/dk   ########   odam.nl         */
+/*   Updated: 2021/10/14 11:02:46 by dkrecisz      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,18 +14,31 @@
 #include "parser.h"
 #include "lexer.h"
 
+#include <stdlib.h>
 /**
  *	parse_pipeline - creates a AST node for a <pipeline>
  *
  *	A <pipeline> can either consist of a sequence of pipes 
- *	(echo 1 | grep "1" | wc -l)
- *	or just a single command (echo -n "abc").
+ *	-> 'echo 1 | grep "1" | wc -l'
+ *	or just a single command -> 'echo -n "abc"'
  *
  *  Grammar:
- * 	<pipeline>	::=		<command> '|' <pipeline>
- *				|		<pipeline> '|'
- *				|		<command>
+ * 	<pipeline>	::=		<command>
+ *				|		<command> '|' <pipeline>
 **/
+
+static void	delete_ast_2(t_astree	**pipeline)
+{
+	if ((*pipeline) == NULL)
+		return ;
+	if ((*pipeline)->str)
+		free((*pipeline)->str);
+	delete_ast((*pipeline)->right);
+	delete_ast((*pipeline)->left);
+	free(*pipeline);
+	*pipeline = NULL;
+}
+
 t_astree	*parse_pipeline(t_data *data)
 {
 	t_astree	*pipeline;
@@ -34,11 +47,21 @@ t_astree	*parse_pipeline(t_data *data)
 	token_backup = data->token_ptr;
 	pipeline = parse_pipe_sequence(data);
 	if (pipeline)
+	{
+		if (data->token_ptr->type & (HERE_DOC | REDIR_IN | APPEND | REDIR_OUT)
+			|| (data->token_ptr && data->token_ptr->type & PIPE))
+			delete_ast_2(&pipeline);
 		return (pipeline);
+	}
 	data->token_ptr = token_backup;
 	pipeline = parse_command(data);
 	if (pipeline)
+	{
+		if (data->token_ptr->type & (HERE_DOC | REDIR_IN | APPEND | REDIR_OUT)
+			|| (data->token_ptr->next && data->token_ptr->next->type & PIPE))
+			delete_ast_2(&pipeline);
 		return (pipeline);
+	}
 	return (NULL);
 }
 

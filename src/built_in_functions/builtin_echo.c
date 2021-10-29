@@ -6,7 +6,7 @@
 /*   By: alkrusts/dkrecisz <codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/09/13 15:54:43 by alkrusts/dk   #+#    #+#                 */
-/*   Updated: 2021/09/13 15:58:25 by alkrusts/dk   ########   odam.nl         */
+/*   Updated: 2021/10/18 06:11:13 by dkrecisz      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,14 +59,14 @@ int	builtin_echo(t_command *cmd)
 		i = get_option(cmd, &option);
 		while (i < cmd->argc && write_ret >= 0)
 		{
-			write_ret = ft_putstr_fd(cmd->argv[i], cmd->fd.write);
+			write_ret = ft_putstr_fd(cmd->argv[i], cmd->fd->write);
 			i++;
 			if (i < cmd->argc && write_ret >= 0)
-				write_ret = write(cmd->fd.write, " ", 1);
+				write_ret = write(cmd->fd->write, " ", 1);
 		}
 	}
 	if (option == 0 && write_ret >= 0)
-		write_ret = write(cmd->fd.write, "\n", 1);
+		write_ret = write(cmd->fd->write, "\n", 1);
 	if (write_ret == -1)
 		return (-1);
 	return (0);

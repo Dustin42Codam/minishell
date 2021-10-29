@@ -6,7 +6,7 @@
 /*   By: alkrusts/dkrecisz <codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/09/13 15:56:50 by alkrusts/dk   #+#    #+#                 */
-/*   Updated: 2021/09/13 15:57:47 by alkrusts/dk   ########   odam.nl         */
+/*   Updated: 2021/10/18 15:10:21 by dkrecisz      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,11 @@
 #include "parser.h"
 #include "lexer.h"
 #include <stdlib.h>
+
+int	is_redirection(int node_type)
+{
+	return (node_type & (AST_REDIR_IN | AST_APPEND | AST_REDIR_OUT));
+}
 
 void	init_ast_node(t_astree *node, char *arg, int type)
 {
@@ -28,7 +33,11 @@ void	init_ast_node(t_astree *node, char *arg, int type)
 void	insert_ast_node(t_astree *node, t_astree *left, t_astree *right)
 {
 	node->left = left;
+	if (left)
+		node->left->parent = node;
 	node->right = right;
+	if (right)
+		node->right->parent = node;
 }
 
 void	delete_ast(t_astree *node)
@@ -36,10 +45,16 @@ void	delete_ast(t_astree *node)
 	if (node == NULL)
 		return ;
 	if (node->str)
+	{
 		free(node->str);
-	delete_ast(node->right);
-	delete_ast(node->left);
-	free(node);
+		node->str = NULL;
+	}
+	if (node->right)
+		delete_ast(node->right);
+	if (node->left)
+		delete_ast(node->left);
+	if (node)
+		free(node);
 	node = NULL;
 }
 

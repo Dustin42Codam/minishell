@@ -6,7 +6,7 @@
 /*   By: alkrusts/dkrecisz <codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/09/13 15:54:34 by alkrusts/dk   #+#    #+#                 */
-/*   Updated: 2021/09/13 15:58:36 by alkrusts/dk   ########   odam.nl         */
+/*   Updated: 2021/10/25 15:26:37 by dkrecisz      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,7 @@
 # include "libft.h"
 # include <curses.h>
 # include <term.h>
+# include <sys/types.h>
 
 /**
  * s_expansion - Struct for expanding environment variables
@@ -61,6 +62,7 @@ typedef struct s_token
  * Root and interior nodes consist of operators.
  * Leaf nodes represent commands.
  * Member description:
+ * @parent:			Pointer to parent node.
  * @left:			Pointer to left neighbour node.
  * @right:			Pointer to right neighbour node. 
  * @str:			String representing a command, argument, path or operator. 
@@ -68,6 +70,7 @@ typedef struct s_token
  * */
 typedef struct s_astree
 {
+	struct s_astree	*parent;
 	struct s_astree	*left;
 	struct s_astree	*right;
 	char			*str;
@@ -131,13 +134,26 @@ typedef struct s_file_io
  * */
 typedef struct s_command
 {
-	char		**argv;
-	int			argc;
-	int			builtin_id;
-	int			exit_status;
-	t_file_io	fd;
-	t_environ	*env;
+	char				**argv;
+	int					argc;
+	int					builtin_id;
+	int					exit_status;
+	t_file_io			*fd;
+	t_environ			*env;
 }	t_command;
+
+/**
+ * s_child - Struct for managing child processes
+ * Member description:
+ * @pid:			Process ID.
+ * @next:			Pointer to next child process node.
+ * */
+typedef struct s_child
+{
+	int				last;
+	pid_t			pid;
+	struct s_child	*next;
+}	t_child;
 
 /**
  * s_data - Main struct for storing all sort of data.
@@ -153,8 +169,7 @@ typedef struct s_command
  * @interactive:	Value is set to TRUE=1 if shell is in interactive mode
  * 					and FALSE=0 if the shell is non-interactive.
  * @exit_status:	exit code of last executed command in the pipeline.
- * @sig_NO:			signal number read by ft_readline
- * @prompt:			prompt settings
+ * @child:			linked list of child process id's
  * @new_term:		new termios settings - minishell exclusive
  * @old_term:		old default termios settings
  * */
@@ -170,8 +185,30 @@ typedef struct s_data
 	int				token_mask;
 	int				interactive;
 	int				exit_status;
+	t_file_io		*fd;
+	t_child			*child;
 	struct termios	new_term;
 	struct termios	old_term;
 }	t_data;
+
+typedef struct s_ptr
+{
+	t_astree	*redirection;
+	t_astree	*redirection_list;
+	t_astree	*word_list;
+	t_token		*token_backup;
+}		t_ptr;
+
+typedef struct s_exec
+{
+	t_astree	*parent;
+	t_astree	*root;
+}		t_exec;
+
+typedef struct s_local
+{
+	int	ret;
+	int	flag;
+}		t_local;
 
 #endif

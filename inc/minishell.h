@@ -6,16 +6,15 @@
 /*   By: alkrusts/dkrecisz <codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/09/13 15:54:30 by alkrusts/dk   #+#    #+#                 */
-/*   Updated: 2021/09/13 15:58:38 by alkrusts/dk   ########   odam.nl         */
+/*   Updated: 2021/10/28 14:43:47 by alkrusts      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef MINISHELL_H
 # define MINISHELL_H
-
-extern int g_sig;
-
 # include "structs.h"
+
+extern int	g_sig;
 
 /**
  *	Boolean defines - Because we are too cool for stdbool.
@@ -23,6 +22,11 @@ extern int g_sig;
 
 # define FALSE	0
 # define TRUE	1
+
+/**
+ * Maximal amount of tokens to protect stack overvlows.
+**/
+# define TOKEN_MAX 254
 
 /*
 **	COLORS THAT YOU SEE ON THE PROOMPT
@@ -52,6 +56,7 @@ ssize_t	minishell_write(int fd, const void *buf, size_t count);
 ssize_t	minishell_putchar_fd(const char c, int fd);
 ssize_t	minishell_putstr_fd(const char *s, int fd);
 ssize_t	minishell_putendl_fd(const char *s, int fd);
+char	*minishell_strdup(const char *s);
 
 /*
 **	SIGNAL HOOK FUNCTIOMS

@@ -6,7 +6,7 @@
 /*   By: alkrusts/dkrecisz <codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/09/13 15:55:43 by alkrusts/dk   #+#    #+#                 */
-/*   Updated: 2021/09/13 15:57:58 by alkrusts/dk   ########   odam.nl         */
+/*   Updated: 2021/10/27 13:08:18 by alkrusts      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,6 @@
 #include "environ.h"
 #include "builtins.h"
 #include <sys/stat.h>
-#include <unistd.h>
 #include <errno.h>
 #include <stdlib.h>
 
@@ -51,27 +50,34 @@ static int	check_if_builtin(char *s)
 	return (0);
 }
 
-static void	free_path(char **path)
+static int	free_path(char **path)
 {
 	size_t	i;
 
 	i = 0;
-	if (path == NULL)
-		return ;
+	if (!path)
+		return (0);
 	while (path[i])
 	{
 		free(path[i]);
 		i++;
 	}
 	free(path);
+	return (0);
 }
 
-static int	do_path(char **path, t_astree *node)
+int	search_command(t_astree *node, t_environ *env)
 {
-	char		*try_path;
 	struct stat	statbuf;
+	char		**path;
+	char		*try_path;
 	int			i;
+	int			builtin_id;
 
+	builtin_id = check_if_builtin(node->str);
+	if (ft_strchr(node->str, '/') || builtin_id)
+		return (builtin_id);
+	path = ft_split(environ_get(env, "PATH"), ':');
 	i = 0;
 	while (path && path[i])
 	{
@@ -81,26 +87,10 @@ static int	do_path(char **path, t_astree *node)
 			free(node->str);
 			node->str = try_path;
 			errno = 0;
-			free_path(path);
-			return (0);
+			return (free_path(path));
 		}
 		free(try_path);
 		i++;
 	}
-	return (1);
-}
-
-int	search_command(t_astree *node, t_environ *env)
-{
-	char		**path;
-	int			builtin_id;
-
-	builtin_id = check_if_builtin(node->str);
-	if (ft_strchr(node->str, '/') || builtin_id)
-		return (builtin_id);
-	path = ft_split(environ_get(env, "PATH"), ':');
-	if (do_path(path, node) == 0)
-		return (0);
-	free_path(path);
-	return (0);
+	return (free_path(path));
 }

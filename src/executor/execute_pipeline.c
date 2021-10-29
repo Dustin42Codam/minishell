@@ -5,55 +5,20 @@
 /*                                                     +:+                    */
 /*   By: alkrusts/dkrecisz <codam.nl>                 +#+                     */
 /*                                                   +#+                      */
-/*   Created: 2021/09/13 15:55:29 by alkrusts/dk   #+#    #+#                 */
-/*   Updated: 2021/09/13 15:58:12 by alkrusts/dk   ########   odam.nl         */
+/*   Created: 2021/09/13 15:58:09 by alkrusts/dk   #+#    #+#                 */
+/*   Updated: 2021/10/27 13:06:10 by alkrusts      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-#include "parser.h"
 #include "executor.h"
+#include "lexer.h"
+#include "parser.h"
+#include "environ.h"
 #include "libft.h"
 #include "lexer.h"
 #include <errno.h>
-#include <stdlib.h>
-#include <stdio.h>
-#include <readline/readline.h>
-#include <stdbool.h>
-
-static bool	is_empty(char *line)
-{
-	size_t	i;
-	char	c;
-
-	i = 0;
-	if (line == NULL)
-		return (true);
-	while (line[i])
-	{
-		c = line[i];
-		if (c != '\t' && c != '\n' && c != '\v' && \
-			c != '\f' && c != '\r' && c != ' ')
-			return (false);
-		i++;
-	}
-	return (true);
-}
-
-static void	pipe_to_stdin(t_data *data, t_file_io fd)
-{
-	free(data->line);
-	data->line = NULL;
-	while (!data->line || !data->line[0] || is_empty(data->line))
-		data->line = readline("> ");
-	data->line_len = ft_strlen(data->line);
-	free_token_list(data->token);
-	lexer(&data, data->line);
-	delete_ast(data->astree);
-	parser(data);
-	dup2(fd.pipe[0], STDIN_FILENO);
-	execute(data);
-}
+#include <fcntl.h>
 
 static void	setup_next_pipe(t_file_io *fd)
 {
@@ -74,30 +39,27 @@ static void	setup_pipe_end(t_file_io *fd)
 	fd->dup_stdout = 0;
 }
 
-void	execute_pipeline(t_data *data, t_file_io fd)
+void	execute_pipeline(t_data *data)
 {
 	t_astree	*node;
 
-	if (pipe(fd.pipe) == -1)
+	if (pipe(data->fd->pipe) == -1)
 		exit_minishell(errno);
-	fd.dup_stdin = 0;
-	fd.dup_stdout = 1;
-	fd.read = fd.pipe[0];
-	fd.write = fd.pipe[1];
-	fd.output = 0;
-	execute_command(data, data->astree->left, fd);
+	data->fd->dup_stdin = 0;
+	data->fd->dup_stdout = 1;
+	data->fd->read = data->fd->pipe[0];
+	data->fd->write = data->fd->pipe[1];
+	data->fd->output = 0;
+	execute_command(data, data->astree->left);
 	node = data->astree->right;
 	while (node && node->type == AST_PIPE)
 	{
-		setup_next_pipe(&fd);
-		execute_command(data, node->left, fd);
-		close(fd.read);
+		setup_next_pipe(data->fd);
+		execute_command(data, node->left);
+		close(data->fd->read);
 		node = node->right;
 	}
-	setup_pipe_end(&fd);
-	if (node == NULL)
-		pipe_to_stdin(data, fd);
-	else
-		execute_command(data, node, fd);
-	close(fd.pipe[0]);
+	setup_pipe_end(data->fd);
+	execute_command(data, node);
+	close(data->fd->pipe[0]);
 }

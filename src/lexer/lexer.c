@@ -104,5 +104,6 @@ int	lexer(t_data **data, char *line)
 	if ((*data)->token_mask & EXPAND)
 		expand_variables((*data)->token, (*data)->env);
 	quote_removal(data);
+	lexer_count_tokens(*data);
 	return (EXIT_SUCCESS);
 }

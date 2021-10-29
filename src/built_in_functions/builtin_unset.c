@@ -6,7 +6,7 @@
 /*   By: alkrusts/dkrecisz <codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/09/13 15:54:57 by alkrusts/dk   #+#    #+#                 */
-/*   Updated: 2021/09/13 15:58:21 by alkrusts/dk   ########   odam.nl         */
+/*   Updated: 2021/10/18 05:16:18 by dkrecisz      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,7 @@ static int	unset_error(char *arg)
 	return (1);
 }
 
-int	builtin_unset(t_command *cmd, t_environ *env)
+int	builtin_unset(t_data *data, t_command *cmd)
 {
 	size_t	i;
 	int		error;
@@ -62,7 +62,7 @@ int	builtin_unset(t_command *cmd, t_environ *env)
 		if (check_variable_name(cmd->argv[i]))
 			error = unset_error(cmd->argv[i]);
 		else
-			environ_unset(&env, cmd->argv[i]);
+			environ_unset(&data->env, cmd->argv[i]);
 		i++;
 	}
 	return (error);

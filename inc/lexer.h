@@ -6,7 +6,7 @@
 /*   By: alkrusts/dkrecisz <codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/09/13 15:54:28 by alkrusts/dk   #+#    #+#                 */
-/*   Updated: 2021/09/13 15:58:38 by alkrusts/dk   ########   odam.nl         */
+/*   Updated: 2021/10/28 13:58:11 by dkrecisz      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,6 +47,7 @@ void	free_token_list(t_token *token);
 void	make_token_meta(t_token **token, t_data **data, size_t *i, size_t *j);
 void	make_token_quote(t_token **token, t_data **data, size_t *i, size_t *j);
 int		get_token_type(char *s);
+void	lexer_count_tokens(t_data *data);
 
 char	*is_meta(char c);
 char	*is_break(char c);

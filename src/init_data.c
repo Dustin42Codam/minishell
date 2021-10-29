@@ -6,14 +6,12 @@
 /*   By: alkrusts/dkrecisz <codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/09/13 15:57:03 by alkrusts/dk   #+#    #+#                 */
-/*   Updated: 2021/09/13 15:57:42 by alkrusts/dk   ########   odam.nl         */
+/*   Updated: 2021/10/27 13:09:28 by alkrusts      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-#include "libft.h"
 #include "environ.h"
-#include <errno.h>
 #include <stdlib.h>
 
 void	free_data(t_data *data)
@@ -24,6 +22,7 @@ void	free_data(t_data *data)
 		free(data->line);
 		data->line = NULL;
 	}
+	free(data->fd);
 	free(data);
 	data = NULL;
 }
@@ -35,5 +34,6 @@ t_data	*init_data(char **envp)
 	data = (t_data *)minishell_calloc(1, sizeof(t_data));
 	data->env = environ_deep_copy(envp);
 	increment_shlvl(data->env);
+	data->fd = (t_file_io *)minishell_calloc(1, sizeof(t_file_io));
 	return (data);
 }

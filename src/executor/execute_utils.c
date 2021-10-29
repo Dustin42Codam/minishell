@@ -6,38 +6,56 @@
 /*   By: alkrusts/dkrecisz <codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/09/13 15:58:09 by alkrusts/dk   #+#    #+#                 */
-/*   Updated: 2021/09/13 15:58:10 by alkrusts/dk   ########   odam.nl         */
+/*   Updated: 2021/10/28 15:43:08 by alkrusts      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 #include "executor.h"
+#include "lexer.h"
 #include "parser.h"
 #include "environ.h"
 #include "libft.h"
 #include <errno.h>
 #include <stdlib.h>
-#include <sys/types.h>
-#include <sys/wait.h>
 #include <fcntl.h>
 #include <stdio.h>
 #include <string.h>
 #include <signal.h>
 
-#include <readline/readline.h>
-#include <readline/history.h>
-
-void	init_cmd(t_data *data, t_command *cmd, t_file_io fd)
+static void	save_child_pid(t_data *data, pid_t pid)
 {
-	cmd->exit_status = data->exit_status;
-	cmd->fd = fd;
-	cmd->env = data->env;
+	t_child	*tmp;
+	t_child	*new;
+
+	if (data == NULL || pid == 0)
+		return ;
+	tmp = data->child;
+	if (tmp)
+	{
+		while (tmp->next)
+			tmp = tmp->next;
+	}
+	new = (t_child *)minishell_calloc(1, sizeof(t_child));
+	new->pid = pid;
+	if (data->child == NULL)
+		data->child = new;
+	else
+		tmp->next = new;
+	tmp = data->child;
+	while (tmp->next)
+	{
+		tmp->last = 0;
+		tmp = tmp->next;
+	}
+	new->last = 1;
 }
 
 static void	free_command_argv(t_command *cmd, char **env_array)
 {
 	size_t	i;
 
+	errno = 0;
 	i = 0;
 	while (cmd->argv[i])
 	{
@@ -54,21 +72,42 @@ static void	free_command_argv(t_command *cmd, char **env_array)
 	free(env_array);
 }
 
+static void	set_fds(t_command *cmd)
+{
+	if (errno == 0 && cmd->fd->dup_stdin)
+		dup2(cmd->fd->read, STDIN_FILENO);
+	if (errno == 0 && cmd->fd->dup_stdout)
+	{
+		if (cmd->fd->pipe[0])
+			close(cmd->fd->pipe[0]);
+		dup2(cmd->fd->write, STDOUT_FILENO);
+	}
+	else if (errno == 0 && cmd->fd->dup_stdout == 0 && cmd->fd->output == 0)
+	{
+		if (cmd->fd->pipe[0])
+			close(cmd->fd->pipe[0]);
+		dup2(cmd->fd->save_stdout, STDOUT_FILENO);
+	}
+	if (errno == 0 && cmd->fd->output)
+		dup2(cmd->fd->output, STDOUT_FILENO);
+	if (errno == 0 && cmd->fd->input)
+		dup2(cmd->fd->input, STDIN_FILENO);
+}
+
 static void	execute_child(t_command *cmd, char **env_array, t_data *data)
 {
-	tcsetattr(cmd->fd.save_stdin, TCSANOW, &data->old_term);
 	errno = 0;
-	if (errno == 0 && cmd->fd.dup_stdin)
-		dup2(cmd->fd.read, STDIN_FILENO);
-	if (errno == 0 && cmd->fd.dup_stdout)
-		dup2(cmd->fd.write, STDOUT_FILENO);
-	if (errno == 0 && cmd->fd.output)
-		dup2(cmd->fd.output, STDOUT_FILENO);
-	if (errno == 0 && cmd->fd.input)
-		dup2(cmd->fd.input, STDIN_FILENO);
-	if (errno || execve(cmd->argv[0], cmd->argv, env_array) == -1)
+	set_fds(cmd);
+	if (cmd->builtin_id)
 	{
-		dup2(cmd->fd.save_stdout, STDOUT_FILENO);
+		execute_builtin(data, cmd, data->env);
+		exit(data->exit_status);
+	}
+	else if (cmd->builtin_id == 0)
+		execve(cmd->argv[0], cmd->argv, env_array);
+	if (errno)
+	{
+		dup2(cmd->fd->save_stdout, STDOUT_FILENO);
 		printf("minishell: %s - Error: %s [%d]\n",
 			cmd->argv[0], strerror(errno), errno);
 		if (errno == 13)
@@ -78,21 +117,11 @@ static void	execute_child(t_command *cmd, char **env_array, t_data *data)
 	}
 }
 
-static void	execute_parent(pid_t pid, int *stat)
-{
-	errno = 0;
-	waitpid(pid, stat, 0);
-	signal(SIGQUIT, sig_quit_parent);
-	signal(SIGINT, sig_int_parent);
-}
-
 void	execute_command_argv(t_data *data, t_command *cmd, t_environ *env)
 {
 	pid_t	pid;
-	int		stat;
 	char	**env_array;
 
-	stat = 0;
 	env_array = environ_get_array(env);
 	if (signal(SIGINT, sig_int_child) == SIG_ERR
 		|| signal(SIGQUIT, sig_quit_child) == SIG_ERR)
@@ -102,15 +131,6 @@ void	execute_command_argv(t_data *data, t_command *cmd, t_environ *env)
 		exit_minishell(errno);
 	else if (pid == 0)
 		execute_child(cmd, env_array, data);
-	execute_parent(pid, &stat);
-	tcsetattr(cmd->fd.save_stdin, TCSANOW, &data->new_term);
+	save_child_pid(data, pid);
 	free_command_argv(cmd, env_array);
-	if (WIFEXITED(stat))
-		data->exit_status = WEXITSTATUS(stat);
-	if (WTERMSIG(stat) == 2)
-		data->exit_status = 130;
-	if (WTERMSIG(stat) == 3)
-		data->exit_status = 131;
-	if (g_sig == 130 || g_sig == 131 || g_sig == 1)
-		data->exit_status = g_sig;
 }

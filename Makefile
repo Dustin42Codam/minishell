@@ -1,15 +1,3 @@
-# **************************************************************************** #
-#                                                                              #
-#                                                         ::::::::             #
-#    Makefile                                           :+:    :+:             #
-#                                                      +:+                     #
-#    By: alkrusts/dkrecisz <codam.nl>                 +#+                      #
-#                                                    +#+                       #
-#    Created: 2021/09/13 15:57:29 by alkrusts/dk   #+#    #+#                  #
-#    Updated: 2021/09/13 15:57:37 by alkrusts/dk   ########   odam.nl          #
-#                                                                              #
-# **************************************************************************** #
-
 NAME := minishell 
 
 #COLORS FOR FUN
@@ -40,6 +28,7 @@ SRC = main.c \
 	minishell_write.c \
 	minishell_putchar_fd.c \
 	minishell_putstr_fd.c \
+	minishell_strdup.c \
 	minishell_putendl_fd.c \
 	increment_shlvl.c \
 	built_in_functions/builtin_echo.c \
@@ -52,6 +41,7 @@ SRC = main.c \
 	lexer/lexer.c \
 	lexer/lexer_utils_1.c \
 	lexer/lexer_utils_2.c \
+	lexer/lexer_count_tokens.c \
 	lexer/make_token_meta.c \
 	lexer/make_token_quote.c \
 	lexer/expand_variables.c \
@@ -66,43 +56,43 @@ SRC = main.c \
 	parser/parse_word_list.c \
 	parser/parse_command.c \
 	parser/parse_redirection.c \
+	executor/execute_redirection_util.c \
 	executor/execute.c \
 	executor/execute_pipeline.c \
 	executor/execute_command.c \
 	executor/execute_word_list.c \
 	executor/execute_builtin.c \
 	executor/execute_here_doc.c \
+	executor/execute_redirection.c \
 	executor/execute_utils.c \
 	executor/search_command.c \
+	executor/execute_redurection_utils.c \
+	executor/execute_free_child.c \
+	executor/make_comand.c \
 	environ/environ.c \
 	environ/environ_utils.c \
-	signals/signals.c
+	environ/environ_get_keyvalue.c \
+	environ/environ_utils_2.c \
+	signals/signals.c \
+	Get-next-line/get_next_line.c \
+	Get-next-line/get_next_line_utils.c
 
 OBJ = $(addprefix $(ODIR)/$(SDIR)/, $(SRC:.c=.o))
 
-#SRCS = $(addprefix $(SDIR)/, $(SRC))
-#OBJS = $(addprefix $(ODIR)/, $(OBJ))
-#TESTS = $(addprefix $(TDIR)/, $(TEST))
-
 LIBFT = libft
-TERMCAPS = -ltermcap
-READLINE = -lreadline -L/usr/local/opt/readline/lib
-LIBS = -L $(LIBFT) -lft $(READLINE) $(TERMCAPS)
+READLINE = -lreadline -L/usr/local/opt/readline/lib -L/Users/alkrusts/.brew/Cellar/readline/8.0.4/lib -L/Users/dkrecisz/.brew/Cellar/readline/8.1.1/lib
+LIBS = -L $(LIBFT) -lft $(READLINE)
 
 #headers aka dependencys
 
-HEADER := -I $(IDIR) -I $(LIBFT) -I/usr/local/opt/readline/include
+HEADER := -I $(IDIR) -I $(LIBFT) -I/Users/alkrusts/.brew/opt/readline/include -I/usr/local/opt/readline/include -I/Users/dkrecisz/.brew/Cellar/readline/8.1.1/include
 
-# OBJ := $(patsubst %,$(ODIR)/%,$(OBJ))
 DBG := $(patsubst %,$(DDIR)/%,$(OBJ))
 
 #flags
 
 C_DEBUG := -g -Wall -Werror -Wextra -fsanitize=address $(HEADER)
-# C_REGULAR := -Wall -Wextra -Werror -g $(HEADER)
-C_REGULAR := -Wall -Wextra -g $(HEADER)
-
-#nasm compiler
+C_REGULAR := -Wall -Wextra -Werror $(HEADER)
 
 CC := clang 
 
@@ -134,6 +124,7 @@ $(ODIR)/%.o: %.c
 		$(ODIR)/$(SDIR)/parser \
 		$(ODIR)/$(SDIR)/executor \
 		$(ODIR)/$(SDIR)/environ \
+		$(ODIR)/$(SDIR)/Get-next-line \
 		$(ODIR)/$(SDIR)/signals
 	@$(CC) $(FLAGS) $(HEADER) -c $< -o $@
 
@@ -148,7 +139,7 @@ clean:
 	@rm -rf $(ODIR)
 	@echo "${RED}Cleaning libft!${NC}"
 	@make -C $(LIBFT) clean
-	@cd tests && bash test_all.sh --cleanup
+#	@cd tests && bash test_all.sh --cleanup
 
 fclean: clean
 	@echo "${RED}Deleting minishell!${NC}"
@@ -171,7 +162,7 @@ test_echo: all
 	cd $(TDIR)/echo && bash test_echo.sh
 
 test_all: all
-	cd tests && bash test_all.sh
+#	cd tests && bash test_all.sh
 
 valgrind: debug_1
 	valgrind --leak-check=full --show-leak-kinds=all --track-origins=yes \
