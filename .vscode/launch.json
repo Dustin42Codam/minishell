@@ -1,0 +1,30 @@
+{
+	"configurations": [
+		
+	{
+		"name": "(gdb) Launch",
+		"type": "cppdbg",
+		"request": "launch",
+		"program": "/home/dustin/minishell/minishell",
+		// "args": [ "-c", "cat << lol > out"],
+		"args": [ "-c", "cat << lol << abc"],
+		"stopAtEntry": false,
+		"cwd": "/home/dustin/minishell",
+		"environment": [],
+		"externalConsole": false,
+		"MIMode": "gdb",
+		"setupCommands": [
+			{
+				"description": "Enable pretty-printing for gdb",
+				"text": "-enable-pretty-printing",
+				"ignoreFailures": true
+			}/* ,
+			{
+				"description": "Enable child fork debugging for gdb",
+				"text": "set follow-fork-mode child",
+				"ignoreFailures": true
+			} */
+		]
+	}
+	]
+}

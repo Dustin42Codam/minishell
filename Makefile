@@ -56,7 +56,6 @@ SRC = main.c \
 	parser/parse_word_list.c \
 	parser/parse_command.c \
 	parser/parse_redirection.c \
-	executor/execute_redirection_util.c \
 	executor/execute.c \
 	executor/execute_pipeline.c \
 	executor/execute_command.c \
@@ -64,9 +63,9 @@ SRC = main.c \
 	executor/execute_builtin.c \
 	executor/execute_here_doc.c \
 	executor/execute_redirection.c \
+	executor/execute_redirection_utils.c \
 	executor/execute_utils.c \
 	executor/search_command.c \
-	executor/execute_redurection_utils.c \
 	executor/execute_free_child.c \
 	executor/make_comand.c \
 	environ/environ.c \
