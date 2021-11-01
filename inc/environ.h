@@ -6,7 +6,7 @@
 /*   By: alkrusts/dkrecisz <codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/09/13 15:54:22 by alkrusts/dk   #+#    #+#                 */
-/*   Updated: 2021/11/01 11:11:31 by alkrusts      ########   odam.nl         */
+/*   Updated: 2021/11/01 14:50:53 by alkrusts      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,8 +28,7 @@ char		*environ_get_keyvalue(char *key, char *value);
 void		environ_modify(t_environ **head, t_environ *new);
 t_environ	*environ_new_empty(const char *key_value);
 t_environ	*environ_addition(const char *key_value);
-int			environ_add_to_env(t_environ **varible, char *key, char *value);
-void		environ_modify_prep(t_environ **head, char *key, char *value);
+void		environ_modify_prep(t_environ **head, t_environ *prep);
 int			environ_add_to_env(t_environ **varible, char *key, char *value);
 
 #endif

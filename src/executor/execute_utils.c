@@ -6,7 +6,7 @@
 /*   By: alkrusts/dkrecisz <codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/09/13 15:58:09 by alkrusts/dk   #+#    #+#                 */
-/*   Updated: 2021/11/01 08:48:45 by alkrusts      ########   odam.nl         */
+/*   Updated: 2021/11/01 13:03:43 by alkrusts      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -137,6 +137,8 @@ void	execute_command_argv(t_data *data, t_command *cmd, t_environ *env)
 		|| signal(SIGQUIT, sig_quit_child) == SIG_ERR)
 		exit_minishell_custom("ERROR SIGINT OR SIGQUIT");
 	pid = fork();
+	if (isatty(STDIN_FILENO))
+		tcsetattr(cmd->fd->save_stdin, TCSANOW, &data->old_term);
 	if (pid == -1)
 		exit_minishell(errno);
 	else if (pid == 0)

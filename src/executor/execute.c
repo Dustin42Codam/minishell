@@ -6,7 +6,7 @@
 /*   By: alkrusts/dkrecisz <codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/09/13 15:55:40 by alkrusts/dk   #+#    #+#                 */
-/*   Updated: 2021/10/31 04:23:45 by dkrecisz      ########   odam.nl         */
+/*   Updated: 2021/11/01 13:05:42 by alkrusts      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -106,6 +106,8 @@ void	execute(t_data *data)
 		execute_command(data, data->astree);
 	restore_fd(data->fd);
 	terminate(data);
+	if (isatty(STDIN_FILENO))
+		tcsetattr(data->fd->save_stdin, TCSANOW, &data->new_term);
 	if (signal(SIGINT, sig_int_parent) == SIG_ERR)
 		exit_minishell_custom("Error SIGINT ");
 	if (signal(SIGQUIT, sig_quit_parent) == SIG_ERR)

@@ -79,7 +79,7 @@ SRC = main.c \
 OBJ = $(addprefix $(ODIR)/$(SDIR)/, $(SRC:.c=.o))
 
 LIBFT = libft
-READLINE = -lreadline -L/usr/local/opt/readline/lib -L/Users/alkrusts/.brew/Cellar/readline/8.0.4/lib -L/Users/dkrecisz/.brew/Cellar/readline/8.1.1/lib
+READLINE = -ltermcap -lreadline -L/usr/local/opt/readline/lib -L/Users/alkrusts/.brew/Cellar/readline/8.0.4/lib -L/Users/dkrecisz/.brew/Cellar/readline/8.1.1/lib
 LIBS = -L $(LIBFT) -lft $(READLINE)
 
 #headers aka dependencys
