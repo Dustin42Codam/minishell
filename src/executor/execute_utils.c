@@ -6,7 +6,7 @@
 /*   By: alkrusts/dkrecisz <codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/09/13 15:58:09 by alkrusts/dk   #+#    #+#                 */
-/*   Updated: 2021/11/01 08:40:42 by alkrusts      ########   odam.nl         */
+/*   Updated: 2021/11/01 08:48:45 by alkrusts      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,7 +61,7 @@ static void	free_command_argv(t_command *cmd, char **env_array)
 	i = 0;
 	if (cmd != NULL || cmd->argv != NULL)
 	{
-		printf("this is cmd argv %s\n", cmd->argv[i]);
+		//printf("this is cmd argv %s\n", cmd->argv[i]);
 		while (cmd->argv[i])
 		{
 			free(cmd->argv[i]);
@@ -118,7 +118,7 @@ static void	execute_child(t_command *cmd, char **env_array, t_data *data)
 	{
 		dup2(cmd->fd->save_stdout, STDOUT_FILENO);
 		if (cmd->argv != NULL)
-			printf("\nminishell: %s - Error: %s [%d]\n",
+			printf("minishell$: %s - Error: %s [%d]\n",
 			cmd->argv[0], strerror(errno), errno);
 		if (errno == 13)
 			exit(126);
