@@ -124,6 +124,7 @@ static void	execute_child(t_command *cmd, char **env_array, t_data *data)
 			exit(126);
 		if (errno == 2)
 			exit(127);
+		exit(errno);
 	}
 }
 

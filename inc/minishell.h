@@ -41,7 +41,7 @@ void	minishell_non_interactive(t_data *data, int argc, char *argv[]);
 void	minishell_interactive(t_data *data);
 void	exit_minishell(int error_id);
 void	exit_minishell_custom(char *str);
-t_data	*init_data(char **envp);
+t_data	*init_data(char **envp, char *path);
 void	free_data(t_data *data);
 void	increment_shlvl(t_environ *env);
 void	quote_removal(t_data **data);
