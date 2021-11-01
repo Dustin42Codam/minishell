@@ -1,0 +1,14 @@
+
+FIXED:
+cat << lol
+cat << lol << abc
+cat << lol << abc > out
+/bin/ls -la | cat -e << lol
+/bin/ls -la | cat -e << lol | ls -la
+/bin/ls -la | cat -e << lol << abc > out
+
+FIXING:
+
+TO TEST:
+
+BUGS:

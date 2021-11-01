@@ -6,7 +6,7 @@
 /*   By: alkrusts/dkrecisz <codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/09/13 15:57:01 by alkrusts/dk   #+#    #+#                 */
-/*   Updated: 2021/10/30 12:51:29 by alkrusts      ########   odam.nl         */
+/*   Updated: 2021/09/13 15:57:44 by alkrusts/dk   ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ void	increment_shlvl(t_environ *env)
 
 	shlvl_str = environ_get(env, "SHLVL");
 	if (shlvl_str == NULL)
-		return ;
+		exit_minishell_custom("no sudo allowed ");
 	shlvl_nb = ft_atoi(shlvl_str);
 	shlvl_nb++;
 	shlvl_str_new = ft_itoa(shlvl_nb);

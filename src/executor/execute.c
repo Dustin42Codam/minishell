@@ -6,7 +6,7 @@
 /*   By: alkrusts/dkrecisz <codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/09/13 15:55:40 by alkrusts/dk   #+#    #+#                 */
-/*   Updated: 2021/10/27 12:16:03 by alkrusts      ########   odam.nl         */
+/*   Updated: 2021/10/31 04:23:45 by dkrecisz      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,15 +33,27 @@ void	restore_fd(t_file_io *fd)
 	dup2(fd->save_stdin, STDIN_FILENO);
 	dup2(fd->save_stdout, STDOUT_FILENO);
 	close(fd->save_stdin);
+	fd->save_stdin = 0;
 	close(fd->save_stdout);
+	fd->save_stdout = 0;
 	if (fd->pipe[0])
 		close(fd->pipe[0]);
+	fd->pipe[0] = 0;
 	if (fd->pipe[1])
 		close(fd->pipe[1]);
+	fd->pipe[1] = 0;
+	if (fd->here_doc[0])
+		close(fd->here_doc[0]);
+	fd->here_doc[0] = 0;
+	if (fd->here_doc[1])
+		close(fd->here_doc[1]);
+	fd->here_doc[1] = 0;
 	if (fd->output)
 		close(fd->output);
+	fd->output = 0;
 	if (fd->input)
 		close(fd->input);
+	fd->input = 0;
 }
 
 static void	get_the_last_exit_staus(t_data *data, int stat)

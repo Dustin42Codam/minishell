@@ -6,7 +6,7 @@
 /*   By: alkrusts/dkrecisz <codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/09/13 15:55:24 by alkrusts/dk   #+#    #+#                 */
-/*   Updated: 2021/10/27 13:04:59 by alkrusts      ########   odam.nl         */
+/*   Updated: 2021/10/31 04:23:59 by dkrecisz      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,11 +31,13 @@ void	execute_command(t_data *data, t_astree *node)
 		return ;
 	else if (is_redirection(node->type))
 		execute_redirection(data, node, data->fd);
-	else if (node->type & AST_HERE_DOC)
-		execute_here_doc(data, node, data->fd);
 	else if (node->type == AST_WORD)
 		execute_word_list(data, node);
 	data->error = 0;
+	if (data->fd->input)
+		close(data->fd->input);
 	data->fd->input = 0;
+	if (data->fd->output)
+		close(data->fd->output);
 	data->fd->output = 0;
 }
