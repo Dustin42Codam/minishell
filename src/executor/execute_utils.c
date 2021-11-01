@@ -6,7 +6,7 @@
 /*   By: alkrusts/dkrecisz <codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/09/13 15:58:09 by alkrusts/dk   #+#    #+#                 */
-/*   Updated: 2021/10/30 23:05:39 by dkrecisz      ########   odam.nl         */
+/*   Updated: 2021/11/01 08:40:42 by alkrusts      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -118,7 +118,7 @@ static void	execute_child(t_command *cmd, char **env_array, t_data *data)
 	{
 		dup2(cmd->fd->save_stdout, STDOUT_FILENO);
 		if (cmd->argv != NULL)
-			printf("minishell: %s - Error: %s [%d]\n",
+			printf("\nminishell: %s - Error: %s [%d]\n",
 			cmd->argv[0], strerror(errno), errno);
 		if (errno == 13)
 			exit(126);

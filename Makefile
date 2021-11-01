@@ -89,8 +89,8 @@ HEADER := -I $(IDIR) -I $(LIBFT) -I/Users/alkrusts/.brew/opt/readline/include -I
 DBG := $(patsubst %,$(DDIR)/%,$(OBJ))
 
 #flags
-#-fsanitize=address 
-C_DEBUG := -g -Wall -Werror -Wextra $(HEADER)
+ 
+C_DEBUG := -g -Wall -Werror -Wextra -fsanitize=address $(HEADER)
 C_REGULAR := -Wall -Wextra -Werror $(HEADER)
 
 CC := clang 
