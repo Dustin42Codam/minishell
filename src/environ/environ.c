@@ -6,7 +6,7 @@
 /*   By: alkrusts/dkrecisz <codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/09/13 15:55:04 by alkrusts/dk   #+#    #+#                 */
-/*   Updated: 2021/10/28 14:41:36 by alkrusts      ########   odam.nl         */
+/*   Updated: 2021/11/01 11:12:07 by alkrusts      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,12 +86,12 @@ t_environ	*environ_deep_copy(char **env)
 	return (head);
 }
 
-void	environ_modify(t_environ *head, t_environ *new)
+void	environ_modify(t_environ **head, t_environ *new)
 {
 	t_environ	*tmp;
 
-	tmp = head;
-	while (head && tmp && new->key)
+	tmp = *head;
+	while (*head && tmp && new->key)
 	{
 		if (environ_compare(tmp->key, new->key))
 		{
@@ -121,7 +121,7 @@ void	environ_set(t_environ *head, char *key, char *value)
 		return ;
 	if (environ_get(head, key))
 	{
-		environ_modify_prep(head, key, value);
+		environ_modify_prep(&head, key, value);
 		return ;
 	}
 	new = (t_environ *)minishell_calloc(1, sizeof(t_environ));
