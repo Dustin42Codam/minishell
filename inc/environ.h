@@ -6,7 +6,7 @@
 /*   By: alkrusts/dkrecisz <codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/09/13 15:54:22 by alkrusts/dk   #+#    #+#                 */
-/*   Updated: 2021/11/01 14:50:53 by alkrusts      ########   odam.nl         */
+/*   Updated: 2021/11/01 16:26:40 by alkrusts      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 
 # include "minishell.h"
 
-t_environ	*environ_deep_copy(char **env);
+t_environ	*environ_deep_copy(char **env, char **argv);
 char		*environ_get(t_environ *head, char *key);
 void		environ_set(t_environ *head, char *key, char *value);
 void		environ_add_back(t_environ **env, t_environ *new);

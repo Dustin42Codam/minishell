@@ -6,7 +6,7 @@
 /*   By: alkrusts/dkrecisz <codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/09/13 15:57:03 by alkrusts/dk   #+#    #+#                 */
-/*   Updated: 2021/10/27 13:09:28 by alkrusts      ########   odam.nl         */
+/*   Updated: 2021/11/01 16:26:14 by alkrusts      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,12 +27,12 @@ void	free_data(t_data *data)
 	data = NULL;
 }
 
-t_data	*init_data(char **envp)
+t_data	*init_data(char **envp, char **argv)
 {
 	t_data	*data;
 
 	data = (t_data *)minishell_calloc(1, sizeof(t_data));
-	data->env = environ_deep_copy(envp);
+	data->env = environ_deep_copy(envp, argv);
 	increment_shlvl(data->env);
 	data->fd = (t_file_io *)minishell_calloc(1, sizeof(t_file_io));
 	return (data);

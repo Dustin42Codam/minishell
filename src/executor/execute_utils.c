@@ -6,7 +6,7 @@
 /*   By: alkrusts/dkrecisz <codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/09/13 15:58:09 by alkrusts/dk   #+#    #+#                 */
-/*   Updated: 2021/11/01 13:03:43 by alkrusts      ########   odam.nl         */
+/*   Updated: 2021/11/01 17:23:53 by alkrusts      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,8 +51,6 @@ static void	save_child_pid(t_data *data, pid_t pid)
 	new->last = 1;
 }
 
-#include <stdio.h>
-
 static void	free_command_argv(t_command *cmd, char **env_array)
 {
 	size_t	i;
@@ -61,7 +59,6 @@ static void	free_command_argv(t_command *cmd, char **env_array)
 	i = 0;
 	if (cmd != NULL || cmd->argv != NULL)
 	{
-		//printf("this is cmd argv %s\n", cmd->argv[i]);
 		while (cmd->argv[i])
 		{
 			free(cmd->argv[i]);
@@ -103,8 +100,31 @@ static void	set_fds(t_command *cmd)
 		dup2(cmd->fd->input, STDIN_FILENO);
 }
 
+#include <errno.h>
+#include <limits.h>
+#include <stdlib.h>
+
 static void	execute_child(t_command *cmd, char **env_array, t_data *data)
 {
+	int	i = 0;
+
+	if (env_array == NULL)
+	{
+		char	cwd[PATH_MAX + 1];
+
+		errno = 0;
+		if (getcwd(cwd, PATH_MAX) == NULL)
+			errno = 0;
+		env_array = minishell_calloc(4, sizeof(char *));
+		env_array[0] = ft_strjoin("PWD=", cwd);
+		env_array[1] = ft_strdup("SHLVL=1");
+		env_array[2] = ft_strjoin("_=", "./minishell");
+	}
+	while (env_array[i])
+	{
+		printf("%s\n", env_array[i]);
+		i++;
+	}
 	errno = 0;
 	set_fds(cmd);
 	if (cmd->builtin_id)
@@ -124,6 +144,7 @@ static void	execute_child(t_command *cmd, char **env_array, t_data *data)
 			exit(126);
 		if (errno == 2)
 			exit(127);
+		exit(errno);
 	}
 }
 
