@@ -6,7 +6,7 @@
 /*   By: dkrecisz <dkrecisz@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/10/09 04:16:44 by dkrecisz      #+#    #+#                 */
-/*   Updated: 2021/10/31 04:11:49 by dkrecisz      ########   odam.nl         */
+/*   Updated: 2021/11/01 09:37:58 by alkrusts      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,8 +49,11 @@ static int	redirect_output(t_exec *stru, t_file_io *fd, t_astree *node)
 {
 	if (fd->output)
 		close(fd->output);
-	if (fd->output || node->parent->type & AST_HERE_DOC)
-		delete_parent(stru, &node);
+	if (fd->output || node->parent)
+	{
+		if (node->parent->type & AST_HERE_DOC)
+			delete_parent(stru, &node);
+	}
 	create_file(node, fd);
 	if (fd->output == -1)
 		return (1);
