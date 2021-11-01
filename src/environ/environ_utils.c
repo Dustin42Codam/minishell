@@ -6,7 +6,7 @@
 /*   By: alkrusts/dkrecisz <codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/09/13 15:55:01 by alkrusts/dk   #+#    #+#                 */
-/*   Updated: 2021/10/28 14:43:07 by alkrusts      ########   odam.nl         */
+/*   Updated: 2021/10/30 13:55:41 by alkrusts      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,6 +63,7 @@ void	environ_unset(t_environ **head, char *key)
 		previous = tmp;
 		tmp = tmp->next;
 	}
+	*head = NULL;
 }
 
 void	environ_free(t_environ *head)

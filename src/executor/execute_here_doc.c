@@ -6,7 +6,7 @@
 /*   By: alkrusts/dkrecisz <codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/09/13 15:55:27 by alkrusts/dk   #+#    #+#                 */
-/*   Updated: 2021/10/27 13:05:40 by alkrusts      ########   odam.nl         */
+/*   Updated: 2021/10/29 19:37:18 by alkrusts      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,10 +60,8 @@ static void	read_input(t_data *data, t_astree *node, t_file_io *fd)
 
 	input = NULL;
 	delimeter = node->str;
-	g_sig = 0;
 	while (1)
 	{
-		init_signal_handler();
 		input = readline("> ");
 		if (input == NULL)
 			break ;
@@ -78,12 +76,17 @@ static void	read_input(t_data *data, t_astree *node, t_file_io *fd)
 			minishell_write(fd->pipe[1], input, ft_strlen(input));
 			minishell_write(fd->pipe[1], "\n", 1);
 		}
+		free(input);
+		input = NULL;
 	}
+	free(input);
 }
 
 void	execute_here_doc(t_data *data, t_astree *node, t_file_io *fd)
 {
 	setup_pipe(fd);
+	g_sig = 0;
+	init_signal_handler();
 	read_input(data, node, fd);
 	close(fd->pipe[1]);
 	if (fd->input)
