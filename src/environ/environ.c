@@ -6,7 +6,7 @@
 /*   By: alkrusts/dkrecisz <codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/09/13 15:55:04 by alkrusts/dk   #+#    #+#                 */
-/*   Updated: 2021/11/01 17:04:35 by alkrusts      ########   odam.nl         */
+/*   Updated: 2021/11/02 10:31:24 by alkrusts      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,10 +73,15 @@ t_environ	*environ_deep_copy(char **env, char **argv)
 {
 	t_environ	*head;
 	size_t		i;
+	char		*tmp;
 
 	i = 0;
 	head = NULL;
-	environ_add_back(&head, environ_new(ft_strjoin("SHELL=", argv[0])));
+	tmp = ft_strjoin("SHELL=", argv[0]);
+	if (tmp == NULL)
+		exit_minishell(errno);
+	environ_add_back(&head, environ_new(tmp));
+	free(tmp);
 	if (env == NULL || *env == NULL)
 		return (NULL);
 	while (env[i])
