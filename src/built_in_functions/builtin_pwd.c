@@ -13,7 +13,6 @@
 #include "minishell.h"
 #include <errno.h>
 #include <limits.h>
-#include <stdlib.h>
 
 int	builtin_pwd(t_command *cmd)
 {

@@ -32,12 +32,6 @@
  *					|	'<<' <filename> <word_list>	# here_docs
  *					|	<word_list> '<<' <filename>
  *					|	'<<' <filename>
- *					|	
- *					|	# ???
- *					|	<word_list> '<>' <word_list>	# wtf?!
- *					|	'<>' <word_list>
- *					|	'>|' <word_list>
- *					|	<word_list> '>|' <word_list>
 **/
 
 t_astree	*parse_redirection(t_data *data)

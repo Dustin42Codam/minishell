@@ -6,7 +6,7 @@
 /*   By: alkrusts/dkrecisz <codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/09/13 15:55:21 by alkrusts/dk   #+#    #+#                 */
-/*   Updated: 2021/10/18 06:12:56 by dkrecisz      ########   odam.nl         */
+/*   Updated: 2021/11/01 11:24:38 by alkrusts      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,10 @@ void	execute_builtin(t_data *data, t_command *cmd, t_environ *env)
 	else if (cmd->builtin_id == BUILTIN_PWD)
 		data->exit_status = builtin_pwd(cmd);
 	else if (cmd->builtin_id == BUILTIN_EXPORT)
-		data->exit_status = builtin_export(cmd, env);
+	{
+		data->exit_status = builtin_export(cmd, &env);
+		data->env = env;
+	}
 	else if (cmd->builtin_id == BUILTIN_UNSET)
 		data->exit_status = builtin_unset(data, cmd);
 	else if (cmd->builtin_id == BUILTIN_ENV)

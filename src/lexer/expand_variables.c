@@ -11,7 +11,6 @@
 /* ************************************************************************** */
 
 #include "minishell.h"
-#include "libft.h"
 #include "lexer.h"
 #include "expansion.h"
 #include <stdlib.h>

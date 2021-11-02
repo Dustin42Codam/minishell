@@ -13,7 +13,6 @@
 #include "minishell.h"
 #include "libft.h"
 #include "environ.h"
-#include <stdlib.h>
 
 static int	check_variable_name(char *name)
 {
@@ -21,18 +20,18 @@ static int	check_variable_name(char *name)
 
 	letter = 0;
 	if (name == NULL || name[0] == 0 || name[0] == '=')
-		return (EXIT_FAILURE);
+		return (1);
 	while (*name && *name != '=')
 	{
 		if (ft_isalpha(*name))
 			letter = TRUE;
 		else if (ft_isalnum(*name) == 0 && *name != '_')
-			return (EXIT_FAILURE);
+			return (1);
 		else if (ft_isdigit(*name) && letter == 0)
-			return (EXIT_FAILURE);
+			return (1);
 		name++;
 	}
-	return (EXIT_SUCCESS);
+	return (0);
 }
 
 static int	unset_error(char *arg)

@@ -6,7 +6,7 @@
 /*   By: alkrusts/dkrecisz <codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/09/13 15:56:50 by alkrusts/dk   #+#    #+#                 */
-/*   Updated: 2021/10/18 15:10:21 by dkrecisz      ########   odam.nl         */
+/*   Updated: 2021/10/30 23:11:53 by dkrecisz      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,8 @@
 
 int	is_redirection(int node_type)
 {
-	return (node_type & (AST_REDIR_IN | AST_APPEND | AST_REDIR_OUT));
+	return (node_type & (AST_REDIR_IN | AST_APPEND
+			| AST_REDIR_OUT | AST_HERE_DOC));
 }
 
 void	init_ast_node(t_astree *node, char *arg, int type)

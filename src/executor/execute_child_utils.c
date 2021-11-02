@@ -1,24 +1,33 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        ::::::::            */
-/*   execute_redurection_utils.c                        :+:    :+:            */
+/*   execute_child_utils.c                              :+:    :+:            */
 /*                                                     +:+                    */
 /*   By: alkrusts <alkrust@student.codam.nl>          +#+                     */
 /*                                                   +#+                      */
-/*   Created: 2021/10/13 11:55:19 by alkrusts      #+#    #+#                 */
-/*   Updated: 2021/10/13 11:57:44 by alkrusts      ########   odam.nl         */
+/*   Created: 2021/11/02 09:57:31 by alkrusts      #+#    #+#                 */
+/*   Updated: 2021/11/02 10:02:02 by alkrusts      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "parser.h"
 #include "minishell.h"
 
-#include <fcntl.h>
+#include <errno.h>
+#include <limits.h>
 
-void	create_file(t_astree *node, t_file_io *fd)
+char	**creat_fresh_array(void)
 {
-	if (node->type & AST_REDIR_OUT)
-		fd->output = open(node->str, O_CREAT | O_TRUNC | O_WRONLY, 0644);
-	else if (node->type & AST_APPEND)
-		fd->output = open(node->str, O_CREAT | O_APPEND | O_WRONLY, 0644);
+	char	cwd[PATH_MAX + 1];
+	char	**env_array;
+
+	errno = 0;
+	if (getcwd(cwd, PATH_MAX) == NULL)
+		errno = 0;
+	env_array = minishell_calloc(4, sizeof(char *));
+	env_array[0] = ft_strjoin("PWD=", cwd);
+	env_array[1] = minishell_strdup("SHLVL=0");
+	env_array[2] = minishell_strdup("_=./minishell");
+	if (errno > 0)
+		exit_minishell(errno);
+	return (env_array);
 }

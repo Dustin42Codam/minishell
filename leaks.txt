@@ -1,0 +1,2 @@
+LEAKS:
+minishell$      lol #spaces and text

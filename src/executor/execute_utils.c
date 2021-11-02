@@ -6,20 +6,15 @@
 /*   By: alkrusts/dkrecisz <codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/09/13 15:58:09 by alkrusts/dk   #+#    #+#                 */
-/*   Updated: 2021/10/28 15:43:08 by alkrusts      ########   odam.nl         */
+/*   Updated: 2021/11/02 10:25:00 by alkrusts      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 #include "executor.h"
-#include "lexer.h"
-#include "parser.h"
 #include "environ.h"
-#include "libft.h"
 #include <errno.h>
 #include <stdlib.h>
-#include <fcntl.h>
-#include <stdio.h>
 #include <string.h>
 #include <signal.h>
 
@@ -57,19 +52,25 @@ static void	free_command_argv(t_command *cmd, char **env_array)
 
 	errno = 0;
 	i = 0;
-	while (cmd->argv[i])
+	if (cmd != NULL || cmd->argv != NULL)
 	{
-		free(cmd->argv[i]);
-		i++;
+		while (cmd->argv[i])
+		{
+			free(cmd->argv[i]);
+			i++;
+		}
+		free(cmd->argv);
+		i = 0;
 	}
-	free(cmd->argv);
-	i = 0;
-	while (env_array[i])
+	if (env_array != NULL)
 	{
-		free(env_array[i]);
-		i++;
+		while (env_array[i])
+		{
+			free(env_array[i]);
+			i++;
+		}
+		free(env_array);
 	}
-	free(env_array);
 }
 
 static void	set_fds(t_command *cmd)
@@ -96,6 +97,8 @@ static void	set_fds(t_command *cmd)
 
 static void	execute_child(t_command *cmd, char **env_array, t_data *data)
 {
+	if (env_array == NULL)
+		env_array = creat_fresh_array();
 	errno = 0;
 	set_fds(cmd);
 	if (cmd->builtin_id)
@@ -108,12 +111,14 @@ static void	execute_child(t_command *cmd, char **env_array, t_data *data)
 	if (errno)
 	{
 		dup2(cmd->fd->save_stdout, STDOUT_FILENO);
-		printf("minishell: %s - Error: %s [%d]\n",
-			cmd->argv[0], strerror(errno), errno);
+		if (cmd->argv != NULL)
+			printf("minishell$: %s - Error: %s [%d]\n",
+				cmd->argv[0], strerror(errno), errno);
 		if (errno == 13)
 			exit(126);
 		if (errno == 2)
 			exit(127);
+		exit(errno);
 	}
 }
 
@@ -127,6 +132,8 @@ void	execute_command_argv(t_data *data, t_command *cmd, t_environ *env)
 		|| signal(SIGQUIT, sig_quit_child) == SIG_ERR)
 		exit_minishell_custom("ERROR SIGINT OR SIGQUIT");
 	pid = fork();
+	if (isatty(STDIN_FILENO))
+		tcsetattr(cmd->fd->save_stdin, TCSANOW, &data->old_term);
 	if (pid == -1)
 		exit_minishell(errno);
 	else if (pid == 0)

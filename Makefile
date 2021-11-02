@@ -1,3 +1,15 @@
+# **************************************************************************** #
+#                                                                              #
+#                                                         ::::::::             #
+#    Makefile                                           :+:    :+:             #
+#                                                      +:+                     #
+#    By: alkrusts/dkrecisz <marvin@codam.nl>          +#+                      #
+#                                                    +#+                       #
+#    Created: 2021/11/02 10:36:33 by dkrecisz      #+#    #+#                  #
+#    Updated: 2021/11/02 10:36:54 by dkrecisz      ########   odam.nl          #
+#                                                                              #
+# **************************************************************************** #
+
 NAME := minishell 
 
 #COLORS FOR FUN
@@ -56,17 +68,17 @@ SRC = main.c \
 	parser/parse_word_list.c \
 	parser/parse_command.c \
 	parser/parse_redirection.c \
-	executor/execute_redirection_util.c \
 	executor/execute.c \
+	executor/execute_child_utils.c \
 	executor/execute_pipeline.c \
 	executor/execute_command.c \
 	executor/execute_word_list.c \
 	executor/execute_builtin.c \
 	executor/execute_here_doc.c \
 	executor/execute_redirection.c \
+	executor/execute_redirection_utils.c \
 	executor/execute_utils.c \
 	executor/search_command.c \
-	executor/execute_redurection_utils.c \
 	executor/execute_free_child.c \
 	executor/make_comand.c \
 	environ/environ.c \
@@ -80,7 +92,7 @@ SRC = main.c \
 OBJ = $(addprefix $(ODIR)/$(SDIR)/, $(SRC:.c=.o))
 
 LIBFT = libft
-READLINE = -lreadline -L/usr/local/opt/readline/lib -L/Users/alkrusts/.brew/Cellar/readline/8.0.4/lib -L/Users/dkrecisz/.brew/Cellar/readline/8.1.1/lib
+READLINE = -ltermcap -lreadline -L/usr/local/opt/readline/lib -L/Users/alkrusts/.brew/Cellar/readline/8.0.4/lib -L/Users/dkrecisz/.brew/Cellar/readline/8.1.1/lib
 LIBS = -L $(LIBFT) -lft $(READLINE)
 
 #headers aka dependencys
@@ -90,21 +102,11 @@ HEADER := -I $(IDIR) -I $(LIBFT) -I/Users/alkrusts/.brew/opt/readline/include -I
 DBG := $(patsubst %,$(DDIR)/%,$(OBJ))
 
 #flags
-
-C_DEBUG := -g -Wall -Werror -Wextra -fsanitize=address $(HEADER)
+#-fsanitize=address 
+C_DEBUG := -g -Wall -Werror -Wextra  $(HEADER)
 C_REGULAR := -Wall -Wextra -Werror $(HEADER)
 
-CC := clang 
-
-#if bonus
-
-ifdef BONUS
-	OBJ = 
-else
-	
-endif
-
-#id febug
+CC := clang
 
 ifdef DEBUG
 	FLAGS = $(C_DEBUG)
@@ -139,7 +141,6 @@ clean:
 	@rm -rf $(ODIR)
 	@echo "${RED}Cleaning libft!${NC}"
 	@make -C $(LIBFT) clean
-#	@cd tests && bash test_all.sh --cleanup
 
 fclean: clean
 	@echo "${RED}Deleting minishell!${NC}"
@@ -151,22 +152,6 @@ re: fclean all
 
 run: all
 	@./$(NAME)
-
-test_expansions: all
-	cd $(TDIR)/expansions && bash test_expansions.sh
-
-test_environ: all
-	cd $(TDIR)/environ && bash test_environ.sh
-
-test_echo: all
-	cd $(TDIR)/echo && bash test_echo.sh
-
-test_all: all
-#	cd tests && bash test_all.sh
-
-valgrind: debug_1
-	valgrind --leak-check=full --show-leak-kinds=all --track-origins=yes \
-		./$(NAME)
 
 debug: fclean
 	@make DEBUG=1
