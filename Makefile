@@ -6,7 +6,7 @@
 #    By: alkrusts/dkrecisz <marvin@codam.nl>          +#+                      #
 #                                                    +#+                       #
 #    Created: 2021/11/02 10:36:33 by dkrecisz      #+#    #+#                  #
-#    Updated: 2021/11/02 10:36:54 by dkrecisz      ########   odam.nl          #
+#    Updated: 2021/11/02 15:31:13 by alkrusts      ########   odam.nl          #
 #                                                                              #
 # **************************************************************************** #
 
@@ -42,6 +42,7 @@ SRC = main.c \
 	minishell_putstr_fd.c \
 	minishell_strdup.c \
 	minishell_putendl_fd.c \
+	minishell_lstnew.c \
 	increment_shlvl.c \
 	built_in_functions/builtin_echo.c \
 	built_in_functions/builtin_cd.c \
@@ -68,6 +69,7 @@ SRC = main.c \
 	parser/parse_word_list.c \
 	parser/parse_command.c \
 	parser/parse_redirection.c \
+	executor/execute_here_utils.c \
 	executor/execute.c \
 	executor/execute_child_utils.c \
 	executor/execute_pipeline.c \
@@ -86,18 +88,18 @@ SRC = main.c \
 	environ/environ_get_keyvalue.c \
 	environ/environ_utils_2.c \
 	signals/signals.c \
-	Get-next-line/get_next_line.c \
-	Get-next-line/get_next_line_utils.c
+	get_next_line/get_next_line.c \
+	get_next_line/get_next_line_utils.c
 
 OBJ = $(addprefix $(ODIR)/$(SDIR)/, $(SRC:.c=.o))
 
 LIBFT = libft
-READLINE = -ltermcap -lreadline -L/usr/local/opt/readline/lib -L/Users/alkrusts/.brew/Cellar/readline/8.0.4/lib -L/Users/dkrecisz/.brew/Cellar/readline/8.1.1/lib
+READLINE = -ltermcap -lreadline -L/usr/local/opt/readline/lib  -L/Users/alkrusts/.brew/Cellar/readline/8.1.1/lib -L/Users/dkrecisz/.brew/Cellar/readline/8.1.1/lib
 LIBS = -L $(LIBFT) -lft $(READLINE)
 
 #headers aka dependencys
 
-HEADER := -I $(IDIR) -I $(LIBFT) -I/Users/alkrusts/.brew/opt/readline/include -I/usr/local/opt/readline/include -I/Users/dkrecisz/.brew/Cellar/readline/8.1.1/include
+HEADER := -I $(IDIR) -I $(LIBFT) -I/Users/alkrusts/.brew/opt/readline/include -I/usr/local/opt/readline/include -I/Users/alkrusts/.brew/Cellar/readline/8.1.1/include -I/Users/dkrecisz/.brew/Cellar/readline/8.1.1/include
 
 DBG := $(patsubst %,$(DDIR)/%,$(OBJ))
 
@@ -126,7 +128,7 @@ $(ODIR)/%.o: %.c
 		$(ODIR)/$(SDIR)/parser \
 		$(ODIR)/$(SDIR)/executor \
 		$(ODIR)/$(SDIR)/environ \
-		$(ODIR)/$(SDIR)/Get-next-line \
+		$(ODIR)/$(SDIR)/get_next_line \
 		$(ODIR)/$(SDIR)/signals
 	@$(CC) $(FLAGS) $(HEADER) -c $< -o $@
 

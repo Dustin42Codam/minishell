@@ -6,7 +6,7 @@
 /*   By: alkrusts/dkrecisz <codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/09/13 15:54:24 by alkrusts/dk   #+#    #+#                 */
-/*   Updated: 2021/11/02 10:04:11 by alkrusts      ########   odam.nl         */
+/*   Updated: 2021/11/02 15:55:34 by alkrusts      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,5 +34,7 @@ void		free_child_pid(t_child *head);
 void		delete_parent(t_exec *stru, t_astree **node);
 void		pop_node_left(t_exec *stru, t_astree **node);
 char		**creat_fresh_array(void);
+void		free_heredocs(char *input, t_list **head);
+void		write_here_docs(t_file_io *fd, t_list *head, char *line);
 
 #endif

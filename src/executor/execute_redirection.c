@@ -6,7 +6,7 @@
 /*   By: dkrecisz <dkrecisz@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/10/09 04:16:44 by dkrecisz      #+#    #+#                 */
-/*   Updated: 2021/11/01 10:04:12 by alkrusts      ########   odam.nl         */
+/*   Updated: 2021/11/02 14:46:49 by alkrusts      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@
 #include <fcntl.h>
 #include <errno.h>
 
-static int	execute_2(t_file_io *fd, t_data *data, t_astree *node)
+static int	open_file(t_file_io *fd, t_data *data, t_astree *node)
 {
 	if (node->type & AST_REDIR_IN)
 		fd->input = open(node->str, O_RDONLY);
@@ -29,6 +29,7 @@ static int	execute_2(t_file_io *fd, t_data *data, t_astree *node)
 		while (node->parent)
 			node = node->parent;
 		data->astree = node;
+		data->exit_status = 1;
 		return (1);
 	}
 	return (0);
@@ -42,7 +43,7 @@ static int	redirect_input(t_exec *stru, t_file_io *fd, t_data *data,
 		close(fd->input);
 		delete_parent(stru, &node);
 	}
-	return (execute_2(fd, data, node));
+	return (open_file(fd, data, node));
 }
 
 static int	redirect_output(t_exec *stru, t_file_io *fd, t_astree *node)

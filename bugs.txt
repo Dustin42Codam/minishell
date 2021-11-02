@@ -1,0 +1,3 @@
+BUGS:
+export VAR="    lol"; echo $VAR	#infinite while loop in expand_variables
+

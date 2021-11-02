@@ -6,7 +6,7 @@
 /*   By: alkrusts/dkrecisz <codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/09/13 15:54:30 by alkrusts/dk   #+#    #+#                 */
-/*   Updated: 2021/11/01 16:25:28 by alkrusts      ########   odam.nl         */
+/*   Updated: 2021/11/02 15:19:18 by alkrusts      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,6 +37,7 @@ extern int	g_sig;
 # define WHITE "\033[97;0;4m"
 # define RESET "\033[0m"
 
+t_list	*minishell_lstnew(void *content);
 void	minishell_non_interactive(t_data *data, int argc, char *argv[]);
 void	minishell_interactive(t_data *data);
 void	exit_minishell(int error_id);

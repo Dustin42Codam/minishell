@@ -6,7 +6,7 @@
 /*   By: alkrusts/dkrecisz <codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/09/13 15:58:09 by alkrusts/dk   #+#    #+#                 */
-/*   Updated: 2021/11/02 10:25:00 by alkrusts      ########   odam.nl         */
+/*   Updated: 2021/11/02 14:47:10 by alkrusts      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -120,6 +120,7 @@ static void	execute_child(t_command *cmd, char **env_array, t_data *data)
 			exit(127);
 		exit(errno);
 	}
+	exit(0);
 }
 
 void	execute_command_argv(t_data *data, t_command *cmd, t_environ *env)

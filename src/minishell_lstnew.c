@@ -1,22 +1,30 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        ::::::::            */
-/*   ft_lstdelone.c                                     :+:    :+:            */
+/*   ft_lstnew.c                                        :+:    :+:            */
 /*                                                     +:+                    */
 /*   By: alkrusts <alkrusts@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
-/*   Created: 2020/05/23 16:01:23 by alkrusts      #+#    #+#                 */
-/*   Updated: 2021/11/02 15:57:47 by alkrusts      ########   odam.nl         */
+/*   Created: 2020/05/23 16:00:48 by alkrusts      #+#    #+#                 */
+/*   Updated: 2021/11/02 15:18:45 by alkrusts      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
+#include "minishell.h"
 #include <stdlib.h>
+#include <errno.h>
 
-void	ft_lstdelone(t_list *lst, void (*del)(void*))
+t_list	*minishell_lstnew(void *content)
 {
-	if (lst == NULL)
-		return ;
-	(*del)((char *)lst->content);
-	free(lst);
+	t_list	*tmp;
+
+	tmp = malloc(sizeof(t_list));
+	if (tmp == NULL)
+		exit_minishell(errno);
+	else if (tmp)
+	{
+		tmp->content = content;
+		tmp->next = NULL;
+	}
+	return (tmp);
 }

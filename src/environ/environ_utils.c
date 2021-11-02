@@ -106,7 +106,7 @@ char	**environ_get_array(t_environ *env)
 	while (tmp)
 	{
 		if (tmp->key_value == NULL)
-			exit_minishell_custom(". environ_utils:109\n");
+			exit_minishell_custom(". environ_utils:107\n");
 		array[i] = minishell_strdup(tmp->key_value);
 		tmp = tmp->next;
 		i++;

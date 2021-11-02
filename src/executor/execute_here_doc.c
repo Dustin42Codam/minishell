@@ -6,7 +6,7 @@
 /*   By: alkrusts/dkrecisz <codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/09/13 15:55:27 by alkrusts/dk   #+#    #+#                 */
-/*   Updated: 2021/10/31 04:35:08 by dkrecisz      ########   odam.nl         */
+/*   Updated: 2021/11/02 15:53:07 by alkrusts      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@
 #include <stdlib.h>
 #include <readline/readline.h>
 
-static void	expand_input(t_data *data, char *line, int pipe_write)
+static void	expand_input(t_data *data, char *line, t_list **list)
 {
 	t_token	*tmp;
 
@@ -30,8 +30,7 @@ static void	expand_input(t_data *data, char *line, int pipe_write)
 	tmp->str = line;
 	tmp->type |= EXPAND;
 	expand_variables(tmp, data->env);
-	minishell_write(pipe_write, tmp->str, ft_strlen(tmp->str));
-	minishell_write(pipe_write, "\n", 1);
+	ft_lstadd_back(list, minishell_lstnew(tmp->str));
 	free(tmp);
 }
 
@@ -54,31 +53,31 @@ static void	init_signal_handler(void)
 
 static void	read_input(t_data *data, t_astree *node, t_file_io *fd)
 {
+	t_list	*head;
 	char	*input;
 	char	*delimeter;
 
 	input = NULL;
+	head = NULL;
 	delimeter = node->str;
 	while (1)
 	{
 		input = readline("> ");
 		if (input == NULL)
 			break ;
-		if (errno)
-			exit_minishell(errno);
 		else if (input == NULL || environ_compare(input, delimeter) == 1)
 			break ;
 		if (!(node->type & RMQUOTE) && ft_strchr(input, '$'))
-			expand_input(data, input, fd->here_doc[1]);
+			expand_input(data, minishell_strdup(input), &head);
 		else
-		{
-			minishell_write(fd->here_doc[1], input, ft_strlen(input));
-			minishell_write(fd->here_doc[1], "\n", 1);
-		}
+			ft_lstadd_back(&head, minishell_lstnew(minishell_strdup(input)));
 		free(input);
 		input = NULL;
 	}
-	free(input);
+	if (g_sig != 1)
+		write_here_docs(fd, head, input);
+	else
+		free_heredocs(input, &head);
 }
 
 t_astree	*execute_here_doc(t_data *data, t_astree *node,
