@@ -6,7 +6,7 @@
 /*   By: alkrusts/dkrecisz <codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/09/13 15:58:09 by alkrusts/dk   #+#    #+#                 */
-/*   Updated: 2021/11/01 17:23:53 by alkrusts      ########   odam.nl         */
+/*   Updated: 2021/11/02 10:03:08 by alkrusts      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -100,31 +100,10 @@ static void	set_fds(t_command *cmd)
 		dup2(cmd->fd->input, STDIN_FILENO);
 }
 
-#include <errno.h>
-#include <limits.h>
-#include <stdlib.h>
-
 static void	execute_child(t_command *cmd, char **env_array, t_data *data)
 {
-	int	i = 0;
-
 	if (env_array == NULL)
-	{
-		char	cwd[PATH_MAX + 1];
-
-		errno = 0;
-		if (getcwd(cwd, PATH_MAX) == NULL)
-			errno = 0;
-		env_array = minishell_calloc(4, sizeof(char *));
-		env_array[0] = ft_strjoin("PWD=", cwd);
-		env_array[1] = ft_strdup("SHLVL=1");
-		env_array[2] = ft_strjoin("_=", "./minishell");
-	}
-	while (env_array[i])
-	{
-		printf("%s\n", env_array[i]);
-		i++;
-	}
+		env_array = creat_fresh_array();
 	errno = 0;
 	set_fds(cmd);
 	if (cmd->builtin_id)
@@ -139,7 +118,7 @@ static void	execute_child(t_command *cmd, char **env_array, t_data *data)
 		dup2(cmd->fd->save_stdout, STDOUT_FILENO);
 		if (cmd->argv != NULL)
 			printf("minishell$: %s - Error: %s [%d]\n",
-			cmd->argv[0], strerror(errno), errno);
+				cmd->argv[0], strerror(errno), errno);
 		if (errno == 13)
 			exit(126);
 		if (errno == 2)
