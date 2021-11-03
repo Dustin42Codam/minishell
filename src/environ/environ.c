@@ -6,7 +6,7 @@
 /*   By: alkrusts/dkrecisz <codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/09/13 15:55:04 by alkrusts/dk   #+#    #+#                 */
-/*   Updated: 2021/10/28 14:41:36 by alkrusts      ########   odam.nl         */
+/*   Updated: 2021/11/02 10:31:24 by alkrusts      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,29 +69,40 @@ t_environ	*environ_new(const char *key_value)
 	return (n3w);
 }
 
-t_environ	*environ_deep_copy(char **env)
+t_environ	*environ_deep_copy(char **env, char **argv)
 {
 	t_environ	*head;
 	size_t		i;
+	char		*tmp;
 
 	i = 0;
 	head = NULL;
+	tmp = ft_strjoin("SHELL=", argv[0]);
+	if (tmp == NULL)
+		exit_minishell(errno);
+	environ_add_back(&head, environ_new(tmp));
+	free(tmp);
 	if (env == NULL || *env == NULL)
 		return (NULL);
 	while (env[i])
 	{
-		environ_add_back(&head, environ_new(env[i]));
-		i++;
+		if (ft_strnstr(env[i], "SHELL", 5) != 0)
+			i++;
+		else
+		{
+			environ_add_back(&head, environ_new(env[i]));
+			i++;
+		}
 	}
 	return (head);
 }
 
-void	environ_modify(t_environ *head, t_environ *new)
+void	environ_modify(t_environ **head, t_environ *new)
 {
 	t_environ	*tmp;
 
-	tmp = head;
-	while (head && tmp && new->key)
+	tmp = *head;
+	while (*head && tmp && new->key)
 	{
 		if (environ_compare(tmp->key, new->key))
 		{
@@ -121,7 +132,10 @@ void	environ_set(t_environ *head, char *key, char *value)
 		return ;
 	if (environ_get(head, key))
 	{
-		environ_modify_prep(head, key, value);
+		new = (t_environ *)minishell_calloc(1, sizeof(t_environ));
+		new->key = key;
+		new->value = value;
+		environ_modify_prep(&head, new);
 		return ;
 	}
 	new = (t_environ *)minishell_calloc(1, sizeof(t_environ));

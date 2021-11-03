@@ -1,27 +1,30 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        ::::::::            */
-/*   environ.c                                          :+:    :+:            */
+/*   ft_lstnew.c                                        :+:    :+:            */
 /*                                                     +:+                    */
-/*   By: alkrusts/dkrecisz <codam.nl>                 +#+                     */
+/*   By: alkrusts <alkrusts@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
-/*   Created: 2021/09/13 15:55:04 by alkrusts/dk   #+#    #+#                 */
-/*   Updated: 2021/11/01 14:51:20 by alkrusts      ########   odam.nl         */
+/*   Created: 2020/05/23 16:00:48 by alkrusts      #+#    #+#                 */
+/*   Updated: 2021/11/02 15:18:45 by alkrusts      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-#include "environ.h"
 #include <stdlib.h>
+#include <errno.h>
 
-void	environ_modify_prep(t_environ **head, t_environ *prep)
+t_list	*minishell_lstnew(void *content)
 {
-	t_environ	*new;
+	t_list	*tmp;
 
-	new = minishell_calloc(1, sizeof(t_environ));
-	new->key = prep->key;
-	new->value = prep->value;
-	new->key_value = prep->key_value;
-	environ_modify(head, new);
-	free(new);
+	tmp = malloc(sizeof(t_list));
+	if (tmp == NULL)
+		exit_minishell(errno);
+	else if (tmp)
+	{
+		tmp->content = content;
+		tmp->next = NULL;
+	}
+	return (tmp);
 }

@@ -6,19 +6,26 @@
 /*   By: alkrusts/dkrecisz <codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/09/13 15:57:07 by alkrusts/dk   #+#    #+#                 */
-/*   Updated: 2021/10/28 15:41:43 by alkrusts      ########   odam.nl         */
+/*   Updated: 2021/11/01 16:23:36 by alkrusts      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "executor.h"
-#include "parser.h"
-#include "lexer.h"
+#include "minishell.h"
 
-#include <stdlib.h>
 #include <errno.h>
 #include <signal.h>
 
 int	g_sig;
+
+static void	init_terminal(t_data *data)
+{
+	if (isatty(STDIN_FILENO))
+		tcgetattr(0, &data->old_term);
+	data->new_term = data->old_term;
+	data->new_term.c_lflag &= ~(ECHOCTL);
+	if (isatty(STDIN_FILENO))
+		tcsetattr(0, TCSANOW, &data->new_term);
+}
 
 int	main(int argc, char *argv[], char **envp)
 {
@@ -30,7 +37,8 @@ int	main(int argc, char *argv[], char **envp)
 		exit_minishell_custom("Error SIGINT ");
 	if (signal(SIGQUIT, sig_quit_parent) == SIG_ERR)
 		exit_minishell_custom("Error SIGQUIT ");
-	data = init_data(envp);
+	data = init_data(envp, argv);
+	init_terminal(data);
 	if (argc == 1)
 	{
 		data->interactive = TRUE;

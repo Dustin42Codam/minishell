@@ -6,7 +6,7 @@
 /*   By: alkrusts/dkrecisz <codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/09/13 15:56:23 by alkrusts/dk   #+#    #+#                 */
-/*   Updated: 2021/09/13 15:57:54 by alkrusts/dk   ########   odam.nl         */
+/*   Updated: 2021/11/03 14:39:28 by alkrusts      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -102,7 +102,7 @@ int	lexer(t_data **data, char *line)
 	if ((*data)->interactive == FALSE)
 		init_new_token(&tmp_token, 0, &j, i);
 	if ((*data)->token_mask & EXPAND)
-		expand_variables((*data)->token, (*data)->env);
+		expand_variables(data, (*data)->env);
 	quote_removal(data);
 	lexer_count_tokens(*data);
 	return (EXIT_SUCCESS);

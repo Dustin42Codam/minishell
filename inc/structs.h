@@ -6,7 +6,7 @@
 /*   By: alkrusts/dkrecisz <codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/09/13 15:54:34 by alkrusts/dk   #+#    #+#                 */
-/*   Updated: 2021/10/25 15:26:37 by dkrecisz      ########   odam.nl         */
+/*   Updated: 2021/10/31 02:33:58 by dkrecisz      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,6 @@
 # include "libft.h"
 # include <curses.h>
 # include <term.h>
-# include <sys/types.h>
 
 /**
  * s_expansion - Struct for expanding environment variables
@@ -96,9 +95,12 @@ typedef struct s_environ
 /**
  * s_file_io - File descriptors for input/output redirection
  * Member description:
- * @pipe:			Pipe array.
+ * @pipe:			Pipe.
  * 					pipe[0]	-	pipe read fd
  * 					pipe[1]	-	pipe write fd
+ * @here_doc:		Here document pipe.
+ * 					here_doc[0]	-	here doc pipe read fd
+ * 					here_doc[1]	-	here doc pipe write fd
  * @read:			Read from this file descriptor.
  * @write:			Write into this file descriptor.
  * @dup_stdin:		Is set to 1 if STDIN needs to be duplicated, otherwise 0.
@@ -111,6 +113,7 @@ typedef struct s_environ
 typedef struct s_file_io
 {
 	int		pipe[2];
+	int		here_doc[2];
 	int		read;
 	int		write;
 	int		dup_stdin;
@@ -203,6 +206,7 @@ typedef struct s_exec
 {
 	t_astree	*parent;
 	t_astree	*root;
+	t_astree	*node;
 }		t_exec;
 
 typedef struct s_local

@@ -12,13 +12,8 @@
 
 #include "minishell.h"
 #include "executor.h"
-#include "lexer.h"
 #include "parser.h"
-#include "environ.h"
-#include "libft.h"
-#include "lexer.h"
 #include <errno.h>
-#include <fcntl.h>
 
 static void	setup_next_pipe(t_file_io *fd)
 {

@@ -81,10 +81,8 @@ static int	make_words(char **arr, const char *s, const char *delim)
 	s_len = ft_strlen(s);
 	while (i < s_len)
 	{
-		while (ft_strchr(delim, s[i]))
+		while (ft_strchr(delim, s[i]) != NULL && s[i] != '\0')
 			i++;
-		if (i >= s_len)
-			break ;
 		token_size = get_word_size(s + i, delim);
 		arr[j] = ft_substr(s + i, 0, token_size);
 		if (arr[j] == NULL)
@@ -105,6 +103,8 @@ char	**word_splitter(char const *s, const char *delim)
 		return (NULL);
 	if (!delim)
 		delim = "";
+	else
+		delim = "\t\n";
 	size = get_array_size(s, delim);
 	array = (char **)minishell_calloc(size + 1, sizeof(char *));
 	if (make_words(array, s, delim) == 1)

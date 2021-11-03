@@ -15,8 +15,7 @@
 # ifndef BUFFER_SIZE
 #  define BUFFER_SIZE 8
 # endif
-# include <fcntl.h>
-# include <stdarg.h>
+
 # include <unistd.h>
 # include <stdlib.h>
 

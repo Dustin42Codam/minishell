@@ -15,12 +15,11 @@
 #include "lexer.h"
 #include "parser.h"
 #include <errno.h>
-#include <stdlib.h>
 
 int	get_next_token(t_data *data, char **token_str, int token_type)
 {
 	if (data->token_ptr->type == EMPTY)
-		return (EXIT_FAILURE);
+		return (1);
 	else if (data->token_ptr->type & token_type)
 	{
 		if (token_str)
@@ -30,10 +29,10 @@ int	get_next_token(t_data *data, char **token_str, int token_type)
 				exit_minishell(errno);
 		}
 		data->token_ptr = data->token_ptr->next;
-		return (EXIT_SUCCESS);
+		return (0);
 	}
 	data->token_ptr = data->token_ptr->next;
-	return (EXIT_FAILURE);
+	return (1);
 }
 
 static void	syntax_error(t_data *data)

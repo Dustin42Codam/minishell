@@ -6,16 +6,14 @@
 /*   By: alkrusts/dkrecisz <codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/09/13 15:55:40 by alkrusts/dk   #+#    #+#                 */
-/*   Updated: 2021/10/27 12:16:03 by alkrusts      ########   odam.nl         */
+/*   Updated: 2021/11/02 14:46:50 by alkrusts      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-#include "parser.h"
 #include "lexer.h"
 #include "executor.h"
 #include <errno.h>
-#include <stdlib.h>
 #include <sys/wait.h>
 
 static void	setup_fd(t_data *data)
@@ -33,15 +31,27 @@ void	restore_fd(t_file_io *fd)
 	dup2(fd->save_stdin, STDIN_FILENO);
 	dup2(fd->save_stdout, STDOUT_FILENO);
 	close(fd->save_stdin);
+	fd->save_stdin = 0;
 	close(fd->save_stdout);
+	fd->save_stdout = 0;
 	if (fd->pipe[0])
 		close(fd->pipe[0]);
+	fd->pipe[0] = 0;
 	if (fd->pipe[1])
 		close(fd->pipe[1]);
+	fd->pipe[1] = 0;
+	if (fd->here_doc[0])
+		close(fd->here_doc[0]);
+	fd->here_doc[0] = 0;
+	if (fd->here_doc[1])
+		close(fd->here_doc[1]);
+	fd->here_doc[1] = 0;
 	if (fd->output)
 		close(fd->output);
+	fd->output = 0;
 	if (fd->input)
 		close(fd->input);
+	fd->input = 0;
 }
 
 static void	get_the_last_exit_staus(t_data *data, int stat)
@@ -94,6 +104,8 @@ void	execute(t_data *data)
 		execute_command(data, data->astree);
 	restore_fd(data->fd);
 	terminate(data);
+	if (isatty(STDIN_FILENO))
+		tcsetattr(data->fd->save_stdin, TCSANOW, &data->new_term);
 	if (signal(SIGINT, sig_int_parent) == SIG_ERR)
 		exit_minishell_custom("Error SIGINT ");
 	if (signal(SIGQUIT, sig_quit_parent) == SIG_ERR)

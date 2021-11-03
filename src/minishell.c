@@ -6,7 +6,7 @@
 /*   By: alkrusts/dkrecisz <codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/09/13 15:53:37 by alkrusts/dk   #+#    #+#                 */
-/*   Updated: 2021/10/27 12:01:06 by alkrusts      ########   odam.nl         */
+/*   Updated: 2021/10/30 10:51:16 by alkrusts      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,9 +18,7 @@
 #include "libft.h"
 
 #include <stdio.h>
-#include <signal.h>
 #include <stdlib.h>
-#include <unistd.h>
 #include <errno.h>
 
 #include <readline/readline.h>

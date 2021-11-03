@@ -6,7 +6,7 @@
 /*   By: alkrusts/dkrecisz <codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/09/13 15:56:32 by alkrusts/dk   #+#    #+#                 */
-/*   Updated: 2021/09/13 15:57:51 by alkrusts/dk   ########   odam.nl         */
+/*   Updated: 2021/11/03 10:18:42 by alkrusts      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,16 +48,11 @@ static int	check_split(char *str)
 void	split_words(t_token *token)
 {
 	char	**words;
-	t_token	*next_save;
 
 	if (check_split(token->str) == FALSE)
 		return ;
-	next_save = token->next;
 	words = word_splitter(token->str, " \t\n");
 	if (words == NULL && errno)
 		exit_minishell(errno);
 	make_word_list(token, words);
-	while (token->next)
-		token = token->next;
-	token->next = next_save;
 }

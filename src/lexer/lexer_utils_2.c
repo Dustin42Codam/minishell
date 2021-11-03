@@ -6,12 +6,16 @@
 /*   By: alkrusts/dkrecisz <codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/09/13 15:56:19 by alkrusts/dk   #+#    #+#                 */
-/*   Updated: 2021/09/13 15:57:55 by alkrusts/dk   ########   odam.nl         */
+/*   Updated: 2021/11/02 16:05:19 by alkrusts      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
+#include "minishell.h"
 #include "lexer.h"
 #include "libft.h"
+
+#include <errno.h>
+#include <stdlib.h>
 
 int	get_token_type(char *s)
 {
@@ -58,6 +62,8 @@ void	get_exit_status(t_data **data, t_token **token, size_t *i, size_t *j)
 
 	index = 0;
 	str = ft_itoa((*data)->exit_status);
+	if (str == NULL)
+		exit_minishell(errno);
 	while (str[index])
 	{
 		(*token)->str[(*j)] = str[index];
@@ -66,4 +72,5 @@ void	get_exit_status(t_data **data, t_token **token, size_t *i, size_t *j)
 	}
 	(*i) += 2;
 	(*token)->type |= WORD;
+	free(str);
 }

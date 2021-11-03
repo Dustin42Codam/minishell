@@ -1,6 +1,6 @@
 
-# Created by https://www.toptal.com/developers/gitignore/api/c,vim,visualstudiocode,zsh,tags
-# Edit at https://www.toptal.com/developers/gitignore?templates=c,vim,visualstudiocode,zsh,tags
+# Created by https://www.toptal.com/developers/gitignore/api/vim,c,visualstudiocode,zsh
+# Edit at https://www.toptal.com/developers/gitignore?templates=vim,c,visualstudiocode,zsh
 
 ### C ###
 # Prerequisites
@@ -56,25 +56,6 @@ Module.symvers
 Mkfile.old
 dkms.conf
 
-### Tags ###
-# Ignore tags created by etags, ctags, gtags (GNU global) and cscope
-TAGS
-.TAGS
-!TAGS/
-tags
-.tags
-!tags/
-gtags.files
-GTAGS
-GRTAGS
-GPATH
-GSYMS
-cscope.files
-cscope.out
-cscope.in.out
-cscope.po.out
-
-
 ### Vim ###
 # Swap
 [._]*.s[a-v][a-z]
@@ -92,6 +73,7 @@ Sessionx.vim
 .netrwhist
 *~
 # Auto-generated tag files
+tags
 # Persistent undo
 [._]*.un~
 
@@ -102,9 +84,6 @@ Sessionx.vim
 !.vscode/launch.json
 !.vscode/extensions.json
 *.code-workspace
-
-# Local History for Visual Studio Code
-.history/
 
 ### VisualStudioCode Patch ###
 # Ignore all local history of files
@@ -141,4 +120,4 @@ zsdoc/data
 /tests/_output/*
 !/tests/_output/.gitkeep
 
-# End of https://www.toptal.com/developers/gitignore/api/c,vim,visualstudiocode,zsh,tags
+# End of https://www.toptal.com/developers/gitignore/api/vim,c,visualstudiocode,zsh

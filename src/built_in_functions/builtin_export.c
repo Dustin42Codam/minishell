@@ -6,7 +6,7 @@
 /*   By: alkrusts/dkrecisz <codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/09/13 15:54:51 by alkrusts/dk   #+#    #+#                 */
-/*   Updated: 2021/10/28 14:30:20 by alkrusts      ########   odam.nl         */
+/*   Updated: 2021/11/02 14:29:45 by alkrusts      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,23 +61,34 @@ static int	export_error(char *arg)
 	return (1);
 }
 
-static void	add_new_variable(t_environ *env, t_environ *new)
+static void	add_new_variable(t_environ **env, t_environ *new)
 {
-	environ_modify_prep(env, new->key, new->value);
+	if (environ_get(*env, new->key))
+	{
+		if (ft_strchr(new->key_value, '=') == 0)
+		{
+			free(new->key);
+			free(new->value);
+			free(new->key_value);
+			free(new);
+			return ;
+		}
+	}
+	environ_modify_prep(env, new);
 	free(new->key);
 	free(new->value);
 	free(new->key_value);
 	free(new);
 }
 
-int	builtin_export(t_command *cmd, t_environ *env)
+int	builtin_export(t_command *cmd, t_environ **env)
 {
 	t_environ	*my_var;
 	size_t		i;
 	int			exit_status;
 
 	if (cmd->argc == 1)
-		return (print_exported_variables(cmd, env));
+		return (print_exported_variables(cmd, *env));
 	i = 1;
 	exit_status = 0;
 	while (cmd->argv[i])
@@ -90,10 +101,10 @@ int	builtin_export(t_command *cmd, t_environ *env)
 	while (cmd->argv[i])
 	{
 		my_var = environ_new(cmd->argv[i]);
-		if (environ_get(env, my_var->key))
+		if (environ_get(*env, my_var->key))
 			add_new_variable(env, my_var);
 		else
-			environ_add_back(&env, my_var);
+			environ_add_back(env, my_var);
 		i++;
 	}
 	return (exit_status);

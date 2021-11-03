@@ -6,7 +6,7 @@
 /*   By: dkrecisz <dkrecisz@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/10/09 04:16:44 by dkrecisz      #+#    #+#                 */
-/*   Updated: 2021/10/28 15:30:47 by alkrusts      ########   odam.nl         */
+/*   Updated: 2021/11/02 14:46:49 by alkrusts      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,9 +16,8 @@
 #include "lexer.h"
 #include <fcntl.h>
 #include <errno.h>
-#include <stdlib.h>
 
-static int	execute_2(t_file_io *fd, t_data *data, t_astree *node)
+static int	open_file(t_file_io *fd, t_data *data, t_astree *node)
 {
 	if (node->type & AST_REDIR_IN)
 		fd->input = open(node->str, O_RDONLY);
@@ -30,6 +29,7 @@ static int	execute_2(t_file_io *fd, t_data *data, t_astree *node)
 		while (node->parent)
 			node = node->parent;
 		data->astree = node;
+		data->exit_status = 1;
 		return (1);
 	}
 	return (0);
@@ -41,17 +41,19 @@ static int	redirect_input(t_exec *stru, t_file_io *fd, t_data *data,
 	if (fd->input)
 	{
 		close(fd->input);
-		del_parent(stru, node);
+		delete_parent(stru, &node);
 	}
-	return (execute_2(fd, data, node));
+	return (open_file(fd, data, node));
 }
 
 static int	redirect_output(t_exec *stru, t_file_io *fd, t_astree *node)
 {
 	if (fd->output)
-	{
 		close(fd->output);
-		del_parent(stru, node);
+	if (fd->output || node->parent)
+	{
+		if (node->parent->type & AST_HERE_DOC)
+			delete_parent(stru, &node);
 	}
 	create_file(node, fd);
 	if (fd->output == -1)
@@ -60,15 +62,8 @@ static int	redirect_output(t_exec *stru, t_file_io *fd, t_astree *node)
 	return (0);
 }
 
-static void	execute_4(t_exec *stru, t_data *data, t_astree *node, t_file_io *fd)
+static void	execute_stuff(t_data *data, t_astree *node)
 {
-	if (node && node->type & AST_HERE_DOC)
-	{
-		node->right = stru->root->right;
-		execute_here_doc(data, node, fd);
-		node->right = NULL;
-		return ;
-	}
 	if ((data->token_mask & PIPE) == 0)
 	{
 		while (node->parent)
@@ -101,6 +96,8 @@ void	execute_redirection(t_data *data, t_astree *node, t_file_io *fd)
 			if (redirect_output(&stru, fd, node) == 1)
 				return (print_error(data, node->str, errno));
 		}
+		else if (node->type & AST_HERE_DOC)
+			node = execute_here_doc(data, node, fd, &stru);
 		if (node->left)
 			node = node->left;
 		else if (node->right)
@@ -108,5 +105,5 @@ void	execute_redirection(t_data *data, t_astree *node, t_file_io *fd)
 		else
 			break ;
 	}
-	execute_4(&stru, data, node, fd);
+	execute_stuff(data, node);
 }

@@ -6,7 +6,7 @@
 /*   By: alkrusts/dkrecisz <codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/09/13 15:54:41 by alkrusts/dk   #+#    #+#                 */
-/*   Updated: 2021/09/13 15:58:35 by alkrusts/dk   ########   odam.nl         */
+/*   Updated: 2021/11/01 15:23:24 by alkrusts      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,6 @@
 #include "environ.h"
 #include <errno.h>
 #include <limits.h>
-#include <stdlib.h>
 #include <string.h>
 
 static int	builtin_cd_error(char *path, int error_id)

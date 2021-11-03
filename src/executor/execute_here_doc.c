@@ -6,7 +6,7 @@
 /*   By: alkrusts/dkrecisz <codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/09/13 15:55:27 by alkrusts/dk   #+#    #+#                 */
-/*   Updated: 2021/10/27 13:05:40 by alkrusts      ########   odam.nl         */
+/*   Updated: 2021/11/03 14:47:17 by alkrusts      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,35 +14,33 @@
 #include "environ.h"
 #include "libft.h"
 #include "lexer.h"
+#include "parser.h"
 #include "executor.h"
 #include "expansion.h"
 #include <errno.h>
 #include <signal.h>
-#include <stdio.h>
 #include <stdlib.h>
 #include <readline/readline.h>
 
-static void	expand_input(t_data *data, char *line, int pipe_write)
+static void	expand_input(t_data *data, char *line, t_list **list)
 {
 	t_token	*tmp;
 
 	tmp = minishell_calloc(1, sizeof(t_token));
 	tmp->str = line;
 	tmp->type |= EXPAND;
-	expand_variables(tmp, data->env);
-	minishell_write(pipe_write, tmp->str, ft_strlen(tmp->str));
-	minishell_write(pipe_write, "\n", 1);
+	expand_variables(&data, data->env);
+	ft_lstadd_back(list, minishell_lstnew(tmp->str));
 	free(tmp);
 }
 
 static void	setup_pipe(t_file_io *fd)
 {
-	if (pipe(fd->pipe) == -1)
+	if (pipe(fd->here_doc) == -1)
 		exit_minishell(errno);
 	fd->dup_stdin = 1;
-	fd->dup_stdout = 0;
-	fd->read = fd->pipe[0];
-	if (fd->output == 0)
+	fd->read = fd->here_doc[0];
+	if (fd->output == 0 && fd->pipe[1] == 0)
 		fd->write = STDOUT_FILENO;
 }
 
@@ -55,42 +53,52 @@ static void	init_signal_handler(void)
 
 static void	read_input(t_data *data, t_astree *node, t_file_io *fd)
 {
+	t_list	*head;
 	char	*input;
 	char	*delimeter;
 
 	input = NULL;
+	head = NULL;
 	delimeter = node->str;
-	g_sig = 0;
 	while (1)
 	{
-		init_signal_handler();
 		input = readline("> ");
 		if (input == NULL)
 			break ;
-		if (errno)
-			exit_minishell(errno);
-		else if (environ_compare(input, delimeter) == 1)
+		else if (input == NULL || environ_compare(input, delimeter) == 1)
 			break ;
 		if (!(node->type & RMQUOTE) && ft_strchr(input, '$'))
-			expand_input(data, input, fd->pipe[1]);
+			expand_input(data, minishell_strdup(input), &head);
 		else
-		{
-			minishell_write(fd->pipe[1], input, ft_strlen(input));
-			minishell_write(fd->pipe[1], "\n", 1);
-		}
+			ft_lstadd_back(&head, minishell_lstnew(minishell_strdup(input)));
+		free(input);
+		input = NULL;
 	}
+	if (g_sig != 1)
+		write_here_docs(fd, head, input);
+	else
+		free_heredocs(input, &head);
 }
 
-void	execute_here_doc(t_data *data, t_astree *node, t_file_io *fd)
+t_astree	*execute_here_doc(t_data *data, t_astree *node,
+		t_file_io *fd, t_exec *stru)
 {
 	setup_pipe(fd);
+	g_sig = 0;
+	init_signal_handler();
 	read_input(data, node, fd);
-	close(fd->pipe[1]);
+	while (node->left && node->left->type & AST_HERE_DOC)
+	{
+		node = node->left;
+		delete_parent(stru, &node);
+		read_input(data, node, fd);
+	}
+	close(fd->here_doc[1]);
+	fd->here_doc[1] = 0;
 	if (fd->input)
 	{
 		close(fd->input);
 		fd->input = 0;
 	}
-	execute_command(data, node->right);
-	close(fd->pipe[0]);
+	return (node);
 }
