@@ -6,7 +6,7 @@
 /*   By: alkrusts/dkrecisz <codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/09/13 15:54:49 by alkrusts/dk   #+#    #+#                 */
-/*   Updated: 2021/11/01 15:16:48 by alkrusts      ########   odam.nl         */
+/*   Updated: 2021/11/04 14:04:34 by dkrecisz      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,6 +46,12 @@ int	builtin_exit(t_command *cmd)
 
 	if (cmd->argc == 1)
 		exit(cmd->exit_status);
+	else if (cmd->argc > 2)
+	{
+		minishell_putendl_fd("minishell: exit: \
+			too many arguments", 2);
+		return (1);
+	}
 	if (cmd->argc > 1 && validate_argument(cmd->argv[1]))
 	{
 		minishell_putendl_fd("minishell: exit: \
