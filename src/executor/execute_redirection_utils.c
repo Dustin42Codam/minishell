@@ -6,7 +6,7 @@
 /*   By: alkrusts <alkrust@student.codam.nl>          +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/10/28 15:26:08 by alkrusts      #+#    #+#                 */
-/*   Updated: 2021/10/31 00:00:55 by dkrecisz      ########   odam.nl         */
+/*   Updated: 2021/11/04 19:42:22 by dkrecisz      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,4 +68,19 @@ void	create_file(t_astree *node, t_file_io *fd)
 		fd->output = open(node->str, O_CREAT | O_TRUNC | O_WRONLY, 0644);
 	else if (node->type & AST_APPEND)
 		fd->output = open(node->str, O_CREAT | O_APPEND | O_WRONLY, 0644);
+}
+
+void	shift_arguments(t_exec *stru, t_astree *node, t_astree *parent)
+{
+	t_astree	*tmp;
+	t_astree	*save_node;
+
+	save_node = node;
+	tmp = stru->root->right;
+	while (tmp->right)
+		tmp = tmp->right;
+	parent->right = NULL;
+	node = save_node;
+	node->parent = tmp;
+	node->parent->right = node;
 }

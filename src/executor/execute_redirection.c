@@ -6,7 +6,7 @@
 /*   By: dkrecisz <dkrecisz@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/10/09 04:16:44 by dkrecisz      #+#    #+#                 */
-/*   Updated: 2021/11/02 14:46:49 by alkrusts      ########   odam.nl         */
+/*   Updated: 2021/11/04 19:42:44 by dkrecisz      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,6 +54,9 @@ static int	redirect_output(t_exec *stru, t_file_io *fd, t_astree *node)
 	{
 		if (node->parent->type & AST_HERE_DOC)
 			delete_parent(stru, &node);
+		if (is_redirection(node->parent->type)
+			&& node->right && node->right->type & AST_WORD)
+			shift_arguments(stru, node->right, node);
 	}
 	create_file(node, fd);
 	if (fd->output == -1)
@@ -76,7 +79,6 @@ static void	execute_stuff(t_data *data, t_astree *node)
 		execute_word_list(data, data->astree->right);
 	else if (node && node->type == AST_WORD)
 		execute_word_list(data, node);
-	return ;
 }
 
 void	execute_redirection(t_data *data, t_astree *node, t_file_io *fd)
