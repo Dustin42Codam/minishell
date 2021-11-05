@@ -135,6 +135,7 @@ void	environ_set(t_environ *head, char *key, char *value)
 		new = (t_environ *)minishell_calloc(1, sizeof(t_environ));
 		new->key = key;
 		new->value = value;
+		new->key_value = environ_get_keyvalue(new->key, new->value);
 		environ_modify_prep(&head, new);
 		return ;
 	}
@@ -148,5 +149,6 @@ void	environ_set(t_environ *head, char *key, char *value)
 		new->value = ft_strdup(value);
 	if (new->value == NULL)
 		exit_minishell(errno);
+	new->key_value = environ_get_keyvalue(new->key, new->value);
 	environ_add_back(&head, new);
 }

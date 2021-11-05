@@ -53,11 +53,7 @@ char	*environ_get_keyvalue(char *key, char *value)
 t_environ	*environ_new_empty(const char *key_value)
 {
 	t_environ	*new;
-	size_t		key_len;
-	size_t		key_value_len;
 
-	key_len = 0;
-	key_value_len = ft_strlen(key_value);
 	new = (t_environ *)minishell_calloc(1, sizeof(t_environ));
 	new->key = ft_strdup(key_value);
 	new->value = ft_strdup("");

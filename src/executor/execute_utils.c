@@ -128,6 +128,7 @@ void	execute_command_argv(t_data *data, t_command *cmd, t_environ *env)
 	pid_t	pid;
 	char	**env_array;
 
+	data->exit_status = 0;
 	env_array = environ_get_array(env);
 	if (signal(SIGINT, sig_int_child) == SIG_ERR
 		|| signal(SIGQUIT, sig_quit_child) == SIG_ERR)
