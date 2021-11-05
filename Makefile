@@ -94,12 +94,17 @@ SRC = main.c \
 OBJ = $(addprefix $(ODIR)/$(SDIR)/, $(SRC:.c=.o))
 
 LIBFT = libft
-READLINE = -ltermcap -lreadline -L/usr/local/opt/readline/lib  -L/Users/alkrusts/.brew/Cellar/readline/8.1.1/lib -L/Users/dkrecisz/.brew/Cellar/readline/8.1.1/lib
+READLINE =	-ltermcap -lreadline \
+			-L/usr/local/opt/readline/lib \
+			-L$(HOME)/.brew/Cellar/readline/8.1.1/lib
 LIBS = -L $(LIBFT) -lft $(READLINE)
 
 #headers aka dependencys
 
-HEADER := -I $(IDIR) -I $(LIBFT) -I/Users/alkrusts/.brew/opt/readline/include -I/usr/local/opt/readline/include -I/Users/alkrusts/.brew/Cellar/readline/8.1.1/include -I/Users/dkrecisz/.brew/Cellar/readline/8.1.1/include
+HEADER :=	-I $(IDIR) -I $(LIBFT) \
+			-I/usr/local/opt/readline/include \
+			-I/Users/alkrusts/.brew/opt/readline/include \
+			-I$(HOME)/.brew/Cellar/readline/8.1.1/include
 
 DBG := $(patsubst %,$(DDIR)/%,$(OBJ))
 
