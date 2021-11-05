@@ -3,10 +3,10 @@
 /*                                                        ::::::::            */
 /*   parser.c                                           :+:    :+:            */
 /*                                                     +:+                    */
-/*   By: dkrecisz <dkrecisz@student.codam.nl>         +#+                     */
+/*   By: alkrusts/dkrecisz <codam.nl>                 +#+                     */
 /*                                                   +#+                      */
-/*   Created: 2021/11/04 13:44:23 by dkrecisz      #+#    #+#                 */
-/*   Updated: 2021/11/04 13:44:29 by dkrecisz      ########   odam.nl         */
+/*   Created: 2021/09/13 15:56:52 by alkrusts/dk   #+#    #+#                 */
+/*   Updated: 2021/10/16 01:27:43 by dkrecisz      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 

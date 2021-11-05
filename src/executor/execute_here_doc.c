@@ -6,7 +6,7 @@
 /*   By: alkrusts/dkrecisz <codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/09/13 15:55:27 by alkrusts/dk   #+#    #+#                 */
-/*   Updated: 2021/11/04 19:36:25 by dkrecisz      ########   odam.nl         */
+/*   Updated: 2021/11/03 14:47:17 by alkrusts      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@ static void	expand_input(t_data *data, char *line, t_list **list)
 	tmp = minishell_calloc(1, sizeof(t_token));
 	tmp->str = line;
 	tmp->type |= EXPAND;
-	expand_variables(tmp, data->env);
+	expand_variables(&data, data->env);
 	ft_lstadd_back(list, minishell_lstnew(tmp->str));
 	free(tmp);
 }

@@ -6,7 +6,7 @@
 /*   By: alkrusts/dkrecisz <codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/09/13 15:58:46 by alkrusts/dk   #+#    #+#                 */
-/*   Updated: 2021/09/13 15:58:50 by alkrusts/dk   ########   odam.nl         */
+/*   Updated: 2021/11/03 14:44:33 by alkrusts      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 
 # include "minishell.h"
 
-void	expand_variables(t_token *token, t_environ *env);
+void	expand_variables(t_data **data, t_environ *env);
 
 char	*merge_node_strings(t_list *head);
 void	append_string(char *dest, char *suffix);
