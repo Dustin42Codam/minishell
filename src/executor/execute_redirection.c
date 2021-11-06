@@ -6,7 +6,7 @@
 /*   By: dkrecisz <dkrecisz@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/10/09 04:16:44 by dkrecisz      #+#    #+#                 */
-/*   Updated: 2021/11/04 19:42:44 by dkrecisz      ########   odam.nl         */
+/*   Updated: 2021/11/06 13:01:08 by dkrecisz      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,9 +52,9 @@ static int	redirect_output(t_exec *stru, t_file_io *fd, t_astree *node)
 		close(fd->output);
 	if (fd->output || node->parent)
 	{
-		if (node->parent->type & AST_HERE_DOC)
+		if (node->parent->type & (AST_HERE_DOC | AST_REDIR_OUT | AST_APPEND))
 			delete_parent(stru, &node);
-		if (is_redirection(node->parent->type)
+		else if (is_redirection(node->parent->type)
 			&& node->right && node->right->type & AST_WORD)
 			shift_arguments(stru, node->right, node);
 	}

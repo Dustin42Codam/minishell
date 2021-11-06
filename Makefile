@@ -6,7 +6,7 @@
 #    By: alkrusts/dkrecisz <marvin@codam.nl>          +#+                      #
 #                                                    +#+                       #
 #    Created: 2021/11/02 10:36:33 by dkrecisz      #+#    #+#                  #
-#    Updated: 2021/11/04 13:35:36 by dkrecisz      ########   odam.nl          #
+#    Updated: 2021/11/06 12:09:22 by dkrecisz      ########   odam.nl          #
 #                                                                              #
 # **************************************************************************** #
 
@@ -111,9 +111,9 @@ DBG := $(patsubst %,$(DDIR)/%,$(OBJ))
 #flags
  
 C_DEBUG := -fsanitize=address -g -Wall -Werror -Wextra  $(HEADER)
-C_REGULAR := -Wall -Wextra -Werror $(HEADER)
+C_REGULAR := -Wall -Wextra -Werror -g $(HEADER)
 
-CC := clang
+CC := gcc
 
 ifdef DEBUG
 	FLAGS = $(C_DEBUG)
